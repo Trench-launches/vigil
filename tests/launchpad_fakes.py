@@ -74,7 +74,11 @@ class FakeSolana:
         for ix in msg.instructions:
             prog, data = keys[ix.program_id_index], bytes(ix.data)
             acc = [keys[i] for i in bytes(ix.accounts)]
-            if prog == pf.PUMP_PROGRAM and data[:8] == DISC_PUMP_CREATE:
+            if prog == pf.SYSTEM_PROGRAM and data[:4] == struct.pack("<I", 2):  # a plain SOL transfer
+                amount = struct.unpack_from("<Q", data, 4)[0]
+                self.balances[str(acc[0])] = self.balances.get(str(acc[0]), 0) - amount
+                self.balances[str(acc[1])] = self.balances.get(str(acc[1]), 0) + amount
+            elif prog == pf.PUMP_PROGRAM and data[:8] == DISC_PUMP_CREATE:
                 mint = acc[0]
                 self.set_account(pf.bonding_curve_pda(mint), pf.PUMP_PROGRAM, curve_bytes(payer))
                 self.balances[str(payer)] = self.balances.get(str(payer), 0) - CREATE_COST

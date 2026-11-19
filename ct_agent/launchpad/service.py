@@ -7,6 +7,8 @@
    wallet, and Buddy replies with the contract address. Right after, the coin's creator fees are split once and
    pump.fun locks it: launch_creator_share_bps (90%) to the requester's wallet, the rest to the launcher. Coins with a
    split get their fees paid out every few hours.
+3. Buddy's share lands on the launcher. Every few hours, what's above a reserve for launches is shared out (fee_*):
+   part tops up the trading wallet to fund trades, the rest goes to the treasury or stays on the launcher.
 
 A request with a tx_hash is never launched again: if the outcome of a send is unknown, the loop asks the chain.
 """
@@ -166,7 +168,7 @@ def launchpad_once(ctx: Any, launcher: PumpLauncher | None = None) -> dict[str, 
         split += _split(ctx, launcher, r)
     for r in rows(conn, "SELECT * FROM launch_requests WHERE status='launched' AND fee_shares IS NOT NULL ORDER BY id"):
         paid += _distribute(ctx, launcher, r)
-    return {"launched": launched, "fee_splits": split, "distributed": paid}
+    return {"launched": launched, "fee_splits": split, "distributed": paid, "swept": _sweep(ctx, launcher)}
 
 
 def announce_key(r: dict[str, Any]) -> str:
@@ -355,6 +357,35 @@ def _distribute(ctx: Any, launcher: PumpLauncher, r: dict[str, Any]) -> int:
     except Exception as exc:  # retried on the next round
         log.warning("fee payout for %s failed: %s", r["token"], exc)
         return 0
+
+
+SWEEP_NEXT = "fee_sweep_next"
+
+
+def _trading_wallet(s: Any) -> str | None:
+    try:
+        return str(keys.load_keypair(s.trading_wallet_private_key).pubkey()) if s.trading_wallet_private_key else None
+    except ValueError:
+        return None
+
+
+def _sweep(ctx: Any, launcher: PumpLauncher) -> int:
+    """Buddy's fees above the launch reserve are shared out (trading wallet, then the treasury or the launcher), at most
+    every fee_sweep_every_hours."""
+    conn, s = ctx.conn, ctx.settings
+    if not s.fee_sweep_enabled or not _due(conn, SWEEP_NEXT):
+        return 0
+    kv_set(conn, SWEEP_NEXT, time.time() + s.fee_sweep_every_hours * 3600)
+    try:
+        done = launcher.share_out_fees(lamports(s.fee_keep_sol), lamports(s.fee_sweep_min_sol), _trading_wallet(s),
+                                       s.fee_trading_share_pct,
+                                       (s.treasury_address or None) if s.fee_rest_to_treasury else None)
+    except Exception as exc:  # LaunchBlocked or an RPC hiccup: tried again sooner than the usual interval
+        kv_set(conn, SWEEP_NEXT, time.time() + RETRY_SPLIT_S)
+        log.warning("fee share-out failed: %s", exc)
+        journal_append(conn, "fees_share_failed", {"error": str(exc)[:300]}, mode="live")
+        return 0
+    return 1 if done else 0
 
 
 # --- launches made outside the X flow ----------------------------------------------------------------------------------

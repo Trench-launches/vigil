@@ -185,7 +185,7 @@ def test_announce_then_launch_then_split_90_10(settings, db):
     assert "pump.fun" in ann["body"] and ann["reply_to_key"] is None and lp.calls == []
     assert launchpad_once(ctx, lp)["launched"] == 0  # not launched until the announcement is out
     _announced(db)
-    assert launchpad_once(ctx, lp) == {"launched": 1, "fee_splits": 0, "distributed": 0}
+    assert launchpad_once(ctx, lp) == {"launched": 1, "fee_splits": 0, "distributed": 0, "swept": 0}
     assert lp.last["socials"]["twitter"] == "https://x.com/catcoin"  # they gave their own link: it stays
     assert lp.last["description"] == "a cat that trades memes. Created by @catfan, launched via @VigilBot"
     assert ("split", [(WALLET, 9000), (LAUNCHER, 1000)]) in lp.calls  # requester first, then Buddy
@@ -205,7 +205,7 @@ def test_announce_then_launch_then_split_90_10(settings, db):
     live = next(b for b in _replies(db) if "is live on Solana\n\nCA:" in b and "x.com/i/status/900" in b)
     assert "90% of its creator fees go to your wallet" in live
     assert "https://solscan.io/tx/SPLITSIG" in _replies(db)[-1] and "locked" in _replies(db)[-1]
-    assert launchpad_once(ctx, lp) == {"launched": 0, "fee_splits": 0, "distributed": 0}  # all done; payout throttled
+    assert launchpad_once(ctx, lp) == {"launched": 0, "fee_splits": 0, "distributed": 0, "swept": 0}  # all done; payout throttled
     assert [c[0] for c in lp.calls].count("launch") == 1
 
 
@@ -543,6 +543,87 @@ def test_a_graduated_coin_or_someone_elses_coin_is_not_split(settings, db):
     with pytest.raises(LaunchBlocked, match="isn't this coin's creator"):
         lp.set_fee_split(MINT, pf.split_for(WALLET, LAUNCHER, 9000))
     assert node.sent == []
+
+
+# --- sharing out Buddy's fees: half funds trading, the rest to the treasury (or left on the launcher) ------------------
+
+TREASURY = str(Keypair.from_seed(bytes([4] * 32)).pubkey())
+TRADING_KP = Keypair.from_seed(bytes([5] * 32))
+TRADING = str(TRADING_KP.pubkey())
+
+
+def _transfers(tx):
+    """(to, lamports) for each SystemProgram transfer in a sent transaction."""
+    keys = list(tx.message.account_keys)
+    return [(str(keys[bytes(ix.accounts)[1]]), struct.unpack("<IQ", bytes(ix.data))[1]) for ix in tx.message.instructions
+            if keys[ix.program_id_index] == pf.SYSTEM_PROGRAM]
+
+
+def test_fees_above_the_reserve_fund_trading_and_the_rest_goes_to_the_treasury(settings, db):
+    node = FakeSolana()
+    node.balances[LAUNCHER] = 300_000_000  # 0.3 SOL
+    lp = _launcher(settings, db, node, FakeWeb())
+    sig, moved = lp.share_out_fees(100_000_000, 20_000_000, TRADING, 50, TREASURY)
+    spare = 300_000_000 - 100_000_000 - pf.SWEEP_FEE_BUFFER
+    assert moved == {TRADING: spare // 2, TREASURY: spare - spare // 2} and len(node.sent) == 1
+    assert sig == str(node.sent[0].signatures[0]) and _transfers(node.sent[0]) == list(moved.items())
+    assert node.balances[TRADING] == spare // 2 and node.balances[TREASURY] == spare - spare // 2
+    assert journal_recent(db, kind="fees_shared")
+    # what's left is the reserve (plus the fee buffer): nothing more to move
+    assert lp.share_out_fees(100_000_000, 20_000_000, TRADING, 50, TREASURY) is None and len(node.sent) == 1
+
+
+def test_the_rest_can_stay_on_the_launcher(settings, db):
+    node = FakeSolana()
+    node.balances[LAUNCHER] = 300_000_000
+    lp = _launcher(settings, db, node, FakeWeb())
+    _, moved = lp.share_out_fees(100_000_000, 20_000_000, TRADING, 50, None)
+    spare = 300_000_000 - 100_000_000 - pf.SWEEP_FEE_BUFFER
+    assert moved == {TRADING: spare // 2} and node.balances[LAUNCHER] == 300_000_000 - spare // 2
+
+
+def test_fees_never_go_to_the_launcher_and_it_keeps_a_floor(settings, db):
+    node = FakeSolana()
+    node.balances[LAUNCHER] = 100_000_000
+    lp = _launcher(settings, db, node, FakeWeb())
+    with pytest.raises(LaunchBlocked, match="must not be the launcher"):
+        lp.share_out_fees(0, 1, LAUNCHER, 50, TREASURY)
+    with pytest.raises(LaunchBlocked, match="isn't a Solana address"):
+        lp.share_out_fees(0, 1, TRADING, 50, "not-a-wallet")
+    with pytest.raises(LaunchBlocked, match="between 0 and 100"):
+        lp.share_out_fees(0, 1, TRADING, 150, TREASURY)
+    _, moved = lp.share_out_fees(0, 1, TRADING, 100, TREASURY)  # a 0 reserve still leaves the launcher its minimum
+    assert moved == {TRADING: 100_000_000 - pf.MIN_LAUNCHER_RESERVE - pf.SWEEP_FEE_BUFFER}
+
+
+class _Sharer(_Launcher):
+    def __init__(self, error=None):
+        super().__init__()
+        self.error = error
+
+    def share_out_fees(self, keep, minimum, trading, pct, treasury):
+        self.calls.append(("share", keep, minimum, trading, pct, treasury))
+        if self.error:
+            raise self.error
+        return "SHARESIG", {trading: 25_000_000}
+
+
+def test_the_launchpad_loop_shares_fees_every_few_hours_and_only_when_on(settings, db):
+    trading_key = base58.b58encode(bytes(TRADING_KP)).decode()
+    lp = _Sharer()
+    assert launchpad_once(_ctx(settings, db, treasury_address=TREASURY), lp)["swept"] == 0  # off by default
+    ctx = _ctx(settings, db, fee_sweep_enabled=True, treasury_address=TREASURY, trading_wallet_private_key=trading_key)
+    assert launchpad_once(ctx, lp)["swept"] == 1
+    assert [c for c in lp.calls if c[0] == "share"] == [("share", 100_000_000, 20_000_000, TRADING, 50.0, TREASURY)]
+    assert launchpad_once(ctx, lp)["swept"] == 0  # not due again for hours
+    kv_set(db, "fee_sweep_next", 0)
+    stay = _ctx(settings, db, fee_sweep_enabled=True, fee_rest_to_treasury=False, treasury_address=TREASURY,
+                trading_wallet_private_key=trading_key)
+    launchpad_once(stay, lp)
+    assert lp.calls[-1] == ("share", 100_000_000, 20_000_000, TRADING, 50.0, None)  # the rest stays on the launcher
+    kv_set(db, "fee_sweep_next", 0)
+    assert launchpad_once(ctx, _Sharer(error=LaunchBlocked("rpc down")))["swept"] == 0
+    assert journal_recent(db, kind="fees_share_failed")
 
 
 # --- the whole loop with the real launcher -----------------------------------------------------------------------------

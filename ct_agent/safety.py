@@ -93,6 +93,19 @@ def review(s: Settings) -> tuple[list[str], list[str]]:
             errors.append("CT_LAUNCHPAD_ENABLED needs CT_X_HANDLE (the bot's X handle, credited in every launch)")
         if not token:
             warnings.append("CT_LAUNCHPAD_ENABLED with no CT_API_ADMIN_TOKEN")
+    if s.fee_sweep_enabled:
+        if not 0 <= s.fee_trading_share_pct <= 100:
+            errors.append("CT_FEE_TRADING_SHARE_PCT must be between 0 and 100")
+        if s.fee_trading_share_pct > 0 and not (s.trading_wallet_private_key and _pubkey(s.trading_wallet_private_key)):
+            errors.append("CT_FEE_TRADING_SHARE_PCT funds the trading wallet, but CT_TRADING_WALLET_PRIVATE_KEY isn't a valid key")
+        if s.fee_rest_to_treasury and s.fee_trading_share_pct < 100:
+            own = {_pubkey(k) for k in (s.trading_wallet_private_key, s.launcher_wallet_private_key) if k}
+            if not is_pubkey(s.treasury_address):
+                errors.append("CT_FEE_REST_TO_TREASURY needs CT_TREASURY_ADDRESS to be a Solana address")
+            elif s.treasury_address in own:
+                errors.append("CT_TREASURY_ADDRESS is one of the bot's own wallets: use a wallet only you hold the key for")
+        if s.fee_keep_sol < 0.05:
+            warnings.append("CT_FEE_KEEP_SOL is under 0.05 SOL: sharing out fees may leave too little to pay for launches")
     if s.chat_enabled and s.anthropic_api_key and s.chat_global_day <= 0:
         errors.append("CT_CHAT_ENABLED with CT_CHAT_GLOBAL_DAY <= 0: the public chat would have no spending cap")
     if s.x_posting_enabled and not token:

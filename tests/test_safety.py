@@ -78,6 +78,21 @@ def test_shared_trading_and_launcher_key_is_refused(settings):
                                                        launcher_wallet_private_key=OTHER))[0])
 
 
+def test_fee_sharing_needs_a_trading_key_and_a_treasury_that_isnt_a_bot_wallet(settings):
+    launcher_addr = str(Keypair.from_seed(bytes([18] * 32)).pubkey())  # OTHER's address
+    treasury = str(Keypair.from_seed(bytes([33] * 32)).pubkey())
+    on = dict(fee_sweep_enabled=True, launcher_wallet_private_key=OTHER, trading_wallet_private_key=KEY)
+    errs = lambda **kw: review(_s(settings, **{**on, **kw}))[0]  # noqa: E731
+    assert any("CT_TREASURY_ADDRESS to be a Solana address" in e for e in errs())
+    assert not any("TREASURY" in e or "FEE" in e for e in errs(treasury_address=treasury))
+    assert any("one of the bot's own wallets" in e for e in errs(treasury_address=launcher_addr))
+    assert not any("TREASURY" in e for e in errs(fee_rest_to_treasury=False))  # the rest stays put: no treasury needed
+    assert any("isn't a valid key" in e for e in errs(treasury_address=treasury, trading_wallet_private_key=""))
+    assert any("between 0 and 100" in e for e in errs(treasury_address=treasury, fee_trading_share_pct=120))
+    assert any("CT_FEE_KEEP_SOL" in w
+               for w in review(_s(settings, **{**on, "treasury_address": treasury, "fee_keep_sol": 0.01}))[1])
+
+
 def test_launchpad_needs_handle(settings):
     errors, _ = review(_s(settings, launchpad_enabled=True, launcher_wallet_private_key=OTHER, api_admin_token=TOKEN))
     assert any("CT_X_HANDLE" in e for e in errors)
