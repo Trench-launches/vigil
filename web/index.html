@@ -4,11 +4,11 @@
 <meta name="description" content="Buddy reads thousands of new memecoins a day on Solana, checks every claim onchain with Claude and trades the rare good ones in public. Losses included.">
 <!-- canonical, og:url, the share image and twitter:site are filled in from SITE_URL and SITE_X_HANDLE by scripts/deploy-web.sh -->
 <link rel="canonical" href="https://example.com/">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="64x64" href="/assets/icon-64.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/icon-16.png">
-<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/icon-64.png?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png?v=3">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icon-16.png?v=3">
+<link rel="apple-touch-icon" href="/assets/icon-180.png?v=3">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://example.com/">
 <meta property="og:title" content="Buddy, powered by Claude">
@@ -1562,6 +1562,7 @@ html { scroll-padding-top: 16px; }
 .side .buy-btn .soon { font-family: var(--f-mono); font-size: 10px; padding: 2px 7px; }
 .side-doc { padding: 2px 12px; font-size: 12.5px; color: var(--ink-3); text-decoration: none; }
 .side-doc:hover { color: var(--ink); }
+.side-status[hidden], .t-chip[hidden] { display: none; }
 .mbar, .side-scrim { display: none; }
 
 /* phones and tablets: the sidebar slides in over the page */
@@ -1785,11 +1786,12 @@ footer { padding-top: 8px; }
 .how-art img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; transform: translateX(-50%); }
 
 /* the four steps: Buddy doing each one, a number, a line */
+.how-steps#features { padding-top: 0; }
 .how-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .how-step { text-decoration: none; color: var(--ink); transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
 .how-step:hover { transform: translate(-2px, -2px); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.hs-art { flex: none; height: clamp(140px, 17vh, 180px); display: grid; place-items: end center; padding-top: 16px; background: var(--panel) radial-gradient(rgba(20,20,19,.1) 1px, transparent 1.3px) 0 0 / 18px 18px; border-bottom: 1px solid var(--line); }
-.hs-art img { height: 100%; width: auto; max-width: 86%; object-fit: contain; object-position: bottom; display: block; }
+.hs-art { flex: none; height: clamp(140px, 17vh, 180px); display: flex; align-items: flex-end; justify-content: center; overflow: hidden; background: var(--panel) radial-gradient(rgba(20,20,19,.1) 1px, transparent 1.3px) 0 0 / 18px 18px; border-bottom: 1px solid var(--line); }
+.hs-art img { height: calc(100% - 16px); width: auto; max-width: 86%; object-fit: contain; object-position: bottom; display: block; }
 .hs-txt { padding: 14px 16px 18px; }
 .hs-n { font-family: var(--f-mono); font-size: 11.5px; font-weight: 600; letter-spacing: .1em; color: var(--clay-deep); }
 .hs-txt h3 { margin-top: 6px; font-size: 21px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
@@ -1797,7 +1799,7 @@ footer { padding-top: 8px; }
 
 /* two things to try: tap a source, replay a decision */
 .how-demos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.how-demos .t-panel { height: 640px; }
+.how-demos .t-panel { height: 680px; }
 .hd-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 14px; }
 .hd-lede { font-size: 14.5px; color: var(--ink-2); }
 .hd-next { display: flex; align-items: center; gap: 10px; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
@@ -1943,7 +1945,7 @@ button.tp-more { border: 0; background: none; padding: 0; cursor: pointer; font-
     <a href="launchpad.html"><svg class="ic"><use href="#i-rocket"/></svg>Launchpad</a>
   </nav>
   <div class="side-foot">
-    <div class="side-status" id="sideStatus"><span class="dot pulse" aria-hidden="true"></span><div><b id="sideMode">Testing phase</b><small id="sideModeS">Simulated trades, not onchain</small></div></div>
+    <div class="side-status" id="sideStatus" hidden><span class="dot pulse" aria-hidden="true"></span><div><b id="sideMode"></b><small id="sideModeS"></small></div></div>
     <a class="btn btn-ghost side-btn" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#b-x"/></svg> Follow on X</a>
     <a class="btn btn-primary side-btn buy-btn" href="#terminal" aria-disabled="true">Buy $BUDDY<span class="soon">soon</span></a>
     <a class="side-doc" href="https://github.com/Trench-launches/vigil#readme" target="_blank" rel="noopener">Docs on GitHub ↗</a>
@@ -1961,7 +1963,7 @@ button.tp-more { border: 0; background: none; padding: 0; cursor: pointer; font-
 <!-- TERMINAL: the dashboard. One screen on a desktop: the lists scroll inside their panels, the page doesn't. -->
 <div class="view term" id="terminal" data-view>
   <header class="t-head">
-    <div class="t-title"><h1>Terminal</h1><span class="t-chip" id="tMode"><span class="dot pulse"></span>Testing phase</span><span class="t-chip soft"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span>Solana</span></div>
+    <div class="t-title"><h1>Terminal</h1><span class="t-chip" id="tMode" hidden><span class="dot pulse"></span> </span><span class="t-chip soft"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span>Solana</span></div>
     <form class="t-cmd" id="tCmd" role="search"><svg class="ic"><use href="#i-search"/></svg><label class="sr-only" for="tCmdIn">Ask Buddy about a coin</label><input id="tCmdIn" maxlength="500" placeholder="Ask Buddy about a coin: a contract or a $ticker" autocomplete="off"><kbd>↵</kbd></form>
     <span class="t-clock" id="tClock">--:--:-- UTC</span>
   </header>
@@ -2448,7 +2450,7 @@ button.tp-more { border: 0; background: none; padding: 0; cursor: pointer; font-
         { body: "Passing on $JOLLY. The deployer bought 52% of its own curve. That isn't demand.", sent_at: at(70) },
         { body: "TEST SOLD $NEZU @ 1.2e-7 SOL, −70.4%.\nWhy: stop loss hit. Loss logged, not hidden.", sent_at: at(96) },
         { body: "Watching $TAKO. Volume is hot, sources aren't.\nWhat would make me wrong: one group trading with itself.", sent_at: at(130) },
-        { body: "Testing Phase scorecard: 23 closed, 13W/10L, net +0.920 SOL.\nEvery fill is in the public journal.", sent_at: at(200) },
+        { body: "Scorecard: 23 closed, 13W/10L, net +0.920 SOL.\nEvery fill is in the public journal.", sent_at: at(200) },
       ],
     };
   };
@@ -2609,15 +2611,17 @@ button.tp-more { border: 0; background: none; padding: 0; cursor: pointer; font-
       : empty("No posts yet. Every trade gets posted to X, losses included.");
   };
 
-  /* the trading mode, in the sidebar and the terminal's header */
+  /* the trading mode, in the sidebar and the terminal's header: shown when it's trading live or paused, hidden otherwise */
   const renderMode = () => {
-    const live = T.mode === "live", killed = document.body.classList.contains("killed");
-    const label = killed ? "Paused" : live ? "Live trading" : "Testing phase";
-    $("#tMode").className = "t-chip " + (killed ? "off" : live ? "live" : "");
+    const live = T.mode === "live", killed = document.body.classList.contains("killed"), show = T.loaded && (live || killed);
+    $("#tMode").hidden = !show; $("#sideStatus").hidden = !show;
+    if (!show) return;
+    const label = killed ? "Paused" : "Live trading";
+    $("#tMode").className = "t-chip " + (killed ? "off" : "live");
     $("#tMode").lastChild.textContent = label;
-    $("#sideStatus").className = "side-status " + (killed ? "off" : live ? "live" : "");
+    $("#sideStatus").className = "side-status " + (killed ? "off" : "live");
     $("#sideMode").textContent = label;
-    $("#sideModeS").textContent = killed ? "Kill switch on: watching, not trading" : live ? "Real trades, onchain" : "Simulated trades, not onchain";
+    $("#sideModeS").textContent = killed ? "Kill switch on: watching, not trading" : "Real trades, onchain";
   };
   const renderTerminal = () => { renderMode(); renderKpis(); renderChartHead(); drawChart(); renderBuddy(); renderCall(); renderTrades(); renderJournal(); renderTxs(); };
   renderTerminal();

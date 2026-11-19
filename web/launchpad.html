@@ -7,8 +7,11 @@
 <meta name="description" content="Launch a coin on pump.fun with one post on X. Buddy checks every request, pays the launch and locks 90% of the creator fees to you on chain.">
 <!-- canonical, og:url, the share image and twitter:site are filled in from SITE_URL and SITE_X_HANDLE by scripts/deploy-web.sh -->
 <link rel="canonical" href="https://example.com/launchpad">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="icon" href="/favicon.ico?v=3" sizes="any">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/icon-64.png?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png?v=3">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/icon-16.png?v=3">
+<link rel="apple-touch-icon" href="/assets/icon-180.png?v=3">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://example.com/launchpad">
 <meta property="og:title" content="Buddy launchpad">
@@ -201,6 +204,9 @@ a.lrow:hover { background: var(--panel); }
 
 /* the sections the sidebar jumps to */
 .sec { margin-top: 48px; }
+/* each sidebar link (Overview, Tokens, Launch a coin, Fees & payouts) is its own page: only one view shows at a time */
+.view[hidden] { display: none; }
+.sec.view { margin-top: 0; }
 .tokens { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
 .tok { background: var(--bg); border: 1px solid var(--line-soft); border-radius: var(--r-panel); padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: var(--shadow); }
 .tok-top { display: flex; gap: 12px; align-items: center; }
@@ -406,12 +412,15 @@ a.lrow:hover { background: var(--panel); }
 
 /* ---- the same frame as the main site: sidebar, heading bar and content width match the terminal ---- */
 @media (min-width: 981px) { :root { --head-h: 69px; --page-gutter: 18px; } }
-.topbar { height: var(--head-h); gap: 14px; }
+.topbar { gap: 14px; }
+@media (min-width: 981px) { .topbar { height: var(--head-h); } }   /* on phones the search wraps to a second row */
 .lp-title { margin: 0; line-height: 1.04; }
 main { max-width: none; padding: 12px var(--page-gutter) 16px; }
 .hero { padding: clamp(22px, 3vw, 36px) clamp(20px, 3vw, 44px); margin-bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
   box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 14px 30px -26px rgba(20,20,19,.35); }
 .hero-buddy { max-height: 260px; }
+.hero h1 { margin-top: 16px; font-size: clamp(32px, 3.6vw, 54px); text-wrap: balance; }
+.hero h1 span { display: block; }
 .tile, .card, .tok, .panel, .fact { border-radius: 14px; }
 .sidebar { padding: 14px 12px; gap: 4px; background: rgba(250,249,245,.9); border-right-color: var(--line); overflow-y: auto; }
 .sidebar .logo { height: auto; gap: 11px; padding: 6px 8px 14px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
@@ -436,6 +445,94 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
 .side-btn .soon { font: 500 10px var(--f-mono); padding: 2px 7px; border-radius: 999px; background: rgba(20,20,19,.12); }
 .sidebar .btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
 .sidebar .buy-btn[aria-disabled="true"]:hover { transform: none; box-shadow: none; }
+
+/* ---- the launch section: one panel. A headline, three steps in a row, the form beside a preview of the post ---- */
+.side-status[hidden] { display: none; }
+.lbox { padding: clamp(18px, 2.2vw, 28px); }
+.lbox-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; }
+.lbox-head h3 { margin: 0; }
+.lbox .lsteps { flex-direction: row; gap: 0; margin: 18px 0 20px; padding: 16px 0; border-block: 1px solid var(--line); }
+.lbox .lsteps li { flex: 1 1 0; min-width: 0; padding: 0 18px; line-height: 1.45; }
+.lbox .lsteps li:first-child { padding-left: 0; } .lbox .lsteps li:last-child { padding-right: 0; }
+.lbox .lsteps li + li { border-left: 1px solid var(--line); }
+.lbox-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr); gap: clamp(18px, 2.4vw, 32px); align-items: start; }
+.form { gap: 14px; }
+.form label { font-weight: 500; }
+.form .two { grid-template-columns: minmax(0, 1fr) 150px; gap: 12px; }
+.form .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.form input { height: 44px; padding: 0 14px; border-radius: 11px; }
+.lbox-go { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 4px; }
+.lbox-go .btn { height: 46px; padding: 0 22px; font-size: 15px; }
+.lbox-go .note { flex: 1 1 220px; }
+.pp { display: grid; gap: 8px; }
+.pp-l { font: 500 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.pp-card { display: grid; gap: 10px; padding: 14px 16px 16px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); }
+.pp-top { display: flex; align-items: center; gap: 8px; font-size: 14px; min-width: 0; }
+.pp-top small { color: var(--ink-3); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pp-av { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--sand); color: var(--ink-3); }
+.pp-card .preview { min-height: 96px; padding: 0; background: none; border: 0; border-radius: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink); overflow-wrap: anywhere; }
+.pp-img { display: flex; align-items: center; justify-content: center; gap: 8px; height: 84px; border: 1px dashed var(--btn-line); border-radius: 12px; font-size: 13px; color: var(--ink-3); }
+@media (max-width: 980px) {
+  .lbox .lsteps { flex-direction: column; gap: 14px; }
+  .lbox .lsteps li, .lbox .lsteps li:first-child, .lbox .lsteps li:last-child { padding: 0; }
+  .lbox .lsteps li + li { border-left: 0; }
+  .lbox-grid, .form .pair { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) { .form .two { grid-template-columns: minmax(0, 1fr) 110px; } }
+
+/* ---- the launch card: the form on the left, a live preview of the coin on the right, the rules in a dropdown ---- */
+.lcard { padding: 0; overflow: hidden; }
+.lcard-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; padding: clamp(18px, 2.2vw, 28px); border-bottom: 1px solid var(--line); }
+.lcard-head h3 { margin: 0 0 6px; }
+.lchips { display: flex; flex-wrap: wrap; gap: 8px; }
+.lchip { padding: 6px 12px; border-radius: 999px; background: var(--clay-soft); color: var(--clay-deep); font: 500 11.5px var(--f-mono); letter-spacing: .04em; white-space: nowrap; }
+.lcard > .track { padding: clamp(18px, 2.2vw, 28px); }
+.lgrid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: clamp(18px, 2.4vw, 36px); align-items: start;
+  padding: clamp(18px, 2.2vw, 28px); }
+.lfill { display: grid; gap: 14px; min-width: 0; }
+.lfile-btn { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 14px; border-radius: 11px; border: 1px dashed var(--btn-line);
+  background: var(--bg); color: var(--ink-2); font-size: 14px; cursor: pointer; min-width: 0; }
+.lfile-btn span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lfile:hover .lfile-btn, .lfile:focus-within .lfile-btn { border-color: var(--clay); }
+.lprev { display: grid; gap: 12px; padding: 16px; border-radius: 16px; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.lprev .lp-img { width: min(100%, 260px); aspect-ratio: 1; justify-self: center; display: grid; place-content: center; justify-items: center; gap: 6px;
+  border-radius: 14px; border: 1px dashed var(--btn-line); background: var(--sand) center / cover no-repeat; color: var(--ink-3); font-size: 13px; cursor: pointer; }
+.lprev .lp-img .ic { width: 22px; height: 22px; }
+.lprev .lp-img.has { border: 1px solid var(--line); }
+.lprev .lp-img.has > * { display: none; }
+.lp-id { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-width: 0; }
+.lp-id b { font: 600 22px var(--f-mono); color: var(--ink); overflow-wrap: anywhere; }
+.lp-id span { font-size: 15px; color: var(--ink-2); overflow-wrap: anywhere; }
+.lp-desc { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--ink); overflow-wrap: anywhere; }
+.lprev .ph { color: var(--ink-4); }
+.lp-facts { margin: 0; display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13.5px; }
+.lp-facts div { display: flex; justify-content: space-between; gap: 12px; }
+.lp-facts dt { color: var(--ink-3); flex: none; }
+.lp-facts dd { margin: 0; min-width: 0; text-align: right; color: var(--ink); overflow-wrap: anywhere; }
+
+/* the rules: a dropdown at the bottom of the card */
+.lrules { border-top: 1px solid var(--line); background: var(--panel); scroll-margin-top: 80px; }
+.lrules summary { display: flex; align-items: center; gap: 12px; padding: 16px clamp(18px, 2.2vw, 28px); cursor: pointer; list-style: none; user-select: none; }
+.lrules summary::-webkit-details-marker { display: none; }
+.lrules summary:hover .lr-t b { color: var(--clay-deep); }
+.lr-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none; background: var(--clay-soft); color: var(--clay-deep); }
+.lr-ic .ic { width: 17px; height: 17px; }
+.lr-t { flex: 1; min-width: 0; }
+.lr-t b { display: block; font-size: 15.5px; font-weight: 600; transition: color .2s; }
+.lr-t small { display: block; font-size: 13px; color: var(--ink-3); }
+.lr-chev { width: 18px; height: 18px; color: var(--ink-2); transform: rotate(90deg); transition: transform .2s ease; }
+.lrules[open] .lr-chev { transform: rotate(-90deg); }
+.lr-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 0 clamp(18px, 2.2vw, 28px) clamp(18px, 2.2vw, 24px); }
+.lr-col { padding: 16px 18px; border-radius: 14px; background: var(--card); border: 1px solid var(--line); }
+.lr-col h5 { margin: 0 0 10px; font: 500 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); }
+.lr-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+.lr-col li { position: relative; padding-left: 16px; }
+.lr-col li::before { content: ""; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; border-radius: 2px; background: var(--clay); }
+.lr-foot { grid-column: 1 / -1; margin: 2px 0 0; font-size: 13px; color: var(--ink-3); }
+.tile .rule .ri { font: 600 13px var(--f-mono); }
+@media (max-width: 980px) {
+  .lgrid, .lr-body { grid-template-columns: minmax(0, 1fr); }
+}
 </style>
 </head>
 <body>
@@ -464,6 +561,7 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
   <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
   <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
   <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10" /> <line x1="12" x2="12" y1="20" y2="4" /> <line x1="6" x2="6" y1="20" y2="14" /></symbol>
+  <symbol id="i-message-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></symbol>
 </svg>
 
 <div class="bg-fx" id="bgFx" aria-hidden="true"><i class="bg-grid"></i><i class="bg-hot"></i><i class="bg-glow"></i></div>
@@ -473,19 +571,18 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
     <span class="side-lbl">Menu</span>
     <nav class="nav site" aria-label="Pages">
       <a href="/#terminal"><svg class="ic"><use href="#i-term"/></svg>Terminal</a>
-      <a href="/#ask"><svg class="ic"><use href="#i-msg"/></svg>Ask Buddy</a>
+      <a href="/#ask"><svg class="ic"><use href="#i-message-circle"/></svg>Ask Buddy</a>
       <a href="/#how"><svg class="ic"><use href="#i-layers"/></svg>How it works</a>
       <a href="launchpad.html" class="here" aria-current="page"><svg class="ic"><use href="#i-rocket"/></svg>Launchpad</a>
     </nav>
     <nav class="nav sub" aria-label="On this page">
-      <a href="#top" class="active">Overview</a>
+      <a href="#overview" class="active" aria-current="page">Overview</a>
       <a href="#tokens">Tokens</a>
       <a href="#launch">Launch a coin</a>
-      <a href="#rules">Rules</a>
       <a href="#fees">Fees &amp; payouts</a>
     </nav>
     <div class="side-foot">
-      <div class="side-status" id="sideStatus"><span class="dot" aria-hidden="true"></span><div><b id="sideMode">Testing phase</b><small id="sideModeS">Simulated trades, not onchain</small></div></div>
+      <div class="side-status" id="sideStatus" hidden><span class="dot" aria-hidden="true"></span><div><b id="sideMode"></b><small id="sideModeS"></small></div></div>
       <a class="btn side-btn" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-x"/></svg> Follow on X</a>
       <a class="btn primary side-btn buy-btn" href="/#terminal" aria-disabled="true">Buy $BUDDY<span class="soon">soon</span></a>
       <a class="side-doc" href="https://github.com/Trench-launches/vigil#readme" target="_blank" rel="noopener">Docs on GitHub ↗</a>
@@ -505,6 +602,7 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
     </header>
 
     <main id="top">
+      <div class="view" data-view="overview">
       <section class="hero">
         <div class="hero-copy">
         <div class="kickers"><span class="kicker soft" id="statusPill"><span class="dot"></span>Launches on pump.fun</span></div>
@@ -520,14 +618,14 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
           <div class="tile-body"><div class="wall" id="wall"></div><div class="wall-empty" id="wallEmpty" hidden><span>No launches yet. Be the first.</span></div></div>
           <div class="tile-foot">Tokens <span class="tile-open">Open <svg class="ic"><use href="#i-arrow"/></svg></span></div>
         </a>
-        <a class="tile span-2" href="#rules">
+        <a class="tile span-2" href="#launch">
           <div class="tile-body rules">
-            <div class="rule"><span class="ri"><svg class="ic"><use href="#i-eye"/></svg></span><div><b>Claude checks every request</b><small>No hate, scams or fake "official" coins</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
-            <div class="rule"><span class="ri"><svg class="ic"><use href="#i-user"/></svg></span><div><b id="tRuleDay">One launch per account a day</b><small>Per X account, every 24 hours</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
-            <div class="rule"><span class="ri"><svg class="ic"><use href="#i-clock"/></svg></span><div><b id="tRuleAge">Accounts older than 30 days</b><small>Brand-new accounts wait</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
-            <div class="rule"><span class="ri"><svg class="ic"><use href="#i-lock"/></svg></span><div><b>Creator fees locked to you</b><small>Split once on chain, then nobody can change it</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
+            <div class="rule"><span class="ri">1</span><div><b>Name your coin</b><small>A name and a ticker</small></div></div>
+            <div class="rule"><span class="ri">2</span><div><b>Add your wallet</b><small>Where your creator fees are paid</small></div></div>
+            <div class="rule"><span class="ri">3</span><div><b>Post it on X with your image</b><small>The post is written for you</small></div></div>
+            <div class="rule"><span class="ri">4</span><div><b>Buddy launches it</b><small>On pump.fun, and replies with the address</small></div></div>
           </div>
-          <div class="tile-foot">Rules <span class="tile-open">Open <svg class="ic"><use href="#i-arrow"/></svg></span></div>
+          <div class="tile-foot">How to launch <span class="tile-open">Open <svg class="ic"><use href="#i-arrow"/></svg></span></div>
         </a>
         <a class="tile" href="#tokens">
           <div class="tile-body tile-pad">
@@ -559,67 +657,93 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
         </a>
       </div>
 
-      <div class="lists">
-        <section>
-          <div class="section-head"><h2>Closest to graduation</h2><a href="#tokens">All tokens</a></div>
-          <div class="card" id="closest"><div class="empty">No tokens yet.</div></div>
-        </section>
-        <section>
-          <div class="section-head"><h2>Latest payouts</h2><a href="#fees">Where fees go</a></div>
-          <div class="card" id="payouts"><div class="empty">No payouts yet: creator fees are paid out every few hours once a coin is trading.</div></div>
-        </section>
       </div>
 
-      <section class="sec" id="tokens" aria-labelledby="h-tokens">
+      <section class="sec view" id="tokens" data-view="tokens" aria-labelledby="h-tokens" hidden>
         <div class="section-head"><h2 id="h-tokens">All tokens</h2><span id="tokCount">0 coins</span></div>
         <div class="tokens" id="tokenGrid"><div class="card empty">No launches yet. When Buddy launches a coin it shows up here with its creator, curve progress and links.</div></div>
       </section>
 
-      <section class="sec" id="launch" aria-labelledby="h-launch">
-        <div class="section-head"><h2 id="h-launch">Launch</h2><span>One post on X</span></div>
-        <div class="panel-grid">
-          <div class="panel">
-            <h3>Launch your own coin. <span>Just tag <span data-x-handle>Buddy</span>.</span></h3>
-            <p>Buddy pays the launch. You get 90% of the creator fees from the first trade.</p>
-            <ol class="lsteps">
-              <li><div><b>Fill in your coin</b>Name, ticker, a line about it and the Solana wallet for your fees.</div></li>
-              <li><div><b>Post it on X with your image</b>Buddy checks every request before it launches anything.</div></li>
-              <li><div><b>Buddy launches it on pump.fun</b>It replies under your post with the contract address, and the coin appears on this page.</div></li>
-            </ol>
+      <section class="sec view" id="launch" data-view="launch" aria-labelledby="h-launch" hidden>
+        <div class="section-head"><h2 id="h-launch">Launch a coin</h2><span>One post on X</span></div>
+        <div class="panel lcard">
+          <div class="lcard-head">
+            <div>
+              <h3>Launch your own coin</h3>
+              <p>Fill it in, post it on X with your image, and Buddy launches it for you.</p>
+            </div>
+            <div class="lchips"><span class="lchip">Costs you 0 SOL</span><span class="lchip"><b data-share-you>90%</b> of creator fees to you</span></div>
           </div>
-          <div class="panel">
-            <form class="form" id="lform" autocomplete="off" novalidate>
+
+          <form class="form lgrid" id="lform" autocomplete="off" novalidate>
+            <div class="lfill">
               <div class="two"><label>Coin name<input id="fName" maxlength="32" placeholder="Purr Capital" required></label><label>Ticker<input id="fSym" maxlength="11" placeholder="PURR" required></label></div>
               <label><span>A line about it <em>optional</em></span><input id="fDesc" maxlength="140" placeholder="a cat that runs a hedge fund"></label>
               <label><span>Coin's X or website <em>optional</em></span><input id="fLink" maxlength="80" placeholder="x.com/purrcapital"></label>
-              <label>Wallet for your creator fees<input id="fWallet" maxlength="44" placeholder="Your Solana wallet" spellcheck="false" required></label>
-              <div class="preview" id="fPreview" aria-live="polite"></div>
-              <div class="note" id="fNote">Attach your coin's image on X before you post.</div>
-              <button class="btn primary big" id="fGo" type="submit" disabled><svg class="ic"><use href="#i-x"/></svg> Post on X to launch →</button>
-            </form>
-            <div class="track" id="lpTrack" hidden aria-live="polite">
+              <label class="lfile"><span>Coin image <em>you attach it to your post on X</em></span>
+                <span class="lfile-btn"><svg class="ic"><use href="#i-img"/></svg><span id="fImgName">Choose an image</span></span>
+                <input id="fImg" type="file" accept="image/png,image/jpeg,image/gif,image/webp" hidden></label>
+              <label>Solana wallet for your fees<input id="fWallet" maxlength="44" placeholder="Your Solana wallet address" spellcheck="false" required></label>
+              <div class="lbox-go"><button class="btn primary big" id="fGo" type="submit" disabled><svg class="ic"><use href="#i-x"/></svg> Post on X to launch →</button><div class="note" id="fNote">Fill in the name, ticker and wallet first.</div></div>
+            </div>
+            <aside class="lprev" aria-label="Preview of your coin">
+              <label class="lp-img" id="pvImg" for="fImg"><svg class="ic"><use href="#i-img"/></svg><span>Your coin's image</span></label>
+              <div class="lp-id"><b id="pvSym" class="ph">$TICKER</b><span id="pvName" class="ph">Coin name</span></div>
+              <p class="lp-desc ph" id="pvDesc">A line about your coin</p>
+              <dl class="lp-facts">
+                <div><dt>Link</dt><dd id="pvLink" class="ph">None</dd></div>
+                <div><dt>Creator fees</dt><dd><span data-share-you>90%</span> to <span id="pvWallet" class="mono">your wallet</span></dd></div>
+                <div><dt>Launches on</dt><dd>pump.fun, paid by Buddy</dd></div>
+              </dl>
+            </aside>
+          </form>
+          <div class="track" id="lpTrack" hidden aria-live="polite">
               <div class="track-h"><span class="track-ic" id="trIc"><svg class="ic"><use href="#i-rocket"/></svg></span><div><b id="trTitle">Your launch post is ready</b><p id="trSub"></p></div></div>
-              <ol class="track-steps"><li id="trS1"><i></i>Post it on X with your image</li><li id="trS2"><i></i>Buddy checks your coin</li><li id="trS3"><i></i><span id="trS3t">Your coin goes live on pump.fun</span></li></ol>
+              <ol class="track-steps"><li id="trS1"><i></i>Post it on X with your image</li><li id="trS2"><i></i>Buddy checks your post</li><li id="trS3"><i></i><span id="trS3t">Your coin goes live on pump.fun</span></li></ol>
               <div class="track-why" id="trWhy" hidden><b id="trWhyT"></b><p id="trWhyD"></p></div>
               <div class="track-live" id="trLive" hidden><div class="track-ca"><code id="trCa"></code><button type="button" id="trCopy" aria-label="Copy the contract address"><svg class="ic"><use href="#i-copy"/></svg></button></div><div class="track-links" id="trLinks"></div></div>
               <div class="track-btns"><button type="button" class="btn ghost" id="trEdit">Edit my post</button><a class="btn primary" id="trOpen" target="_blank" rel="noopener"><svg class="ic"><use href="#i-x"/></svg> Open X again</a></div>
-            </div>
           </div>
+
+          <details class="lrules" id="launch-rules">
+            <summary><span class="lr-ic"><svg class="ic"><use href="#i-shield"/></svg></span><span class="lr-t"><b>Launch rules</b><small>What you need, what Buddy won't launch, fees and limits</small></span><svg class="ic lr-chev"><use href="#i-arrow"/></svg></summary>
+            <div class="lr-body">
+              <div class="lr-col">
+                <h5>What you need</h5>
+                <ul>
+                  <li>A name and a ticker. Tickers are letters and numbers, up to 10.</li>
+                  <li>An image attached to your post on X.</li>
+                  <li>One Solana wallet address for your fees.</li>
+                  <li id="rAge">X accounts older than 30 days</li>
+                </ul>
+              </div>
+              <div class="lr-col">
+                <h5>What Buddy won't launch</h5>
+                <ul>
+                  <li>Slurs, hate, sexual content or graphic violence.</li>
+                  <li>Coins that harass or target a real private person.</li>
+                  <li>Coins claiming to be the official or endorsed coin of a real company, person or project. A meme about them is fine.</li>
+                  <li>Scam wording: guaranteed returns, presales, airdrops for sending funds.</li>
+                  <li>The BUDDY ticker. That's Buddy's own coin.</li>
+                </ul>
+              </div>
+              <div class="lr-col">
+                <h5>Fees and limits</h5>
+                <ul>
+                  <li>You get <span data-share-you>90%</span> of the coin's creator fees. Buddy keeps <span data-share-us>10%</span>.</li>
+                  <li>The split is set on chain once, then nobody can change it.</li>
+                  <li>Buddy pays the launch. It costs you 0 SOL.</li>
+                  <li id="rDay">One launch per X account a day</li>
+                  <li>Buddy has a daily launch budget. When it's used up, requests wait until the next day.</li>
+                </ul>
+              </div>
+              <p class="lr-foot">A request that breaks a rule gets a short reply saying why. Nothing is launched and nothing is spent.</p>
+            </div>
+          </details>
         </div>
       </section>
 
-      <section class="sec" id="rules" aria-labelledby="h-rules">
-        <div class="section-head"><h2 id="h-rules">Rules</h2><span>The same for everyone</span></div>
-        <div class="card">
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>Claude reads every request</b><small>A real request, no impersonation of people or projects, nothing hateful or unsafe. Refusals get a short reply.</small></div></div>
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b id="rDay">One launch per X account a day</b><small>Requests past the limit are refused until tomorrow.</small></div></div>
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b id="rAge">X accounts older than 30 days</b><small>Keeps throwaway accounts from flooding the launchpad.</small></div></div>
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>An image, a name, a ticker and one wallet</b><small>Tickers are letters and numbers, up to 10. Buddy's own ticker is reserved.</small></div></div>
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>A daily launch budget</b><small>Buddy pays for launches, so there's a daily cap. Once it's used, requests wait for the next day.</small></div></div>
-        </div>
-      </section>
-
-      <section class="sec" id="fees" aria-labelledby="h-fees">
+      <section class="sec view" id="fees" data-view="fees" aria-labelledby="h-fees" hidden>
         <div class="section-head"><h2 id="h-fees">Fees &amp; payouts</h2><span>Locked on chain</span></div>
         <div class="facts">
           <div class="fact"><span>Your share</span><b id="fShare">90%</b><small>of the coin's creator fees</small></div>
@@ -627,7 +751,16 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
           <div class="fact"><span>Paid to creators</span><b id="fPaid">0 SOL</b><small>in recent payouts</small></div>
           <div class="fact"><span>Launch cost to you</span><b>0 SOL</b><small>Buddy pays it</small></div>
         </div>
-        <div class="card" style="margin-top:12px"><div class="empty">pump.fun pays a coin's creator a small fee on every trade. Right after launch Buddy splits that fee on chain: your share to your wallet, the rest to Buddy, then the split is locked so nobody, Buddy included, can change it. Buddy pays out what has built up every few hours.</div></div>
+        <div class="lists">
+          <section>
+            <div class="section-head"><h2>Closest to graduation</h2><a href="#tokens">All tokens</a></div>
+            <div class="card" id="closest"><div class="empty">No tokens yet.</div></div>
+          </section>
+          <section>
+            <div class="section-head"><h2>Latest payouts</h2><span>Every few hours</span></div>
+            <div class="card" id="payouts"><div class="empty">No payouts yet: creator fees are paid out every few hours once a coin is trading.</div></div>
+          </section>
+        </div>
       </section>
 
       <div class="foot">Buddy is an automated account run by software. Coins launched here are made by their requesters; Buddy checks requests but doesn't vouch for any coin. Memecoins are extremely risky. Not financial advice. <span id="dataNote">Waiting for live data.</span></div>
@@ -665,21 +798,31 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
   fetch(API + "/site", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(d => {
     if (!d) return;
     const live = d.mode === "live", killed = !!d.kill_switch?.on;
-    $("#sideStatus").className = "side-status " + (killed ? "off" : live ? "live" : "");
-    $("#sideMode").textContent = killed ? "Paused" : live ? "Live trading" : "Testing phase";
-    $("#sideModeS").textContent = killed ? "Kill switch on: watching, not trading" : live ? "Real trades, onchain" : "Simulated trades, not onchain";
+    if (!live && !killed) return;   // nothing to flag
+    $("#sideStatus").hidden = false;
+    $("#sideStatus").className = "side-status " + (killed ? "off" : "live");
+    $("#sideMode").textContent = killed ? "Paused" : "Live trading";
+    $("#sideModeS").textContent = killed ? "Kill switch on: watching, not trading" : "Real trades, onchain";
   }).catch(() => {});
 
-  // sidebar: open on phones, and the section in view is the active link
+  // sidebar: open on phones; each link under Launchpad opens its own page (#overview, #tokens, #launch, #fees)
   const side = $("#sidebar"), menu = $("#menuBtn");
   menu.addEventListener("click", e => { e.stopPropagation(); const open = !side.classList.contains("open"); side.classList.toggle("open", open); menu.setAttribute("aria-expanded", String(open)); });
   document.addEventListener("click", e => { if (side.classList.contains("open") && !side.contains(e.target)) { side.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); } });
   $$(".sidebar a").forEach(a => a.addEventListener("click", () => { side.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); }));
-  const links = $$(".sidebar .nav.sub a");
-  const secs = ["top", "tokens", "launch", "rules", "fees"].map(id => document.getElementById(id));
-  const mark = () => { const y = scrollY + 140; let cur = "top"; secs.forEach(s => { if (s && s.id !== "top" && s.offsetTop <= y) cur = s.id; });
-    links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + cur)); };
-  addEventListener("scroll", mark, { passive: true }); mark();
+  const links = $$(".sidebar .nav.sub a"), views = $$("[data-view]");
+  const PAGES = { overview: "Launchpad", tokens: "All tokens", launch: "Launch a coin", fees: "Fees & payouts" };
+  const route = () => {
+    const h = location.hash.slice(1);
+    const rules = h === "launch-rules" || h === "rules";  // the rules live inside the launch page
+    const view = rules ? "launch" : Object.hasOwn(PAGES, h) ? h : "overview";
+    views.forEach(v => { v.hidden = v.dataset.view !== view; });
+    links.forEach(a => { const on = a.getAttribute("href") === "#" + view; a.classList.toggle("active", on);
+      if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    document.title = view === "overview" ? "Buddy launchpad" : `${PAGES[view]} · Buddy launchpad`;
+    if (!rules) scrollTo(0, 0);
+  };
+  addEventListener("hashchange", route); route();
 
   // the token wall: real coins, or quiet placeholders until the first launch
   const wallTile = c => `<div class="wt"><div class="img" ${bg(c.logo)}>${c.logo ? "" : initial(c.symbol)}</div><b>${esc(c.symbol)}</b></div>`;
@@ -744,7 +887,7 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
         <div class="tok-links">${links3(c)}</div></article>`).join("")
       : `<div class="card empty">${COINS.length ? "No coin matches that search." : "No launches yet. When Buddy launches a coin it shows up here with its creator, curve progress and links."}</div>`;
   };
-  $("#q").addEventListener("input", () => { renderTokens(); if ($("#q").value.trim()) document.getElementById("tokens").scrollIntoView({ block: "start" }); });
+  $("#q").addEventListener("input", () => { renderTokens(); if ($("#q").value.trim() && location.hash !== "#tokens") location.hash = "#tokens"; });
 
   // the launch form: builds the post Buddy reads on X (same format as the main site's form)
   let launchOpen = true;
@@ -757,17 +900,32 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
       + (v.link ? `\n\n${v.link}` : "") + `\n\nfees to: ${v.wallet || "your Solana wallet"}`;
     return { v, ok, text, valid: ok.name && ok.sym && ok.wallet };
   };
+  // the preview on the right: what's typed, or a grey placeholder
+  const pvSet = (id, text, placeholder) => { const el = $(id); el.textContent = text || placeholder; el.classList.toggle("ph", !text); };
   const renderForm = (touched = false) => {
     const p = post();
-    $("#fPreview").textContent = p.text;
+    pvSet("#pvSym", p.v.sym && "$" + p.v.sym, "$TICKER"); pvSet("#pvName", p.v.name, "Coin name");
+    pvSet("#pvDesc", p.v.desc, "A line about your coin"); pvSet("#pvLink", p.v.link, "None");
+    $("#pvWallet").textContent = p.ok.wallet ? `${p.v.wallet.slice(0, 4)}…${p.v.wallet.slice(-4)}` : "your wallet";
     [["name", f.name], ["sym", f.sym], ["wallet", f.wallet]].forEach(([k, el]) => el.classList.toggle("bad", touched && el.value.trim() !== "" && !p.ok[k]));
     $("#fGo").disabled = !p.valid || !launchOpen || !X_HANDLE;
     const bad = touched && f.wallet.value.trim() !== "" && !p.ok.wallet;
     $("#fNote").classList.toggle("warn", bad || !launchOpen);
     $("#fNote").textContent = !launchOpen ? "Launches open soon. Get your coin ready." : bad
-      ? "That wallet doesn't look right: it should be a Solana wallet address (32 to 44 letters and numbers)." : "Attach your coin's image on X before you post.";
+      ? "That wallet doesn't look right: it should be a Solana wallet address (32 to 44 letters and numbers)."
+      : !p.valid ? "Fill in the name, ticker and wallet first." : "X opens with your post written. Attach your image, then post.";
   };
   Object.values(f).forEach(el => el.addEventListener("input", () => renderForm(true)));
+  // the image only shows in the preview here; they attach it to the post on X themselves
+  let imgUrl = null;
+  $("#fImg").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (imgUrl) URL.revokeObjectURL(imgUrl);
+    imgUrl = file ? URL.createObjectURL(file) : null;
+    $("#pvImg").style.backgroundImage = imgUrl ? `url("${imgUrl}")` : "";
+    $("#pvImg").classList.toggle("has", !!imgUrl);
+    $("#fImgName").textContent = file ? file.name : "Choose an image";
+  });
   $("#lform").addEventListener("submit", e => { e.preventDefault(); const p = post(); if (!p.valid) return;
     const url = "https://x.com/intent/post?text=" + encodeURIComponent(p.text);
     window.open(url, "_blank", "noopener"); track(p.v.sym, p.v.wallet, url); });
@@ -828,6 +986,11 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
   $("#trCopy").addEventListener("click", () => { const t = $("#trCa").textContent; if (t && navigator.clipboard) navigator.clipboard.writeText(t); });
   renderForm();
 
+  // the rules dropdown opens when a link points at it (old #rules links included)
+  const rulesBox = $("#launch-rules");
+  const openRules = () => { if (location.hash === "#launch-rules" || location.hash === "#rules") { rulesBox.open = true; rulesBox.scrollIntoView({ block: "start" }); } };
+  addEventListener("hashchange", openRules); openRules();
+
   // live data
   const render = d => {
     const st = d.stats || {}, coins = d.coins || [];
@@ -843,15 +1006,14 @@ main { max-width: none; padding: 12px var(--page-gutter) 16px; }
     const share = (st.creator_share_bps ?? 9000) / 100; SHARE = share;
     $("#fShare").textContent = `${share}%`; $("#fOurs").textContent = `${100 - share}%`;
     $(".split .you").textContent = `${share}%`; $(".split .us").textContent = `${100 - share}%`;
+    $$("[data-share-you]").forEach(el => { el.textContent = `${share}%`; }); $$("[data-share-us]").forEach(el => { el.textContent = `${100 - share}%`; });
     $("#fPaid").textContent = solAmt(st.creator_fees_paid_sol || 0);
     if (st.per_user_day) {
       const n = st.per_user_day;
       $("#rDay").textContent = n === 1 ? "One launch per X account a day" : `${n} launches per X account a day`;
-      $("#tRuleDay").textContent = n === 1 ? "One launch per account a day" : `${n} launches per account a day`;
     }
     if (st.min_account_days) {
       $("#rAge").textContent = `X accounts older than ${st.min_account_days} days`;
-      $("#tRuleAge").textContent = `Accounts older than ${st.min_account_days} days`;
     }
     renderWall(coins); renderBars(coins); renderClosest(coins); renderPayouts(d.payouts || []); renderTokens(); renderForm();
     $("#dataNote").textContent = `Live from ${NAME}'s public API, updated ${ago(d.generated_at) || "just now"} ago.`;
