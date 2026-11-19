@@ -3,7 +3,7 @@ import re
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
 
-from ct_agent.brain.grok import GrokMusing, GrokResult
+from ct_agent.brain.claude import ClaudeMusing, ClaudeResult
 from ct_agent.db import rows
 from ct_agent.social.cadence import cadence_once
 
@@ -21,11 +21,11 @@ class _Brain:
         self.goal_ctx = None
 
     def musing(self, ctx):
-        return GrokResult(GrokMusing(tweet="patience is also a position."), "", "m", "h")
+        return ClaudeResult(ClaudeMusing(tweet="patience is also a position."), "", "m", "h")
 
     def goals(self, ctx):
         self.goal_ctx = ctx
-        return GrokResult(GrokMusing(tweet=self.goal), "", "m", "h")
+        return ClaudeResult(ClaudeMusing(tweet=self.goal), "", "m", "h")
 
 
 def _ctx(settings, db, **kw):
@@ -118,7 +118,7 @@ def test_a_goal_post_comes_round_every_few_hours_with_real_numbers(settings, db)
     assert cadence_once(ctx, early, NOW)["cadence"] == "goals"
     body = rows(db, "SELECT body FROM posts WHERE kind='goals'")[0]["body"]
     assert body == "🎯 Progress update\n\n" + _Brain.goal
-    f = ctx.brain.goal_ctx  # what Grok was given: only counts from the database
+    f = ctx.brain.goal_ctx  # what Claude was given: only counts from the database
     assert (f["smart_money_calls_read"], f["calls_bought"], f["calls_refused_for_a_tax_on_every_transfer"],
             f["calls_that_never_ran_30pct_in_6h"], f["take_profits_hit"], f["coins_launched_for_people"]) == (11, 2, 2, 2, 2, 1)
     assert f["next_milestones"] == ["my first fully closed trade, so the scorecard has a real win rate",

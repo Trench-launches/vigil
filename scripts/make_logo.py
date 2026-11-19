@@ -54,7 +54,7 @@ def avatar(px=400) -> Image.Image:
 
 
 def lockup(on_black: bool, ink=WHITE, sub=GREY) -> Image.Image:
-    """The head, then VIGIL, then "POWERED BY GROK" under the name. ink/sub: text colours (dark ones for light backgrounds)."""
+    """The head, then VIGIL, then "POWERED BY CLAUDE" under the name. ink/sub: text colours (dark ones for light backgrounds)."""
     h = 360
     head = cutout("vigil-head.webp", round(h * .78))
     name_f, sub_f = font("seguisb.ttf", 150), font("segoeui.ttf", 34)
@@ -72,7 +72,7 @@ def lockup(on_black: bool, ink=WHITE, sub=GREY) -> Image.Image:
     x0 = head.width + 70
     cx = x0 + name_w / 2
     tracked(d, cx, h * .60, "VIGIL", name_f, ink, .34)
-    tracked(d, cx, h * .79, "POWERED BY GROK", sub_f, sub, .32)
+    tracked(d, cx, h * .79, "POWERED BY CLAUDE", sub_f, sub, .32)
     return out
 
 
@@ -91,7 +91,7 @@ def banner(ss=2) -> Image.Image:
         d = ImageDraw.Draw(im)
         cx = W * .455
         tracked(d, cx, H * .47, "VIGIL", font("seguisb.ttf", 104 * s), WHITE, .34)
-        tracked(d, cx, H * .575, "POWERED BY GROK", font("segoeui.ttf", 20 * s), GREY, .32)
+        tracked(d, cx, H * .575, "POWERED BY CLAUDE", font("segoeui.ttf", 20 * s), GREY, .32)
         tracked(d, cx, H * .675, "Watches every memecoin launch on Solana. Trades in public, losses included.",
                 font("segoeuisl.ttf", 22 * s), (200, 200, 200), 0)
         return im.convert("RGB")

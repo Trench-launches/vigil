@@ -4,7 +4,7 @@ DexScreener's token info as a fallback), plus a quick look at those links: the X
 account's profile and the website's title and summary.
 
 All of it is written by the coin's creator, so it is a claim, not proof. It is
-handed to Grok as untrusted text, next to the third-party evidence.
+handed to Claude as untrusted text, next to the third-party evidence.
 
 The metadata and website fetches only go to public internet addresses (never this
 server's own network), with a short timeout, a size cap and no automatic redirects.

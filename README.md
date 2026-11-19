@@ -1,8 +1,8 @@
-# VIGIL: an open, automated memecoin trader for Solana
+# Buddy: an open, automated memecoin trader for Solana
 
-VIGIL is an AI trading persona that runs in the open. It follows a smart-money scanner's calls on Solana
+Buddy is an AI trading persona that runs in the open. It follows a smart-money scanner's calls on Solana
 memecoins (pump.fun launches and the coins trading on PumpSwap, Raydium and other DEXs), checks each coin
-onchain (who can still mint or freeze it, Token-2022 taxes, who holds the supply), has xAI's **Grok** write its
+onchain (who can still mint or freeze it, Token-2022 taxes, who holds the supply), has Anthropic's **Claude** write its
 read on the coin, trades by fixed rules through **Jupiter** with hard risk limits nothing can override, journals
 every decision in a tamper-evident log, and posts its trades (wins and losses) on X.
 A one-page website shows the journal, scorecard and open positions live.
@@ -23,7 +23,7 @@ static site (`web/`). You bring your own keys. Nothing in the repo talks to anyo
  smart-money scanner (Supabase) ──► caller / trader ──┐       ┌──► social ──► X API (posts, replies)
  Solana RPC (mints, holders) ─────► mint safety,      │       │      outbox: daily cap, idempotent,
  Jupiter (quotes, swaps, prices) ─► Jupiter route,    ▼       │      never blind-retries an ambiguous send
- DexScreener (pools, USD prices) ─► Grok's read ──► SQLite ◄──┴── exits (stop / take-profit / max-hold,
+ DexScreener (pools, USD prices) ─► Claude's read ► SQLite ◄──┴── exits (stop / take-profit / max-hold,
  news RSS / X reads / Twitch ──► research ──────► (append-only        one batched price call per tick)
  (budgeted, attributed)   verify leads onchain    hash-chained journal, token cache)
                                                      ▲
@@ -36,7 +36,7 @@ docker compose), so an X outage can't stop trading and a crash in one worker can
 | Worker | What it does |
 | --- | --- |
 | `research` | Pulls news, X posts and Twitch chat; links mentions to coins only after verifying them onchain |
-| `caller` / `trader` | Copies the scanner's Solana calls, checks they're tradeable, gets Grok's read, buys by rule (paper or live) |
+| `caller` / `trader` | Copies the scanner's Solana calls, checks they're tradeable, gets Claude's read, buys by rule (paper or live) |
 | `exits` | Checks stop-loss, take-profit ladder and max-hold every few seconds |
 | `social` | Writes and sends posts and replies through a rate-limited outbox |
 | `launchpad` | Optional: launches coins for people who ask on X (off by default) |
@@ -48,11 +48,11 @@ docker compose), so an X outage can't stop trading and a crash in one worker can
 | --- | --- |
 | Solana calls only; mints are base58 and case-sensitive, never lowercased | `sources/scanner.py`, `chain/keys.py` |
 | A coin is tradeable only if it's a real mint, nobody can mint or freeze it, no Token-2022 extension can take or tax holders' coins, and Jupiter can route it | `chain/token.py` `safety_blockers`, `sources/scanner.py` |
-| Buy rule: +`CT_SCANNER_TRIGGER_PCT` from the call within `CT_SCANNER_WINDOW_HOURS` (or on the call); Grok never decides the trade | `strategy/engine.py` |
+| Buy rule: +`CT_SCANNER_TRIGGER_PCT` from the call within `CT_SCANNER_WINDOW_HOURS` (or on the call); Claude never decides the trade | `strategy/engine.py` |
 | Liquidity, volume, wash-trade and holder-concentration screen (curves, pools and burns don't count as holders) | `strategy/screen.py`, `chain/token.py` `holder_facts` |
 | Addresses from chat, speech or posts are leads until verified on this chain | `sources/store.py` |
-| Third-party text is fenced as untrusted in the Grok prompt | `brain/grok.py` |
-| Grok cannot override gates, limits or the kill switch | `strategy/engine.py` |
+| Third-party text is fenced as untrusted in the Claude prompt | `brain/claude.py` |
+| Claude cannot override gates, limits or the kill switch | `strategy/engine.py` |
 | Paper first; paper trades labelled and never shown as onchain | `execution/paper.py`, `social/compose.py` |
 | Live needs mode=live, a human review flag, a valid trading-only key, Solana mainnet, and a fresh Jupiter order whose price impact is inside `CT_MAX_SLIPPAGE_BPS` | `execution/live.py` |
 | Position, exposure, daily-loss and daily-entry limits, and a kill switch | `execution/risk.py` |
@@ -75,7 +75,7 @@ cp .env.example .env                     # then fill in what you have (see "Keys
 .venv/bin/pytest                         # the test suite, fully offline
 ```
 
-To make decisions and paper trades, add at least `CT_GROK_API_KEY`. To see the site against your local API:
+To make decisions and paper trades, add at least `CT_ANTHROPIC_API_KEY`. To see the site against your local API:
 
 ```bash
 python -m http.server 5173 -d web        # then open http://localhost:5173
@@ -125,7 +125,7 @@ paper mode. `ctagent check` prints the same review.
 
 | What | Settings | Where |
 | --- | --- | --- |
-| Grok (the brain) | `CT_GROK_API_KEY` | [console.x.ai](https://console.x.ai), API Keys. Billed per use by xAI; separate from X developer keys. |
+| Claude (the brain) | `CT_ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com), Settings, API Keys. Billed per use by Anthropic. Model: `CT_CLAUDE_MODEL` (default `claude-sonnet-5-5`). |
 | X reads | `CT_X_BEARER_TOKEN` | [developer.x.com](https://developer.x.com): create a project and app, copy the Bearer token. X API access is paid. |
 | X posting | `CT_X_API_KEY`, `CT_X_API_SECRET`, `CT_X_ACCESS_TOKEN`, `CT_X_ACCESS_SECRET` | Same app. Set user authentication to Read and write, then generate the Access Token and Secret **while signed in as the bot account**. Or use OAuth 2.0: `CT_X_CLIENT_ID`/`CT_X_CLIENT_SECRET`, then run `ctagent x-login` once. |
 | Solana RPC | `CT_SOLANA_RPC_URL`, `CT_SOLANA_BACKUP_RPC_URL` | The public RPC works for testing. For production use a provider such as [Helius](https://dashboard.helius.dev) (free tier is enough to start; it also serves coin metadata); the URL then contains your key, so treat it as a secret. |
@@ -162,7 +162,7 @@ the repo has configs for Railway and Vercel.
    - Healthcheck path: `/health`, healthcheck timeout: `120` seconds
    - Restart policy: on failure, 10 retries (Railway's default)
 2. Attach a volume mounted at `/app/data` (the database and journal live there).
-3. Add your settings as service **Variables** (never commit them). At minimum `CT_GROK_API_KEY`,
+3. Add your settings as service **Variables** (never commit them). At minimum `CT_ANTHROPIC_API_KEY`,
    `CT_API_ADMIN_TOKEN` and `CT_SITE_ORIGINS=["https://your-site.example"]`.
 4. `.railwayignore` keeps `.env`, data, tests and the site out of the upload.
 5. Optional CI deploys: `.github/workflows/deploy-railway.yml` deploys on every push to `main` after the tests
@@ -180,7 +180,7 @@ committing. Put them in a gitignored `.env.site`:
 SITE_URL=https://www.your-site.example          # required: the site's own address
 SITE_API_URL=https://your-backend.example.com   # required
 SITE_X_HANDLE=YourBot                           # optional, no @
-SITE_NAME=VIGIL                                 # optional
+SITE_NAME=Buddy                                 # optional
 ```
 
 Then `vercel link` once and `scripts/deploy-web.sh`. On another static host, edit `web/config.js` and those
@@ -221,4 +221,4 @@ Interactive docs at `/docs` while the API runs.
 See [CONTRIBUTING.md](CONTRIBUTING.md). To report a vulnerability, follow [SECURITY.md](SECURITY.md) and
 please don't open a public issue.
 
-Released under the [MIT License](LICENSE). VIGIL is an independent project, not affiliated with xAI, X, Solana, Jupiter or pump.fun.
+Released under the [MIT License](LICENSE). Buddy is an independent project, not affiliated with Anthropic, xAI, X, Solana, Jupiter or pump.fun.

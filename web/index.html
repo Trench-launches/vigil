@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VIGIL · powered by Grok</title>
-<meta name="description" content="VIGIL reads thousands of new memecoins a day on Solana, checks every claim onchain with Grok and trades the rare good ones in public. Losses included.">
+<title>Buddy · powered by Claude</title>
+<meta name="description" content="Buddy reads thousands of new memecoins a day on Solana, checks every claim onchain with Claude and trades the rare good ones in public. Losses included.">
 <!-- canonical, og:url, the share image and twitter:site are filled in from SITE_URL and SITE_X_HANDLE by scripts/deploy-web.sh -->
 <link rel="canonical" href="https://example.com/">
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -11,15 +11,15 @@
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://example.com/">
-<meta property="og:title" content="VIGIL, powered by Grok">
-<meta property="og:description" content="An AI, powered by Grok, that watches every memecoin launch on Solana, checks every claim onchain and trades in public. Losses included.">
+<meta property="og:title" content="Buddy, powered by Claude">
+<meta property="og:description" content="An AI, powered by Claude, that watches every memecoin launch on Solana, checks every claim onchain and trades in public. Losses included.">
 <meta property="og:image" content="https://example.com/assets/og-vigil.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="">
 <meta name="twitter:image" content="https://example.com/assets/og-vigil.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..600&family=DM+Sans:opsz,wght@9..40,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 
 
@@ -186,7 +186,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .nav .wrap { display: flex; align-items: center; gap: 20px; height: 64px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--f-display); font-size: 25px; font-weight: 600; letter-spacing: -0.01em; }
 
-/* ---------- PRELOADER: VIGIL's head, the name typed in, then "powered by Grok"; 2s, then it fades away ---------- */
+/* ---------- PRELOADER: VIGIL's head, the name typed in, then "powered by Claude"; 2s, then it fades away ---------- */
 .preload { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: var(--white); animation: plOut .45s ease 2s forwards; }
 @keyframes plOut { to { opacity: 0; visibility: hidden; } }
 .pl-word { display: flex; justify-content: center; gap: 0; height: clamp(56px, 12vw, 96px); }
@@ -1178,6 +1178,697 @@ footer nav a:hover { color: var(--ink); }
   0% { box-shadow: 0 0 0 1px rgba(var(--glow), .5), 0 0 34px rgba(var(--glow), .45), 0 0 0 0 rgba(var(--glow), .35), 0 18px 34px -16px rgba(0,0,0,.9); }
   100% { box-shadow: 0 0 0 1px rgba(var(--glow), .5), 0 0 34px rgba(var(--glow), .45), 0 0 0 14px rgba(var(--glow), 0), 0 18px 34px -16px rgba(0,0,0,.9); } }
 @media (prefers-reduced-motion: reduce) { .btn-cta, .btn-cta::before { transition: none; } .btn-cta:hover, .btn-cta:focus-visible { animation: none; } }
+
+/* ================= BUDDY: warm paper, ink and clay orange ================= */
+/* Last in the sheet, so it wins over the dark blocks above. Claude-style colours and type: an ivory page with a
+   dot grid, near-black ink, clay orange as the one accent; a serif for headlines, a sans for reading and a mono for
+   labels. Buddy (the ant in the suit) is a black silhouette, so he always stands on a light surface. Green and red
+   stay, for gains and losses only. */
+:root {
+  color-scheme: light;
+  --paper: #F5F4ED;       /* the page */
+  --white: #FFFFFF;       /* cards, and text on ink */
+  --surface: #F0EEE6;     /* soft fills: tags, inputs, bars */
+  --line: #E3E0D5;        /* borders and dividers */
+  --ink: #141413;
+  --ink-2: #5E5D59;
+  --ink-3: #75736B;       /* ~4.6:1 on white */
+  --clay: #D97757;        /* the accent */
+  --clay-deep: #C15F3C;   /* the accent as text: ~4.5:1 on white */
+  --clay-soft: #F6E4DA;
+  --kraft: #D4A27F;
+  --blue: var(--clay); --blue-deep: var(--clay-deep); --blue-soft: var(--clay-soft);   /* old names, new colour */
+  --beige: #D4A27F; --sand: #F3E9DC; --sand-ink: #8A5A36; --sand-deep: #EAD9C3;
+  --green: #2E7D4F; --green-soft: #E2F0E6; --coral: #C0392B; --coral-soft: #F8E1DD;
+  --panel: #EEEBE1; --panel-cool: #EEEBE1; --panel-warm: #F3E9DC;
+  --card: #FFFFFF; --card-2: #FAF9F5;
+  --accent: var(--ink);
+  --glow: 217, 119, 87;   /* clay, as r, g, b */
+  --f-display: "Source Serif 4", "Tiempos Headline", Georgia, "Times New Roman", serif;
+  --f-body: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r-card: 14px; --r-panel: 22px; --r-pill: 999px;
+  --shadow: 0 1px 2px rgba(20,20,19,.05), 0 14px 32px -20px rgba(20,20,19,.22);
+  --dots: radial-gradient(rgba(20,20,19,.085) 1px, transparent 1.2px);
+}
+body { background: var(--paper) var(--dots); background-size: 22px 22px; color: var(--ink); }
+::selection { background: var(--clay); color: var(--ink); }
+:focus-visible { outline-color: var(--clay-deep); }
+h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 450; letter-spacing: -0.025em; line-height: 1.04; }
+h1 .blue, h2 .blue { color: var(--clay-deep); font-style: italic; font-weight: 400; }
+.hero h1 { color: var(--ink); font-weight: 450; }
+.hero h1 .blue::after { display: none; }
+.sub { color: var(--ink-2); }
+.nav { background: rgba(245,244,237,.86); }
+.nav.scrolled { border-bottom-color: var(--line); }
+
+/* the wordmark: serif, with Buddy's face as the badge */
+.wordmark-t { font-family: var(--f-display); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-right: 0; color: var(--ink); }
+.nav .wordmark-t, footer .wordmark-t { color: var(--ink); }
+.brand-tag { font-family: var(--f-mono); color: var(--ink-3); font-size: 11px; }
+.brand-tag .ic { color: var(--clay); }
+.nav-links a { font-family: var(--f-mono); font-size: 12.5px; text-transform: none; letter-spacing: 0; color: var(--ink-2); border-radius: 8px; }
+.nav-links a:hover { background: rgba(20,20,19,.05); color: var(--ink); }
+.nav-links a.nav-hl, .nav.open .nav-links a.nav-hl { color: var(--ink); }
+.nav-links a.nav-hl::before { background: var(--clay); box-shadow: none; }
+.nav-links a.nav-hl:hover { color: var(--ink); background: rgba(20,20,19,.05); }
+@media (max-width: 1200px) { .nav.open .nav-links { background: var(--white); } }
+
+/* Buddy's face: the avatar everywhere a small round portrait is used */
+.face { background: var(--sand) url("assets/buddy-face.png") center / cover no-repeat; box-shadow: inset 0 0 0 1px rgba(20,20,19,.1); }
+.xp .face { box-shadow: inset 0 0 0 1px rgba(20,20,19,.08); }
+
+/* buttons: ink and clay, squarer, with a hard offset shadow on hover */
+.btn { border-radius: 10px; font-weight: 600; letter-spacing: -0.005em; transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s, border-color .2s, color .2s; }
+.btn-primary { background: var(--clay); color: var(--ink); border-color: var(--ink); }
+.btn-primary:hover { background: var(--clay); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.btn-dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn-dark:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--clay); }
+.btn-ghost { background: var(--white); color: var(--ink); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--ink); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.buy-btn .soon { background: rgba(20,20,19,.12); color: var(--ink); }
+.buy-btn[aria-disabled="true"]:hover { background: var(--clay); transform: none; box-shadow: none; }
+.btn-cta::before { display: none; }
+.btn-cta:hover, .btn-cta:focus-visible { animation: none; transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--ink); }
+.btn-cta:active { transform: translate(-1px, -1px); box-shadow: 2px 2px 0 var(--ink); }
+.menu-btn, .tnav button, .ca-row button, .ldca button { background: var(--white); border-color: var(--line); color: var(--ink); }
+
+/* tags: mono labels with a clay dot */
+.kicker { font-family: var(--f-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2);
+  background: rgba(255,255,255,.6); border: 1px solid var(--line); border-radius: var(--r-pill); }
+.kicker:not(:has(.ic, .dot))::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--clay); flex: none; }
+.kicker .ic { color: var(--clay-deep); }
+.kicker .dot { color: var(--clay); }
+.kicker.soft { background: transparent; border-color: var(--line); color: var(--ink-2); }
+.pill { font-family: var(--f-mono); }
+.pill.blue { background: var(--clay-soft); color: var(--clay-deep); box-shadow: none; }
+.pill.solid-blue { background: var(--clay); color: var(--ink); }
+.pill.sand, .pill.amber { background: var(--sand); color: var(--sand-ink); box-shadow: none; }
+.pill.grey { background: var(--surface); color: var(--ink-2); box-shadow: none; }
+.pill.ink { background: var(--ink); color: var(--paper); box-shadow: none; }
+.pill.green { background: var(--green-soft); color: var(--green); }
+.pill.coral { background: var(--coral-soft); color: var(--coral); }
+.example { background: var(--white); border-color: var(--line); color: var(--ink-3); }
+.lc-k.sand { background: var(--sand); color: var(--sand-ink); }
+.lc-k.ink { background: var(--ink); color: var(--paper); }
+
+/* surfaces: sand panels with a dot grid, white cards with a hairline */
+.panel { background: var(--panel); border: 1px solid #E2DED2; }
+.panel.grid-bg::before { background-image: radial-gradient(rgba(20,20,19,.13) 1px, transparent 1.3px); background-size: 20px 20px; }
+.card, .lc, .sc-card, .lform, .chat, .lead, .src, .fl, .lcard, .lempty, .lrow2, .msg.att, .msg.scan, .msg.verdict-msg {
+  background: var(--card); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 18px 36px -26px rgba(20,20,19,.3); }
+.float { background: rgba(255,255,255,.92); border: 1px solid var(--line); box-shadow: 0 16px 30px -22px rgba(20,20,19,.4); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.float b { font-family: var(--f-body); font-weight: 700; }
+.float .bar { background: var(--surface); }
+.float .bar i { background: var(--clay); }
+.coin { filter: drop-shadow(0 10px 14px rgba(20,20,19,.18)); }
+.glyph .gl { box-shadow: inset 0 0 0 1px rgba(20,20,19,.12); }
+.coinav { background: linear-gradient(160deg, #FFFFFF, var(--surface)); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
+.coin-logo { background: var(--white); box-shadow: inset 0 0 0 1px rgba(20,20,19,.08); }
+.chip-ic, .src-ic { color: #FFFFFF; box-shadow: none; }
+.sol, .xl, .scan-row .si.sol, .scan-row .si.xl { background: var(--ink); color: #FFFFFF; box-shadow: none; }
+.tile { background: var(--surface); }
+.hero-stats { color: var(--ink-2); }
+.hero-stats b { color: var(--ink); }
+
+/* inputs */
+.lform input, .lform textarea, .ask-bar { background: var(--white); border: 1.5px solid var(--line); color: var(--ink); }
+.lform input { background: var(--card-2); }
+.lform input:focus, .ask-bar:focus-within { background: var(--white); border-color: var(--clay); box-shadow: 0 0 0 3px rgba(var(--glow), .18); }
+.lform label, .lform .lbl { color: var(--ink-2); }
+.lform input::placeholder, .ask-bar textarea::placeholder { color: #9B998F; }
+.lform .btn:disabled, .lform .btn:disabled:hover { opacity: 1; background: var(--surface); color: var(--ink-3); border-color: var(--line); box-shadow: none; transform: none; }
+.ask-send { background: var(--clay); color: var(--ink); }
+.ask-send:hover:not(:disabled) { background: var(--clay-deep); color: var(--white); }
+.ask-send:disabled { background: var(--surface); color: var(--ink-3); box-shadow: inset 0 0 0 1px var(--line); }
+.ask-sugg button { background: var(--white); border-color: var(--line); color: var(--ink-2); font-family: var(--f-mono); font-size: 12px; font-weight: 500; text-transform: none; letter-spacing: 0; }
+.ask-sugg button:hover { border-color: var(--ink); color: var(--ink); }
+.ask-sugg button .ic { color: var(--clay); }
+.ask-points .ic-b { background: var(--clay-soft); color: var(--clay-deep); box-shadow: none; }
+.ca-row { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.ca-row:hover { background: var(--white); box-shadow: inset 0 0 0 1px var(--ink); }
+.ca-row button:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.gate { background: var(--white); border-color: var(--line); color: var(--ink); }
+.gate.ok .ic { color: var(--green); }
+.gate.no { background: var(--coral-soft); border-color: rgba(192,57,43,.25); color: var(--coral); }
+.gate.no .ic { color: var(--coral); }
+
+/* chats: Buddy's replies on white, yours on sand; the decision card in ink and clay */
+.chat { background: var(--card); }
+.chat-h { border-bottom-color: var(--line); }
+.chat-foot { border-top-color: var(--line); color: var(--ink-3); }
+.msg.bot { background: var(--card-2); color: var(--ink); border: 1px solid var(--line); }
+.msg.sys { background: var(--ink); color: var(--paper); }
+.msg.sys code { background: rgba(255,255,255,.14); }
+.msg code { background: rgba(20,20,19,.06); }
+.msg .tag { color: var(--clay-deep); }
+.msg.warn { background: var(--sand); color: var(--sand-ink); }
+.typing { background: var(--card-2); box-shadow: inset 0 0 0 1px var(--line); }
+.vd-head { background: var(--card-2); border-bottom-color: var(--line); }
+.vd-act { font-family: var(--f-mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; box-shadow: none; }
+.vd-act.buy { background: var(--clay); color: var(--ink); }
+.vd-act.watch { background: var(--sand-deep); color: var(--ink); }
+.vd-act.pass { background: var(--ink); color: var(--paper); box-shadow: none; }
+.vd-label b { font-family: var(--f-display); }
+.vd-bar { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.vd-bar i, .wbar i { background: var(--clay); }
+.wprog.done .wbar i { background: var(--kraft); }
+.vd-risk { background: var(--sand); }
+.vd-risk .ri { background: var(--white); color: var(--coral); box-shadow: none; }
+.wrow.bump { background: var(--clay-soft); }
+.spin { border-color: var(--clay-soft); border-top-color: var(--clay); }
+.scan-row .si { background: var(--clay-soft); color: var(--clay-deep); box-shadow: none; }
+.pick { border-color: var(--line); background: rgba(255,255,255,.55); }
+.pick:hover { border-color: var(--ink); }
+.pick[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pick[aria-selected="true"] .pill.ink { background: var(--clay); color: var(--ink); }
+.pick .sym { font-family: var(--f-display); }
+
+/* the phone: a black bezel round an ivory screen */
+.chat.phone { background: var(--card-2); border: 9px solid var(--ink); border-radius: 46px;
+  box-shadow: 0 0 0 1px #2A2926, 0 0 0 3px #8E8B82, 0 0 0 4px #3A3935, 0 40px 70px -36px rgba(20,20,19,.55); }
+.chat.phone::before, .chat.phone::after { background: linear-gradient(90deg, #3A3935, #8E8B82 55%, #4A4945); }
+.phone-bar { color: var(--ink); }
+.home-ind { background: var(--ink); }
+.chat-panel::before { background: radial-gradient(closest-side, rgba(var(--glow), .16), transparent); }
+.lc-scroll, .tslide { scrollbar-color: var(--line) transparent; }
+
+/* X posts: X's own light theme */
+.xtl { background: #FFFFFF; border: 1px solid #E1E8ED; border-radius: 14px; }
+.xp, .xp:hover, .lc .xp:hover, .rec-card .xp:hover { background: #FFFFFF; }
+.tslide .xtl a.xlink:hover .xp { background: #F7F9F9; }
+.xp { color: #0F1419; }
+.xp + .xp { border-top-color: #EFF3F4; }
+.xp-name, .xp-text { color: #0F1419; }
+.xp-meta, .xp-more, .xp-actions { color: #536471; }
+.rec-card .xtl { border-color: #E1E8ED; box-shadow: 0 1px 3px rgba(20,20,19,.06), 0 24px 44px -24px rgba(20,20,19,.4); }
+
+/* sources: Buddy in the middle ring, the wires in clay */
+.src { background: var(--card); }
+.src[aria-pressed="true"] { border-color: var(--ink); box-shadow: 4px 4px 0 var(--clay); }
+.src p code, .lead code { background: var(--surface); }
+.wires path { stroke: var(--clay); opacity: .55; }
+.hub .ring { background: var(--sand); box-shadow: 0 0 0 1px var(--line), 0 0 0 12px rgba(255,255,255,.55), 0 0 0 13px var(--line), 0 0 0 26px rgba(255,255,255,.3); }
+.hub .ring::after { box-shadow: none; animation: none; }
+.hub .ring img { width: 96%; transform: translate(3%, 10%); }
+.hub p { color: var(--ink-2); }
+.lead-note { color: var(--sand-ink); background: var(--sand); }
+
+/* live, record, scorecard */
+.lc-foot { border-top-color: var(--line); }
+.tdots i.on, .post-dots i.on { background: var(--clay); }
+.tmore { background: var(--ink); color: var(--paper); }
+.sc-recent { background: rgba(255,255,255,.7); box-shadow: inset 0 0 0 1px var(--line); }
+.rc { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.sc-net .big, .sc-tile .v, .rec-stats b, .giant { font-family: var(--f-display); font-weight: 450; }
+.spark-tip { background: var(--ink); color: var(--paper); }
+@media (max-width: 1000px) {
+  .live-tabs { background: rgba(255,255,255,.7); box-shadow: inset 0 0 0 1px var(--line); }
+  .live-tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); box-shadow: none; }
+}
+.lsteps b { background: var(--clay); color: var(--ink); font-family: var(--f-mono); }
+.ld-ic { background: var(--clay-soft); }
+.ld-badge { background: var(--clay); color: var(--ink); }
+.ldlinks a, .lcard .lk a, .lcard .lk span, .lrow2 .lk a { background: var(--clay-soft); color: var(--clay-deep); }
+.ldlinks a:hover, .lcard .lk a:hover, .lrow2 .lk a:hover { background: var(--clay); color: var(--ink); }
+.lcredit .ic { color: var(--clay-deep); }
+
+/* ---- scenes: a clay sun behind Buddy, a sand hill under him */
+.hz-sky { background: radial-gradient(46% 64% at 50% 100%, rgba(var(--glow), .16), rgba(var(--glow), .05) 50%, transparent 78%); }
+.hz-orb::before { display: none; }
+.hero-stage { background: var(--panel); border-color: #E2DED2; }
+.hero-stage::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(20,20,19,.11) 1px, transparent 1.3px); background-size: 20px 20px;
+  -webkit-mask-image: radial-gradient(80% 75% at 50% 45%, #000 30%, transparent 90%); mask-image: radial-gradient(80% 75% at 50% 45%, #000 30%, transparent 90%); pointer-events: none; z-index: 0; }
+.hero .hz-orb { top: 12%; height: 72%; }
+.rec-panel, .cta-panel { background: var(--panel); }
+.cta-panel { background: var(--clay); border-color: var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+.cta-panel h2, .cta-panel .sub { color: var(--ink); }
+.cta-panel h2 .blue { color: var(--paper); }
+.cta-panel .btn-primary { background: var(--paper); }
+.cta-panel .btn-primary:hover, .cta-panel .buy-btn[aria-disabled="true"]:hover { background: var(--paper); }
+.cta-panel .btn-dark:hover { box-shadow: 4px 4px 0 var(--paper); }
+.cta-orb .hz { display: none; }   /* on the clay panel the sun is the panel itself */
+.vg-board { bottom: 0; height: 100%; filter: drop-shadow(0 14px 18px rgba(20,20,19,.22)); }
+.vg-holder { right: -9%; height: 44%; }
+/* the launchpad: Buddy and his rocket stand on the top edge of the form's panel, the smoke tucked behind the card */
+.launch-panel { overflow: visible; }
+.vg-rocket { right: 5%; top: 0; height: clamp(150px, 21vh, 220px); width: auto; transform: translateY(-80%); z-index: 0; }
+@media (max-width: 900px) { .vg-rocket { display: none; } }
+
+/* ---- Buddy, wherever he appears: flat 2D cut-outs, a soft paper shadow, a gentle bob */
+.vg { filter: drop-shadow(0 18px 22px rgba(20,20,19,.16)); }
+.vg-hero { bottom: 0; height: 88%; }
+.pl-orb { filter: drop-shadow(0 14px 18px rgba(20,20,19,.18)); }
+.preload { background: var(--paper) var(--dots); background-size: 22px 22px; }
+.pl-word { font-family: var(--f-display); font-weight: 600; letter-spacing: -0.01em; gap: .04em; margin-right: 0; color: var(--ink); }
+.pl-sub { font-family: var(--f-mono); color: var(--ink-3); letter-spacing: .18em; }
+.pl-sub .gk, .pl-sub .st { color: var(--clay-deep); }
+.buddy-tag { position: absolute; z-index: 3; left: 50%; bottom: 5%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px;
+  border-radius: var(--r-pill); background: var(--ink); color: var(--paper); font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.buddy-tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--clay); }
+
+/* ---- the cursor grid over the bare page: ink lines, a clay glow */
+.bg-grid { background-image: linear-gradient(rgba(20,20,19,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(20,20,19,.06) 1px, transparent 1px); }
+.bg-hot { background-image: linear-gradient(rgba(var(--glow), .5) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--glow), .5) 1px, transparent 1px); }
+.bg-glow { background: radial-gradient(360px circle at var(--mx) var(--my), rgba(var(--glow), .08), transparent 70%); }
+
+/* footer */
+footer { color: var(--ink-2); }
+footer .wrap { border-top-color: var(--line); }
+footer nav a:hover { color: var(--clay-deep); }
+.foot, footer { border-top-color: var(--line); }
+
+/* ================= NAV: a floating bar of frosted paper ================= */
+/* The header itself is clear; the bar inside it floats 12px below the top of the screen. Brand on the left (Buddy's
+   face in a clay ring, the wordmark over its tag), the section links centred in one soft group where a white marker
+   slides to the section you're reading, the X and Buy buttons on the right. Below 1200px the links fold into a menu
+   card under the bar. */
+html { scroll-padding-top: 92px; }
+.nav { padding-top: 12px; background: transparent; border-bottom: 0; -webkit-backdrop-filter: none; backdrop-filter: none; pointer-events: none; }
+.nav.scrolled { border-bottom-color: transparent; }
+.nav .wrap { pointer-events: auto; position: relative; display: grid; grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr); align-items: center; gap: 16px;
+  height: 62px; padding: 0 10px 0 12px; border-radius: 18px; background: rgba(255,255,255,.7); border: 1px solid rgba(20,20,19,.08);
+  box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 12px 30px -20px rgba(20,20,19,.28);
+  -webkit-backdrop-filter: saturate(1.3) blur(16px); backdrop-filter: saturate(1.3) blur(16px); transition: background .3s, box-shadow .3s, border-color .3s; }
+.nav.scrolled .wrap { background: rgba(255,255,255,.88); border-color: var(--line); box-shadow: 0 1px 2px rgba(20,20,19,.05), 0 18px 40px -22px rgba(20,20,19,.4); }
+@media (min-width: 1001px) { .hero { min-height: calc(100svh - 74px); } }
+
+/* brand */
+.nav .brand { justify-self: start; gap: 11px; min-width: 0; }
+.nav .brand .face { width: 38px; height: 38px; box-shadow: inset 0 0 0 1px rgba(20,20,19,.1), 0 0 0 2px #FFFFFF, 0 0 0 3.5px var(--clay); }
+.brand-txt { display: grid; gap: 4px; line-height: 1; min-width: 0; }
+.nav .wordmark-t { font-size: 22px; line-height: .9; }
+.nav .brand-tag { margin: 0; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; line-height: 1; }
+
+/* the section links: one soft group, the current one on a sliding white marker with a clay tick */
+.nav-links { position: relative; justify-self: center; margin: 0; gap: 2px; padding: 4px; border-radius: 13px; background: rgba(20,20,19,.045); }
+.nav-links a { position: relative; z-index: 1; font-family: var(--f-body); font-size: 14px; font-weight: 500; letter-spacing: -0.005em; text-transform: none;
+  color: var(--ink-2); padding: 7px 13px; border-radius: 9px; transition: color .2s, background .2s; }
+.nav-links a:hover { color: var(--ink); background: rgba(255,255,255,.55); }
+.nav-links a.on { color: var(--ink); background: transparent; }
+.nav-links a.nav-hl::before { width: 6px; height: 6px; margin-right: 7px; vertical-align: 1.5px; }
+.nav-links::before { content: ""; position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 0; width: var(--iw, 0px); transform: translateX(var(--ix, 0px));
+  border-radius: 9px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(20,20,19,.08), 0 0 0 1px rgba(20,20,19,.06); opacity: 0;
+  transition: transform .45s var(--ease), width .45s var(--ease), opacity .3s; }
+.nav-links.has-on::before { opacity: 1; }
+.nav-links a.on::after { content: ""; position: absolute; left: 50%; bottom: 2px; width: 14px; height: 2px; margin-left: -7px; border-radius: 2px; background: var(--clay); }
+
+/* the buttons */
+.nav-right { justify-self: end; gap: 8px; }
+.nav-right .btn { height: 40px; padding: 0 15px; font-size: 14px; border-radius: 11px; gap: 8px; white-space: nowrap; }
+.nav-right .btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.nav-right .buy-btn[aria-disabled="true"]:hover { transform: none; box-shadow: none; }
+.nav-x { background: transparent; border-color: rgba(20,20,19,.16); }
+.nav-x:hover { background: #FFFFFF; border-color: var(--ink); }
+.nav .buy-btn .soon { font-family: var(--f-mono); font-size: 10px; font-weight: 500; padding: 2px 7px; }
+.nav .menu-btn { width: 40px; height: 40px; border-radius: 11px; background: transparent; border: 1px solid rgba(20,20,19,.16); transition: background .2s, color .2s, border-color .2s; }
+.nav .menu-btn:hover { background: #FFFFFF; border-color: var(--ink); }
+.nav.open .menu-btn { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* below 1200px: brand and buttons in the bar, the links in a card that drops under it */
+@media (max-width: 1200px) {
+  .nav .wrap { grid-template-columns: minmax(0, 1fr) auto; }
+  .nav.open .nav-links { justify-self: stretch; left: 0; right: 0; top: calc(100% + 8px); padding: 8px; gap: 2px; border-radius: 18px; background: #FFFFFF;
+    border: 1px solid var(--line); box-shadow: 0 24px 48px -24px rgba(20,20,19,.45); animation: pop .3s var(--spring); }
+  .nav.open .nav-links::before { display: none; }
+  .nav.open .nav-links a { display: flex; align-items: center; padding: 13px 14px; font-size: 16px; color: var(--ink); border-radius: 12px; }
+  .nav.open .nav-links a:hover { background: var(--surface); }
+  .nav.open .nav-links a.on { background: var(--surface); }
+  .nav.open .nav-links a::after, .nav.open .nav-links a.on::after { content: "\2192"; position: static; width: auto; height: auto; margin: 0 0 0 auto; background: none; color: var(--ink-3); }
+  .nav.open .nav-links a.on::after { color: var(--clay-deep); }
+}
+@media (max-width: 520px) {
+  .nav { padding-top: 8px; }
+  .nav .wrap { height: 58px; padding: 0 8px 0 10px; gap: 10px; border-radius: 16px; }
+  .nav .brand .face { width: 34px; height: 34px; }
+  .nav .wordmark-t { font-size: 21px; }
+  .nav-right { gap: 6px; }
+  .nav-right .btn:not(.buy-btn) { width: 40px; height: 40px; padding: 0; }
+  .nav-right .buy-btn { height: 40px; padding: 0 14px; }
+}
+
+/* ================= FEATURES: what Buddy does, four cards under the scorecard ================= */
+#features { padding-top: clamp(28px, 5vh, 56px); }
+.feats-head .h2 { max-width: 24ch; }
+.feat-grid { margin-top: clamp(22px, 4vh, 40px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(12px, 1.4vw, 20px); }
+.feat { display: flex; flex-direction: column; gap: 10px; padding: clamp(18px, 2vw, 26px); border-radius: 18px; background: var(--card); border: 1px solid var(--line);
+  text-decoration: none; color: var(--ink); box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 18px 36px -28px rgba(20,20,19,.3);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
+.feat:hover { transform: translate(-2px, -2px); border-color: var(--ink); box-shadow: 5px 5px 0 var(--ink); }
+.feat-ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--clay-soft); color: var(--clay-deep); margin-bottom: 6px; }
+.feat-ic .ic { width: 21px; height: 21px; vertical-align: 0; }
+.feat h3 { font-size: clamp(21px, 1.7vw, 25px); font-weight: 500; letter-spacing: -0.02em; }
+.feat p { color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+.feat-more { margin-top: auto; padding-top: 8px; font-family: var(--f-mono); font-size: 12px; color: var(--clay-deep); }
+@media (max-width: 1100px) { .feat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .feat-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ================= APP: a left sidebar holds the whole site; the terminal fills exactly one screen ================= */
+/* Pages are views of this one document (the sidebar switches them; old #section links still land on the right one).
+   The launchpad is its own page with the same sidebar. */
+:root { --side-w: 248px; }
+html { scroll-padding-top: 16px; }
+.app { position: relative; z-index: 1; display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); min-height: 100vh; }
+.main { min-width: 0; }
+.view[hidden] { display: none !important; }
+.view > .sec:first-child { padding-top: clamp(36px, 6vh, 72px); }
+
+/* sidebar */
+.side { position: sticky; top: 0; height: 100vh; z-index: 50; display: flex; flex-direction: column; gap: 4px; padding: 14px 12px 14px;
+  background: rgba(250,249,245,.9); border-right: 1px solid var(--line); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); overflow-y: auto; }
+.side-brand { display: flex; align-items: center; gap: 11px; padding: 6px 8px; text-decoration: none; color: var(--ink); }
+.side > .side-brand { padding-bottom: 14px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.side-brand .face { width: 38px; height: 38px; box-shadow: inset 0 0 0 1px rgba(20,20,19,.1), 0 0 0 2px #FFFFFF, 0 0 0 3.5px var(--clay); }
+.side-brand .wordmark-t { font-size: 22px; line-height: .9; }
+.side-brand .brand-tag { margin: 0; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; line-height: 1; }
+.side-lbl { padding: 8px 12px 4px; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.side-nav { display: grid; gap: 3px; }
+.side-nav a { display: flex; align-items: center; gap: 11px; height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid transparent; text-decoration: none;
+  font-size: 14.5px; font-weight: 500; color: var(--ink-2); transition: background .2s, color .2s, border-color .2s, box-shadow .2s; }
+.side-nav a .ic { width: 17px; height: 17px; color: var(--ink-3); transition: color .2s; }
+.side-nav a:hover { background: rgba(20,20,19,.05); color: var(--ink); }
+.side-nav a.on { background: #FFFFFF; color: var(--ink); border-color: var(--line); box-shadow: 3px 3px 0 var(--clay); }
+.side-nav a.on .ic { color: var(--clay-deep); }
+.side-foot { margin-top: auto; padding-top: 12px; display: grid; gap: 8px; }
+.side-status { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid var(--line); }
+.side-status .dot { color: #B26A1E; }
+.side-status.live .dot { color: var(--green); }
+.side-status.off .dot { color: var(--coral); }
+.side-status b { display: block; font-size: 13.5px; line-height: 1.2; }
+.side-status small { display: block; font-size: 12px; color: var(--ink-3); line-height: 1.3; }
+.side-btn { justify-content: center; height: 40px; padding: 0 14px; font-size: 14px; white-space: nowrap; }
+.side .btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.side .buy-btn[aria-disabled="true"]:hover { transform: none; box-shadow: none; }
+.side .buy-btn .soon { font-family: var(--f-mono); font-size: 10px; padding: 2px 7px; }
+.side-doc { padding: 2px 12px; font-size: 12.5px; color: var(--ink-3); text-decoration: none; }
+.side-doc:hover { color: var(--ink); }
+.mbar, .side-scrim { display: none; }
+
+/* phones and tablets: the sidebar slides in over the page */
+@media (max-width: 1000px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { position: fixed; left: 0; top: 0; bottom: 0; width: min(300px, 86vw); height: auto; background: var(--paper); transform: translateX(-102%);
+    transition: transform .28s var(--ease); box-shadow: 0 0 60px rgba(20,20,19,.25); }
+  body.side-open .side { transform: none; }
+  .side-scrim { display: block; position: fixed; inset: 0; z-index: 49; background: rgba(20,20,19,.32); opacity: 0; pointer-events: none; transition: opacity .25s; }
+  body.side-open .side-scrim { opacity: 1; pointer-events: auto; }
+  .mbar { display: flex; position: sticky; top: 0; z-index: 40; align-items: center; justify-content: space-between; height: 60px; padding: 0 12px 0 8px;
+    background: rgba(245,244,237,.9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .mbar .menu-btn { display: inline-grid; width: 40px; height: 40px; border-radius: 11px; background: #FFFFFF; border: 1px solid var(--line); }
+}
+
+/* ================= TERMINAL ================= */
+.term { height: 100vh; min-height: 640px; display: grid; gap: 12px; padding: 0 18px 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto minmax(0, 1.3fr) minmax(0, 1fr);
+  grid-template-areas: "head head head" "kpis kpis kpis" "chart chart side" "trades journal txs"; }
+body[data-view="terminal"] footer { display: none; }
+
+/* header: title, mode, the command bar, the clock */
+.t-head { grid-area: head; }
+.t-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.t-chip { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 11px; border-radius: 999px; background: #FFFFFF; border: 1px solid var(--line);
+  font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+.t-chip .dot { color: #B26A1E; }
+.t-chip.live .dot { color: var(--green); }
+.t-chip.off .dot { color: var(--coral); }
+.t-chip .sol { font-size: 11px; }
+.t-cmd { margin-left: auto; flex: 0 1 430px; display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 8px 0 14px; border-radius: 12px;
+  background: #FFFFFF; border: 1px solid var(--line); transition: border-color .2s, box-shadow .2s; }
+.t-cmd:focus-within { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(var(--glow), .18); }
+.t-cmd > .ic { width: 16px; height: 16px; color: var(--ink-3); }
+.t-cmd input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 14px; color: var(--ink); }
+.t-cmd input::placeholder { color: #9B998F; }
+.t-cmd kbd { font-family: var(--f-mono); font-size: 11px; padding: 3px 7px; border-radius: 6px; background: var(--surface); color: var(--ink-3); border: 1px solid var(--line); }
+.t-clock { font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* panels */
+.t-panel, .t-kpis { background: #FFFFFF; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 14px 30px -26px rgba(20,20,19,.35); min-width: 0; min-height: 0; }
+.t-panel { display: flex; flex-direction: column; overflow: hidden; }
+.tp-h { flex: none; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 8px 14px; border-bottom: 1px solid var(--line); }
+.tp-l { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+.tp-l::before { content: ""; width: 6px; height: 6px; border-radius: 2px; background: var(--clay); }
+.tp-meta, .tp-more { margin-left: auto; font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
+.tp-meta a { color: inherit; }
+.tp-more, .tp-foot { color: var(--clay-deep); text-decoration: none; }
+.tp-more:hover, .tp-foot:hover { text-decoration: underline; }
+.tp-foot { flex: none; padding: 10px 14px; border-top: 1px solid var(--line); font-family: var(--f-mono); font-size: 11.5px; }
+.tp-list { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 8px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+.tp-list::-webkit-scrollbar { width: 6px; } .tp-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+.tp-empty { margin: 0; padding: 14px 6px; font-size: 13.5px; color: var(--ink-3); }
+
+/* KPIs: one strip, six cells */
+.t-kpis { grid-area: kpis; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.kpi { display: grid; gap: 2px; padding: 11px 16px 12px; min-width: 0; }
+.kpi + .kpi { border-left: 1px solid var(--line); }
+.k-l { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.k-v { font-family: var(--f-display); font-size: clamp(21px, 1.8vw, 28px); font-weight: 450; letter-spacing: -0.02em; line-height: 1.15; white-space: nowrap; font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; }
+.k-v small { font-family: var(--f-body); font-size: .48em; letter-spacing: 0; color: var(--ink-3); margin-left: 4px; }
+.kpi > small { font-size: 12px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* the chart */
+.t-chart { grid-area: chart; }
+.tc-coin { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.tc-coin b { display: block; font-family: var(--f-display); font-size: 19px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.1; }
+.tc-coin small { display: block; font-family: var(--f-mono); font-size: 11px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tc-ic { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--clay-soft); color: var(--clay-deep); flex: none; }
+.tc-ic .ic { width: 16px; height: 16px; vertical-align: 0; }
+.tc-tabs { margin-left: auto; display: flex; gap: 3px; padding: 3px; border-radius: 10px; background: var(--surface); overflow-x: auto; scrollbar-width: none; }
+.tc-tabs button { border: 0; background: transparent; padding: 5px 10px; border-radius: 7px; font-family: var(--f-mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; transition: background .2s, color .2s; }
+.tc-tabs button:hover { color: var(--ink); }
+.tc-tabs button[aria-selected="true"] { background: #FFFFFF; color: var(--ink); box-shadow: 0 1px 2px rgba(20,20,19,.12); }
+.tc-box { position: relative; flex: 1; min-height: 0; background-image: radial-gradient(rgba(20,20,19,.06) 1px, transparent 1.2px); background-size: 18px 18px; }
+.tc-box svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.tc-grid { stroke: rgba(20,20,19,.08); stroke-dasharray: 3 5; }
+.tc-ax { font-family: var(--f-mono); font-size: 10.5px; fill: var(--ink-3); }
+.tc-pill { font-family: var(--f-mono); font-size: 10.5px; font-weight: 600; }
+.tc-b { font-family: var(--f-mono); font-size: 9.5px; font-weight: 700; fill: var(--ink); }
+.tc-empty[hidden] { display: none; }
+.tc-empty { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; padding: 20px; text-align: center; font-size: 14px; color: var(--ink-3); }
+.tc-stats { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; padding: 10px 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-3); }
+.tc-stats b { margin-left: 6px; color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.tc-stats b.up-t { color: var(--green); } .tc-stats b.down-t { color: var(--coral); }
+.tc-stats a { margin-left: auto; font-family: var(--f-mono); font-size: 11.5px; color: var(--clay-deep); text-decoration: none; }
+.tc-stats a:hover { text-decoration: underline; }
+.tc-tabs .up-t { color: var(--green); } .tc-tabs .down-t { color: var(--coral); }
+
+/* the right column: Buddy now, the latest call */
+.t-side { grid-area: side; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 12px; min-height: 0; min-width: 0; }
+.t-buddy { display: grid; grid-template-columns: 68px minmax(0, 1fr); align-items: center; gap: 4px 12px; padding: 12px 14px 12px 10px; }
+.tb-art { position: relative; width: 68px; height: 68px; }
+.tb-art::before { content: ""; position: absolute; inset: 6px 4px 2px; border-radius: 50%; background: var(--clay); }
+.tb-art img { position: relative; width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
+.tb-txt b { display: block; font-family: var(--f-display); font-size: 19px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.15; }
+.tb-txt small { display: block; margin-top: 3px; font-size: 12.5px; color: var(--ink-3); line-height: 1.35; }
+.tb-fun { grid-column: 1 / -1; display: grid; gap: 6px; margin-top: 8px; padding: 10px 2px 0 4px; border-top: 1px solid var(--line); }
+.tb-fun div { display: grid; grid-template-columns: 70px minmax(0, 1fr) 40px; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink-2); }
+.tb-fun i { height: 6px; border-radius: 3px; background: var(--surface); overflow: hidden; }
+.tb-fun i span { display: block; height: 100%; border-radius: 3px; background: var(--clay); transition: width .8s var(--ease); }
+.tb-fun b { text-align: right; font-family: var(--f-mono); font-size: 12px; font-weight: 500; color: var(--ink); }
+.tb-fun small { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.t-call .tcall { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; overflow: hidden; }
+.tcall-top { display: flex; align-items: center; gap: 10px; }
+.tcall-top b { font-family: var(--f-display); font-size: 21px; font-weight: 500; letter-spacing: -0.01em; }
+.tcall p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
+.tcall-conf { margin-top: auto; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px;
+  font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.tcall-conf .vd-bar { margin: 0; }
+.tcall-conf b { font-size: 12px; color: var(--ink); letter-spacing: 0; }
+
+/* the three lists */
+.t-trades { grid-area: trades; } .t-journal { grid-area: journal; } .t-txs { grid-area: txs; }
+.tr-row, .tx-row, .w-row { display: grid; align-items: center; gap: 10px; padding: 8px 6px; border-radius: 10px; transition: background .2s; }
+.tr-row + .tr-row, .tx-row + .tx-row, .w-row + .w-row { box-shadow: 0 -1px 0 var(--line); }
+.tr-row:hover, .tx-row:hover, .w-row:hover { background: var(--card-2); }
+.tr-row, .w-row { grid-template-columns: auto minmax(0, 1fr) auto; }
+.tr-nm, .tx-nm { min-width: 0; }
+.tr-nm b, .tx-nm b { display: block; font-size: 14px; font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tr-nm small, .tx-nm small { display: block; margin-top: 1px; font-size: 12px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tr-pl { text-align: right; font-variant-numeric: tabular-nums; }
+.tr-pl b { display: block; font-family: var(--f-mono); font-size: 13px; font-weight: 600; }
+.tr-pl small { display: block; font-family: var(--f-mono); font-size: 11px; opacity: .8; }
+.tx-row { grid-template-columns: 44px minmax(0, 1fr) auto 18px; }
+.tx-side { font-family: var(--f-mono); font-size: 10.5px; font-weight: 600; letter-spacing: .06em; text-align: center; padding: 3px 0; border-radius: 6px; }
+.tx-side.buy { background: var(--green-soft); color: var(--green); }
+.tx-side.sell { background: var(--coral-soft); color: var(--coral); }
+.tx-amt { font-family: var(--f-mono); font-size: 12.5px; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tx-link { color: var(--ink-3); display: grid; place-items: center; }
+.tx-link:hover { color: var(--clay-deep); }
+.tx-link .ic { width: 14px; height: 14px; vertical-align: 0; }
+.w-row .wchip { font-family: var(--f-mono); font-size: 12px; font-weight: 500; letter-spacing: 0; padding: 3px 9px; }
+
+/* short laptop screens (about 768px tall): the same layout, tighter, so it still fits one screen */
+@media (min-width: 1101px) and (max-height: 860px) {
+  .term { gap: 10px; padding: 0 18px 12px; grid-template-rows: auto auto minmax(0, 1.45fr) minmax(0, 1fr); }
+  .kpi { padding-block: 8px 9px; }
+  .tp-h { min-height: 38px; padding-block: 6px; }
+  .tp-foot { padding-block: 8px; }
+  .t-buddy { grid-template-columns: 54px minmax(0, 1fr); padding-block: 10px; }
+  .tb-art { width: 54px; height: 54px; }
+  .tb-fun { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 2px; padding-top: 8px; }
+  .tb-fun div { display: grid; grid-template-columns: none; gap: 0; }
+  .tb-fun div i, .tb-fun small { display: none; }
+  .tb-fun div b { text-align: left; font-size: 15px; }
+  .tcall { gap: 8px; padding-block: 10px; }
+  .tcall p { -webkit-line-clamp: 2; line-clamp: 2; }
+}
+/* smaller screens: the terminal stacks and the page scrolls */
+@media (max-width: 1280px) { .kpi { padding-inline: 12px; } .t-cmd { flex-basis: 340px; } }
+@media (max-width: 1100px), (max-height: 600px) {
+  .term { height: auto; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: none;
+    grid-template-areas: "head head" "kpis kpis" "chart chart" "side side" "trades journal" "txs txs"; }
+  .t-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kpi:nth-child(4) { border-left: 0; } .kpi:nth-child(n+4) { border-top: 1px solid var(--line); }
+  .t-chart { height: 420px; }
+  .t-side { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: none; }
+  .t-trades .tp-list, .t-journal .tp-list, .t-txs .tp-list { max-height: 360px; }
+  body[data-view="terminal"] footer { display: block; }
+}
+@media (max-width: 700px) {
+  .term { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "kpis" "chart" "side" "trades" "journal" "txs"; padding: 0 12px 18px; }
+  .t-head { flex-wrap: wrap; }
+  .t-cmd { order: 3; flex: 1 0 100%; margin-left: 0; }
+  .t-clock { margin-left: auto; }
+  .t-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi:nth-child(odd) { border-left: 0; } .kpi:nth-child(4) { border-left: 1px solid var(--line); } .kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .t-chart { height: 340px; }
+  .t-side { grid-template-columns: minmax(0, 1fr); }
+  .t-title .t-chip.soft { display: none; }
+}
+
+/* ================= PAGES: every page is a heading bar, then panels at the terminal's width ================= */
+/* The heading bar is the same on every page (and the same as the terminal's and the launchpad's): 69px tall, the
+   title 18px from the sidebar. Under it the content starts 12px down and runs edge to edge with 18px gutters. */
+.p-head, .t-head { height: 69px; display: flex; align-items: center; gap: 14px; min-width: 0; border-bottom: 1px solid var(--line); }
+.p-head { position: sticky; top: 0; z-index: 30; padding: 0 18px; background: rgba(245,244,237,.88); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.t-head { margin: 0 -18px; padding: 0 18px; }
+.p-head h1, .t-title h1 { font-size: 28px; font-weight: 450; letter-spacing: -0.02em; line-height: 1.04; margin: 0; white-space: nowrap; }
+.t-title { gap: 12px; }
+.p-sub { margin: 0; padding-left: 14px; border-left: 1px solid var(--line); font-size: 14px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pg { padding: 12px 18px 16px; }
+footer .wrap { width: auto; max-width: none; margin: 0 18px; }
+footer { padding-top: 8px; }
+.ex-tag { font-family: var(--f-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border: 1px dashed var(--line); padding: 2px 8px; border-radius: 999px; }
+#features, #listens, #think, #follow { scroll-margin-top: 81px; }
+@media (max-width: 1000px) { .p-head { position: static; } #features, #listens, #think, #follow { scroll-margin-top: 12px; } }
+@media (max-width: 700px) {
+  .p-head { padding-inline: 12px; } .pg { padding: 12px 12px 18px; } footer .wrap { margin-inline: 12px; }
+  .t-head { height: auto; margin: 0 -12px; padding: 12px; }
+}
+@media (max-width: 560px) { .p-sub { display: none; } }
+
+/* ---------- ASK: one screen. What to ask on the left, the chat on the right ---------- */
+.ask-pg { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 12px; height: calc(100vh - 69px); min-height: 560px; }
+.ask-copy { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: clamp(18px, 3.2vh, 34px) clamp(18px, 2vw, 30px) 0; overflow: hidden; }
+.ask-copy h2 { font-size: clamp(30px, 3vw, 46px); }
+.ask-lede { margin-top: 14px; max-width: 46ch; font-size: 16px; color: var(--ink-2); }
+.ask-copy .ask-points { margin-top: clamp(16px, 2.6vh, 26px); font-size: 15px; }
+.ask-copy .ask-fine { margin-top: clamp(14px, 2.2vh, 22px); }
+.ask-art { margin-top: auto; align-self: flex-end; flex: 0 1 auto; min-height: 0; height: clamp(130px, 27vh, 250px); width: auto; object-fit: contain; object-position: bottom right; }
+.ask-pg .ask-chat { flex: none; border-radius: 14px; min-height: 0; z-index: auto; }
+@media (max-height: 740px) { .ask-art { display: none; } }
+@media (max-width: 900px) {
+  .ask-pg { grid-template-columns: minmax(0, 1fr); height: auto; min-height: 0; }
+  .ask-copy { padding-bottom: 20px; } .ask-art { display: none; }
+  .ask-pg .ask-chat { height: 560px; }
+}
+
+/* ---------- HOW IT WORKS ---------- */
+.how-pg { display: grid; gap: 12px; }
+.how-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+/* the short version: copy on the left, Buddy in front of his sun on the right */
+.how-hero { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .5fr); align-items: center; gap: 24px; flex-direction: unset; padding: clamp(22px, 3vw, 36px) clamp(20px, 3vw, 44px); }
+.how-copy h2 { margin-top: 12px; font-size: clamp(32px, 3.6vw, 54px); max-width: 17ch; }
+.how-copy p { margin-top: 14px; max-width: 58ch; font-size: 17px; color: var(--ink-2); }
+.how-art { position: relative; justify-self: center; width: min(100%, 230px); aspect-ratio: 1; }
+.how-art .how-sun { position: absolute; inset: 8% 10% 22%; border-radius: 50%; background: var(--clay); box-shadow: 0 0 0 14px rgba(var(--glow), .12); }
+.how-art img { position: absolute; left: 50%; bottom: 0; height: 100%; width: auto; transform: translateX(-50%); }
+
+/* the four steps: Buddy doing each one, a number, a line */
+.how-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.how-step { text-decoration: none; color: var(--ink); transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
+.how-step:hover { transform: translate(-2px, -2px); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.hs-art { flex: none; height: clamp(140px, 17vh, 180px); display: grid; place-items: end center; padding-top: 16px; background: var(--panel) radial-gradient(rgba(20,20,19,.1) 1px, transparent 1.3px) 0 0 / 18px 18px; border-bottom: 1px solid var(--line); }
+.hs-art img { height: 100%; width: auto; max-width: 86%; object-fit: contain; object-position: bottom; display: block; }
+.hs-txt { padding: 14px 16px 18px; }
+.hs-n { font-family: var(--f-mono); font-size: 11.5px; font-weight: 600; letter-spacing: .1em; color: var(--clay-deep); }
+.hs-txt h3 { margin-top: 6px; font-size: 21px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
+.hs-txt p { margin-top: 6px; font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+
+/* two things to try: tap a source, replay a decision */
+.how-demos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.how-demos .t-panel { height: 640px; }
+.hd-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+.hd-lede { font-size: 14.5px; color: var(--ink-2); }
+.hd-next { display: flex; align-items: center; gap: 10px; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.hd-next::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.how-listen .srcs { gap: 8px; }
+.how-listen .src { background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; box-shadow: none; padding: 10px 14px; }
+.how-listen .src:hover { transform: none; border-color: var(--ink-3); }
+.how-listen .src[aria-pressed="false"] { opacity: 1; }
+.how-listen .src[aria-pressed="true"] { background: #FFFFFF; border-color: var(--ink); box-shadow: 3px 3px 0 var(--clay); }
+.how-listen .src p { font-size: 14px; }
+.how-listen .lead { flex: 1; min-height: 0; overflow-y: auto; background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; box-shadow: none; padding: 16px; }
+.how-listen .lead h4 { font-size: 21px; font-weight: 500; }
+.how-think .picks { margin: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.how-think .pick { gap: 8px; padding: 9px 12px; border-radius: 12px; background: var(--card-2); min-width: 0; }
+.how-think .pick:hover { transform: none; }
+.how-think .pick > span:first-child { min-width: 0; }
+.how-think .pick br { display: none; }
+.how-think .pick .sym { display: block; font-size: 17px; line-height: 1.2; }
+.how-think .pick .why { display: block; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.how-think .pick .pill { flex: none; font-size: 10.5px; padding: 3px 8px; }
+.how-think .pick[aria-selected="true"] { background: var(--ink); }
+.how-think .msgs { flex: 1; min-height: 0; padding: 14px; background: var(--card-2); border: 1px solid var(--line); border-radius: 12px; }
+.how-think .msg { font-size: 14.5px; }
+.how-think .msg.bot { background: #FFFFFF; }
+
+/* where next: follow along, or launch a coin */
+.how-end { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 12px; }
+.how-follow { display: block; padding: clamp(22px, 3vw, 36px); background: var(--clay); border-color: var(--ink); }
+.how-follow h2 { font-size: clamp(28px, 3vw, 44px); }
+.how-follow h2 .blue { color: var(--paper); }
+.how-follow p { margin-top: 12px; max-width: 52ch; font-size: 16px; color: var(--ink); }
+.how-follow .btn-primary, .how-follow .buy-btn[aria-disabled="true"]:hover { background: var(--paper); }
+.how-follow .btn-dark:hover { box-shadow: 4px 4px 0 var(--paper); }
+.how-launch { flex-direction: row; align-items: center; gap: 16px; padding: clamp(18px, 2.4vw, 28px); text-decoration: none; color: var(--ink); transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
+.how-launch:hover { transform: translate(-2px, -2px); border-color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.hl-txt { flex: 1; min-width: 0; }
+.hl-txt h3 { margin-top: 12px; font-size: 24px; font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; }
+.hl-txt p { margin-top: 8px; font-size: 14.5px; color: var(--ink-2); }
+.hl-more { display: inline-block; margin-top: 12px; font-family: var(--f-mono); font-size: 12px; color: var(--clay-deep); }
+.how-launch img { flex: none; height: clamp(120px, 14vw, 170px); width: auto; }
+
+@media (max-width: 1100px) {
+  .how-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .how-demos, .how-end { grid-template-columns: minmax(0, 1fr); }
+  .how-demos .t-panel { height: 600px; }
+}
+@media (max-width: 700px) {
+  .how-hero { grid-template-columns: minmax(0, 1fr); }
+  .how-art { width: 170px; order: -1; justify-self: start; }
+  .how-think .picks { grid-template-columns: minmax(0, 1fr); }
+  .how-demos .t-panel { height: auto; } .how-think .msgs { height: 420px; flex: none; } .how-listen .lead { flex: none; }
+  .how-launch img { height: 100px; }
+}
+@media (max-width: 480px) { .how-steps { grid-template-columns: minmax(0, 1fr); } }
+
+/* the terminal's journal: Buddy's own posts on X, newest first */
+.j-row { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 9px 6px; border-radius: 10px; text-decoration: none; color: inherit; transition: background .2s; }
+.j-row + .j-row { box-shadow: 0 -1px 0 var(--line); }
+.j-row:hover { background: var(--card-2); }
+.j-row .face { width: 26px; height: 26px; }
+.j-body { min-width: 0; }
+.j-top { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.j-top b { font-size: 13.5px; font-weight: 700; }
+.j-top small { font-size: 12px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.j-body p { margin: 2px 0 0; font-size: 13px; line-height: 1.45; color: var(--ink); white-space: pre-line; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+.j-body .tag { color: var(--clay-deep); font-weight: 600; }
+.tp-x { display: grid; place-items: center; width: 26px; height: 26px; margin-right: -4px; border-radius: 7px; color: var(--ink-2); transition: background .2s, color .2s; }
+.tp-x:hover { background: var(--surface); color: var(--ink); }
+.tp-x .ic { width: 13px; height: 13px; vertical-align: 0; }
+button.tp-more { border: 0; background: none; padding: 0; cursor: pointer; font-family: var(--f-mono); font-size: 11.5px; }
 </style>
 <!-- Icons: brand marks from Simple Icons (CC0), UI icons from Lucide (ISC) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1226,338 +1917,210 @@ footer nav a:hover { color: var(--ink); }
 <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
 <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /> <path d="M20 3v4" /> <path d="M22 5h-4" /> <path d="M4 17v2" /> <path d="M5 18H3" /></symbol>
 <symbol id="orb-lg" viewBox="0 0 400 400">
-  <defs>
-    <radialGradient id="orbCorona" cx="200" cy="200" r="200" gradientUnits="userSpaceOnUse">
-      <stop offset=".5" stop-color="#DEE6FF" stop-opacity="0"/><stop offset=".535" stop-color="#DEE6FF" stop-opacity=".6"/>
-      <stop offset=".58" stop-color="#DEE6FF" stop-opacity=".24"/><stop offset=".72" stop-color="#DEE6FF" stop-opacity=".07"/>
-      <stop offset="1" stop-color="#DEE6FF" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="orbRim" x1="0" y1="94" x2="0" y2="306" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".45"/><stop offset="1" stop-color="#FFFFFF"/>
-    </linearGradient>
-  </defs>
-  <circle cx="200" cy="200" r="200" fill="url(#orbCorona)"/>
-  <circle cx="200" cy="200" r="106" fill="#000"/>
-  <circle cx="200" cy="200" r="99" fill="none" stroke="#FFFFFF" stroke-opacity=".07" stroke-width="5"/>
-  <circle cx="200" cy="200" r="106" fill="none" stroke="url(#orbRim)" stroke-width="2.4"/>
+  <circle cx="200" cy="200" r="196" fill="#D97757" fill-opacity=".12"/>
+  <circle cx="200" cy="200" r="168" fill="none" stroke="#D97757" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="3 7"/>
+  <circle cx="200" cy="200" r="140" fill="#D97757"/>
 </symbol>
 <symbol id="planet" viewBox="0 0 1000 300" preserveAspectRatio="none">
-  <defs>
-    <linearGradient id="planetEdge" x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-    <radialGradient id="planetShine" cx="500" cy="205" r="460" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 133) scale(1 .35)">
-      <stop offset="0" stop-color="#DEE6FF" stop-opacity=".09"/><stop offset="1" stop-color="#DEE6FF" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <path d="M0 262 Q 500 148 1000 262 V 300 H 0 Z" fill="#000"/>
-  <path d="M0 262 Q 500 148 1000 262 V 300 H 0 Z" fill="url(#planetShine)"/>
-  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="url(#planetEdge)" stroke-opacity=".08" stroke-width="16" vector-effect="non-scaling-stroke"/>
-  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="url(#planetEdge)" stroke-opacity=".2" stroke-width="5" vector-effect="non-scaling-stroke"/>
-  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="url(#planetEdge)" stroke-width="1.4" vector-effect="non-scaling-stroke"/>
+  <path d="M0 262 Q 500 148 1000 262 V 300 H 0 Z" fill="#E4D9C6"/>
+  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="#141413" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
 </symbol>
 </svg>
 
-<div class="preload" id="preload" aria-hidden="true"><div><img class="pl-orb" src="assets/vigil-head.webp" alt="" width="619" height="512" decoding="async" fetchpriority="high"><div class="pl-word"><span style="--i:0">V</span><span style="--i:1">I</span><span style="--i:2">G</span><span style="--i:3">I</span><span style="--i:4">L</span></div><p class="pl-sub"><span class="st" style="--i:0"><svg class="ic"><use href="#i-sparkles"/></svg> </span><span style="--i:1">p</span><span style="--i:2">o</span><span style="--i:3">w</span><span style="--i:4">e</span><span style="--i:5">r</span><span style="--i:6">e</span><span style="--i:7">d</span><span style="--i:8"> </span><span style="--i:9">b</span><span style="--i:10">y</span><span style="--i:11"> </span><span class="gk" style="--i:12">G</span><span class="gk" style="--i:13">r</span><span class="gk" style="--i:14">o</span><span class="gk" style="--i:15">k</span></p></div></div>
-
-<header class="nav" id="nav">
-  <div class="wrap">
-    <a class="brand" href="#top" aria-label="VIGIL home, powered by Grok"><span class="face" aria-hidden="true"></span><span class="wordmark-t">VIGIL</span><span class="brand-tag">powered by Grok</span></a>
-    <nav class="nav-links" id="navLinks" aria-label="Sections">
-      <a href="#ask">Ask VIGIL</a>
-      <a href="#listens">Sources</a>
-      <a href="#think">How it thinks</a>
-      <a href="#launch" class="nav-hl">Launch a coin</a>
-      <a href="#live">Live</a>
-      <a href="#record">Journal</a>
-    </nav>
-    <div class="nav-right">
-      <a class="btn btn-primary btn-sm buy-btn" href="#follow" aria-disabled="true"><span class="face" aria-hidden="true"></span><span class="lbl">Buy $VIGIL</span><span class="lbl-s">Buy</span><span class="soon">soon</span></a>
-      <a class="btn btn-dark btn-sm" data-x-link href="https://x.com/" target="_blank" rel="noopener" aria-label="Follow VIGIL on X"><svg class="ic"><use href="#b-x"/></svg><span class="lbl"> Follow</span></a>
-      <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"><svg class="ic ic-open"><use href="#i-menu"/></svg><svg class="ic ic-close"><use href="#i-x"/></svg></button>
-    </div>
-  </div>
-</header>
+<div class="preload" id="preload" aria-hidden="true"><div><img class="pl-orb" src="assets/buddy.webp" alt="" width="533" height="656" decoding="async" fetchpriority="high"><div class="pl-word"><span style="--i:0">B</span><span style="--i:1">u</span><span style="--i:2">d</span><span style="--i:3">d</span><span style="--i:4">y</span></div><p class="pl-sub"><span class="st" style="--i:0"><svg class="ic"><use href="#i-sparkles"/></svg> </span><span style="--i:1">p</span><span style="--i:2">o</span><span style="--i:3">w</span><span style="--i:4">e</span><span style="--i:5">r</span><span style="--i:6">e</span><span style="--i:7">d</span><span style="--i:8"> </span><span style="--i:9">b</span><span style="--i:10">y</span><span style="--i:11"> </span><span class="gk" style="--i:12">C</span><span class="gk" style="--i:13">l</span><span class="gk" style="--i:14">a</span><span class="gk" style="--i:15">u</span><span class="gk" style="--i:16">d</span><span class="gk" style="--i:17">e</span></p></div></div>
 
 <div class="bg-fx" id="bgFx" aria-hidden="true"><i class="bg-grid"></i><i class="bg-hot"></i><i class="bg-glow"></i></div>
-<main id="top">
+<div class="app">
 
-<!-- 1 HERO: an AI that watches every launch so you don't have to -->
-<section class="hero" aria-labelledby="h1">
-  <div class="wrap center">
-    <div class="kickers"><span class="kicker"><svg class="ic"><use href="#i-sparkles"/></svg> VIGIL, powered by Grok</span><span class="kicker soft"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span> Trading memecoins on Solana</span></div>
-    <h1 id="h1">I watch every launch<br><span class="blue">so you don't have to.</span></h1>
-    <p class="sub">VIGIL reads thousands of new memecoins a day, checks every claim onchain with Grok and trades the rare good ones in public. Losses included.</p>
-    <div class="ctas">
-      <a class="btn btn-primary btn-cta" href="#think">Watch it think <span class="arr">→</span></a>
-      <a class="btn btn-ghost" href="#live">See it live</a>
-    </div>
-    <div class="panel hero-stage" id="stage">
-      <!-- the VIGIL orb rising over the horizon, VIGIL waving in front of it -->
-      <div class="hz" aria-hidden="true"><i class="hz-sky"></i><span class="hz-orb"><svg class="orb-svg" viewBox="0 0 400 400" aria-hidden="true"><use href="#orb-lg"/></svg></span><svg class="hz-planet" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><use href="#planet"/></svg></div>
-      <img class="vg vg-hero" fetchpriority="high" src="assets/vigil-wave.webp" alt="VIGIL, a small white robot with a headset, waving" width="663" height="900">
-      <div class="float f1" data-depth="18">
-        <div class="row"><span class="coinav" data-coin="blue" data-sym="HATCH" style="width:22px;height:22px"></span><b id="hfWatch">Watching $HATCH</b><span class="dot pulse" style="color:var(--green)"></span></div>
-        <div class="bar"><i id="heroBar" style="width:91%"></i></div>
-        <small id="heroBarTxt">pump.fun curve · buys speeding up</small>
-      </div>
-      <div class="float f2" data-depth="-14">
-        <div class="row"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span><span class="pill green" id="hfChecks"><svg class="ic"><use href="#i-badge-check"/></svg> 4/4 checks</span></div>
-        <small id="hfLead">9wFq…pump is a real pump.fun launch</small>
-      </div>
-      <div class="float f3" data-depth="22">
-        <div class="row"><span class="pill blue" id="hfCallPill">TEST BUY</span><b id="hfCallSym">$HATCH</b></div>
-        <small class="onchain"><svg class="ic solu"><use href="#b-sol"/></svg> <span id="hfCallTxt">0.5 SOL · risk: one wallet is 35% of buys</span></small>
-      </div>
-      <div class="float f4" data-depth="-20">
-        <div class="row"><span class="pill ink"><svg class="ic"><use href="#i-circle-stop"/></svg> PASS</span><b id="hfPassSym">$JOLLY</b></div>
-        <small class="onchain"><svg class="ic"><use href="#i-wallet"/></svg> <span id="hfPassTxt">dev wallet bought 52% of the curve</span></small>
-      </div>
-    </div>
-    <div class="hero-stats"><span class="onchain"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span><span><b id="hsCalls" data-count="148">148</b> smart-money calls today</span></span><span class="onchain"><svg class="ic"><use href="#i-shield-check"/></svg><span><b id="hsScreened" data-count="61">61</b> screened onchain</span></span><span class="onchain"><svg class="ic"><use href="#i-trending-up"/></svg><span><b id="hsBought" data-count="3">3</b> bought</span></span></div>
+<!-- the sidebar: the whole site's structure. On phones it slides in from the left. -->
+<aside class="side" id="side" aria-label="Site">
+  <a class="side-brand" href="#terminal" aria-label="Buddy, powered by Claude: the terminal"><span class="face" aria-hidden="true"></span><span class="brand-txt"><span class="wordmark-t">Buddy</span><span class="brand-tag">powered by Claude</span></span></a>
+  <span class="side-lbl">Menu</span>
+  <nav class="side-nav" aria-label="Pages">
+    <a href="#terminal" data-v="terminal"><svg class="ic"><use href="#i-chart-no-axes-column"/></svg>Terminal</a>
+    <a href="#ask" data-v="ask"><svg class="ic"><use href="#i-message-circle"/></svg>Ask Buddy</a>
+    <a href="#how" data-v="how"><svg class="ic"><use href="#i-layers"/></svg>How it works</a>
+    <a href="launchpad.html"><svg class="ic"><use href="#i-rocket"/></svg>Launchpad</a>
+  </nav>
+  <div class="side-foot">
+    <div class="side-status" id="sideStatus"><span class="dot pulse" aria-hidden="true"></span><div><b id="sideMode">Testing phase</b><small id="sideModeS">Simulated trades, not onchain</small></div></div>
+    <a class="btn btn-ghost side-btn" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#b-x"/></svg> Follow on X</a>
+    <a class="btn btn-primary side-btn buy-btn" href="#terminal" aria-disabled="true">Buy $BUDDY<span class="soon">soon</span></a>
+    <a class="side-doc" href="https://github.com/Trench-launches/vigil#readme" target="_blank" rel="noopener">Docs on GitHub ↗</a>
   </div>
-</section>
+</aside>
+<div class="side-scrim" id="sideScrim" aria-hidden="true"></div>
 
-<!-- 5b ASK: now ask it yourself -->
-<section class="sec ask" id="ask" aria-labelledby="h-ask">
-  <div class="wrap">
-    <div>
-      <span class="kicker"><svg class="ic"><use href="#i-sparkles"/></svg> Ask VIGIL</span>
-      <h2 class="h2" id="h-ask">Got a coin in mind? <span class="blue">Ask VIGIL.</span></h2>
-      <p class="sub">Paste a Solana contract address or a $ticker. VIGIL researches it with Grok, the way it researches its own trades, and tells you what it finds.</p>
+<div class="main" id="top">
+<!-- phones and tablets: a slim bar with the brand and the menu button -->
+<header class="mbar">
+  <a class="side-brand" href="#terminal" aria-label="Buddy: the terminal"><span class="face" aria-hidden="true"></span><span class="brand-txt"><span class="wordmark-t">Buddy</span><span class="brand-tag">powered by Claude</span></span></a>
+  <button class="menu-btn" id="sideBtn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="side"><svg class="ic"><use href="#i-menu"/></svg></button>
+</header>
+
+<!-- TERMINAL: the dashboard. One screen on a desktop: the lists scroll inside their panels, the page doesn't. -->
+<div class="view term" id="terminal" data-view>
+  <header class="t-head">
+    <div class="t-title"><h1>Terminal</h1><span class="t-chip" id="tMode"><span class="dot pulse"></span>Testing phase</span><span class="t-chip soft"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span>Solana</span></div>
+    <form class="t-cmd" id="tCmd" role="search"><svg class="ic"><use href="#i-search"/></svg><label class="sr-only" for="tCmdIn">Ask Buddy about a coin</label><input id="tCmdIn" maxlength="500" placeholder="Ask Buddy about a coin: a contract or a $ticker" autocomplete="off"><kbd>↵</kbd></form>
+    <span class="t-clock" id="tClock">--:--:-- UTC</span>
+  </header>
+
+  <section class="t-kpis" aria-label="Performance">
+    <div class="kpi"><span class="k-l">Net P&amp;L</span><b class="k-v" id="kNet">—</b><small id="kNetS"></small></div>
+    <div class="kpi"><span class="k-l">Win rate</span><b class="k-v" id="kRate">—</b><small id="kRateS"></small></div>
+    <div class="kpi"><span class="k-l">Trades</span><b class="k-v" id="kTaken">—</b><small id="kTakenS"></small></div>
+    <div class="kpi"><span class="k-l">Avg hold</span><b class="k-v" id="kHold">—</b><small id="kHoldS"></small></div>
+    <div class="kpi"><span class="k-l">Best trade</span><b class="k-v" id="kBest">—</b><small id="kBestS"></small></div>
+    <div class="kpi"><span class="k-l">Worst trade</span><b class="k-v" id="kWorst">—</b><small id="kWorstS"></small></div>
+  </section>
+
+  <section class="t-panel t-chart" aria-label="Chart">
+    <div class="tp-h"><div class="tc-coin" id="tcCoin"></div><div class="tc-tabs" id="tcTabs" role="tablist" aria-label="What the chart shows"></div></div>
+    <div class="tc-box" id="tcBox"><svg id="tcSvg" aria-hidden="true"></svg><p class="tc-empty" id="tcEmpty" hidden></p></div>
+    <div class="tc-stats" id="tcStats"></div>
+  </section>
+
+  <div class="t-side">
+    <section class="t-panel t-buddy" aria-label="Buddy right now">
+      <div class="tb-art" aria-hidden="true"><img src="assets/buddy-binoculars.webp" alt="" width="582" height="700" decoding="async"></div>
+      <div class="tb-txt"><b id="tbState">On watch</b><small id="tbSub">Loading…</small></div>
+      <div class="tb-fun" id="tbFun"></div>
+    </section>
+    <section class="t-panel t-call" aria-label="Latest call">
+      <div class="tp-h"><span class="tp-l">Latest call</span><span class="tp-meta" id="tCallTime"></span></div>
+      <div class="tcall" id="tCall"></div>
+      <a class="tp-foot" href="#think">Replay its thinking →</a>
+    </section>
+  </div>
+
+  <section class="t-panel t-trades" aria-label="Recent trades">
+    <div class="tp-h"><span class="tp-l">Recent trades</span><button class="tp-more" type="button" id="tPnlBtn">P&amp;L chart →</button></div>
+    <div class="tp-list" id="tTrades"></div>
+  </section>
+  <section class="t-panel t-journal" aria-label="Journal">
+    <div class="tp-h"><span class="tp-l">Journal</span><span class="tp-meta" id="tJourMeta"></span><a class="tp-x" data-x-link href="https://x.com/" target="_blank" rel="noopener" aria-label="Buddy on X"><svg class="ic"><use href="#b-x"/></svg></a></div>
+    <div class="tp-list" id="tJournal"></div>
+  </section>
+  <section class="t-panel t-txs" aria-label="Transactions">
+    <div class="tp-h"><span class="tp-l">Transactions</span><span class="tp-meta" id="tTxMeta"></span></div>
+    <div class="tp-list" id="tTxs"></div>
+  </section>
+</div>
+
+<!-- ASK: chat with Buddy about any coin. One screen: what to ask on the left, the chat on the right. -->
+<div class="view" id="ask-view" data-view hidden>
+<header class="p-head"><h1>Ask Buddy</h1><p class="p-sub">Research any Solana coin with Claude</p></header>
+<section class="pg ask-pg" id="ask" aria-labelledby="h-ask">
+  <div class="t-panel ask-info">
+    <div class="tp-h"><span class="tp-l">How to ask</span><span class="tp-meta">10 questions an hour</span></div>
+    <div class="ask-copy">
+      <h2 id="h-ask">Got a coin in mind? <span class="blue">Ask Buddy.</span></h2>
+      <p class="ask-lede">Paste a Solana contract address or a $ticker. Buddy researches it with Claude, the way it researches its own trades, and tells you what it finds.</p>
       <ul class="ask-points">
         <li><span class="ic-b"><svg class="ic"><use href="#i-shield-check"/></svg></span>Checked onchain, live: curve, pool, who's buying</li>
         <li><span class="ic-b"><svg class="ic"><use href="#i-users"/></svg></span>What people are saying, and whether it holds up</li>
-        <li><span class="ic-b"><svg class="ic"><use href="#i-notebook-pen"/></svg></span>What VIGIL decided, if it looked at it already</li>
+        <li><span class="ic-b"><svg class="ic"><use href="#i-notebook-pen"/></svg></span>What Buddy decided, if it looked at it already</li>
       </ul>
-      <p class="ask-fine"><svg class="ic"><use href="#i-lock"/></svg> 10 questions an hour per visitor. Research only, not financial advice.</p>
+      <p class="ask-fine"><svg class="ic"><use href="#i-lock"/></svg> Research only, not financial advice.</p>
+      <img class="ask-art" src="assets/buddy-magnify.webp" alt="" aria-hidden="true" width="799" height="900" decoding="async">
     </div>
-    <div class="panel grid-bg ask-panel" style="background:var(--panel-cool)">
-      <div class="chat ask-chat">
-        <div class="chat-h"><span class="face"></span><div><b>VIGIL</b><small>Research with Grok</small></div><span class="pill blue" id="askLeft">10 an hour</span></div>
-        <div class="msgs" id="askMsgs" aria-live="polite"><div class="msg bot">Hi, I'm VIGIL. Paste a Solana contract address or a $ticker and I'll dig into it with Grok: the onchain numbers, what people are saying, and what I made of it.</div></div>
-        <div class="ask-sugg" id="askSugg"></div>
-        <form class="ask-bar" id="askForm"><label class="sr-only" for="askIn">Ask VIGIL about a coin</label><textarea id="askIn" rows="1" maxlength="500" placeholder="Paste a contract or a $ticker"></textarea><button class="ask-send" id="askSend" type="submit" aria-label="Send" disabled><svg class="ic"><use href="#i-arrow-up"/></svg></button></form>
-        <div class="chat-foot"><span>Research, not financial advice.</span><span class="num" id="askCount">0/500</span></div>
+  </div>
+  <div class="t-panel chat ask-chat">
+    <div class="chat-h"><span class="face"></span><div><b>Buddy</b><small>Research with Claude</small></div><span class="pill blue" id="askLeft">10 an hour</span></div>
+    <div class="msgs" id="askMsgs" aria-live="polite"><div class="msg bot">Hi, I'm Buddy. Paste a Solana contract address or a $ticker and I'll dig into it with Claude: the onchain numbers, what people are saying, and what I made of it.</div></div>
+    <div class="ask-sugg" id="askSugg"></div>
+    <form class="ask-bar" id="askForm"><label class="sr-only" for="askIn">Ask Buddy about a coin</label><textarea id="askIn" rows="1" maxlength="500" placeholder="Paste a contract or a $ticker"></textarea><button class="ask-send" id="askSend" type="submit" aria-label="Send" disabled><svg class="ic"><use href="#i-arrow-up"/></svg></button></form>
+    <div class="chat-foot"><span>Research, not financial advice.</span><span class="num" id="askCount">0/500</span></div>
+  </div>
+</section>
+</div>
+
+<!-- HOW IT WORKS: the short version, the four steps, two things to try, then where to go next -->
+<div class="view" id="how" data-view hidden>
+<header class="p-head"><h1>How it works</h1><p class="p-sub">How Buddy finds, checks and trades a coin</p></header>
+<div class="pg how-pg">
+
+  <section class="t-panel how-hero" aria-labelledby="h-how">
+    <div class="how-copy">
+      <span class="tp-l">The short version</span>
+      <h2 id="h-how">I watch every launch <span class="blue">so you don't have to.</span></h2>
+      <p>Buddy reads thousands of new memecoins a day, checks every claim onchain with Claude and trades the rare good ones in public. Losses included.</p>
+      <div class="how-btns"><a class="btn btn-primary" href="#terminal">Open the terminal <span class="arr">→</span></a><a class="btn btn-ghost" href="#ask">Ask Buddy about a coin</a></div>
+    </div>
+    <div class="how-art" aria-hidden="true"><span class="how-sun"></span><img src="assets/buddy.webp" alt="" width="533" height="656" decoding="async"></div>
+  </section>
+
+  <section class="how-steps" id="features" aria-label="What Buddy does, in four steps">
+    <a class="t-panel how-step" href="#listens">
+      <div class="hs-art"><img src="assets/buddy-binoculars.webp" alt="" width="582" height="700" decoding="async"></div>
+      <div class="hs-txt"><span class="hs-n">01</span><h3>Watches every launch</h3><p>Smart-money calls, X, Twitch and the news: thousands of new Solana memecoins a day.</p></div>
+    </a>
+    <a class="t-panel how-step" href="#listens">
+      <div class="hs-art"><img src="assets/buddy-magnify.webp" alt="" width="799" height="900" decoding="async"></div>
+      <div class="hs-txt"><span class="hs-n">02</span><h3>Checks it onchain</h3><p>The curve, the pool, who's buying and who deployed it. A claim without proof doesn't count.</p></div>
+    </a>
+    <a class="t-panel how-step" href="#think">
+      <div class="hs-art"><img src="assets/buddy-desk.webp" alt="" width="900" height="885" decoding="async"></div>
+      <div class="hs-txt"><span class="hs-n">03</span><h3>Thinks out loud</h3><p>Claude weighs the facts and Buddy's own past mistakes, then explains every call it makes.</p></div>
+    </a>
+    <a class="t-panel how-step" href="#terminal">
+      <div class="hs-art"><img src="assets/buddy-board.webp" alt="" width="882" height="900" decoding="async"></div>
+      <div class="hs-txt"><span class="hs-n">04</span><h3>Trades in public</h3><p>Small, same-size trades with hard rules. Every buy, sell, pass and loss is posted to X.</p></div>
+    </a>
+  </section>
+
+  <div class="how-demos">
+    <section class="t-panel how-listen" id="listens" aria-labelledby="h-listen">
+      <div class="tp-h"><span class="tp-l" id="h-listen">Where it listens</span><span class="ex-tag" id="srcEx">example</span><span class="tp-meta">tap a source</span></div>
+      <div class="hd-body">
+        <p class="hd-lede">X posts, Twitch streams and the news all feed in. Every quote keeps who said it, when, and a link.</p>
+        <div class="srcs" id="srcs"></div>
+        <span class="hd-next">What Buddy makes of it</span>
+        <div class="lead" id="leadCard" aria-live="polite"></div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- 3 LISTENS: hears everything, one lead at a time -->
-<section class="sec" id="listens" aria-labelledby="h-listen">
-  <div class="wrap center">
-    <span class="kicker">Listening</span>
-    <h2 class="h2" id="h-listen">It listens everywhere.<br><span class="blue">Then it asks for proof.</span></h2>
-    <p class="sub">X posts, Twitch streams and the news all feed in. Every quote keeps who said it, when, and a link. Tap a source.</p>
-    <div class="panel grid-bg listen-panel" id="listenPanel" style="text-align:left">
-      <svg class="wires" id="wires" aria-hidden="true"></svg>
-      <div class="srcs" id="srcs"></div>
-      <div class="hub" aria-hidden="true"><div class="ring"><img src="assets/vigil-head.webp" alt="" width="619" height="512" decoding="async" fetchpriority="low"></div><p>VIGIL is listening</p></div>
-      <div class="lead" id="leadCard" aria-live="polite"></div>
-    </div>
-  </div>
-</section>
-
-<!-- 5 THINKS: it thinks out loud -->
-<section class="sec think" id="think" aria-labelledby="h-think">
-  <div class="wrap">
-    <div>
-      <span class="kicker">How it thinks</span>
-      <h2 class="h2" id="h-think">It thinks out loud. <span class="blue">You can check its homework.</span></h2>
-      <p class="sub">Grok reasons over the verified facts, the onchain numbers and VIGIL's past mistakes. Pick a token to replay its thinking.</p>
-      <div class="picks" role="tablist" aria-label="Decisions (example data)" id="picks"></div>
-    </div>
-    <div class="chat-panel">
-      <img class="vg vg-holder" src="assets/vigil-phone.webp" alt="" aria-hidden="true" width="498" height="900" decoding="async" fetchpriority="low">
-      <div class="chat phone">
-        <div class="phone-bar" aria-hidden="true"><span class="time">9:41</span><span class="island"></span><span class="sys"><svg viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12"><path d="M1.64 4.64a9 9 0 0 1 12.72 0M3.76 6.76a6 6 0 0 1 8.48 0" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M8 11 5.88 8.88a3 3 0 0 1 4.24 0z" fill="currentColor"/></svg><svg class="bat" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="currentColor"/><rect x="24.5" y="4.5" width="1.6" height="4" rx=".8" fill="currentColor" opacity=".4"/></svg></span></div>
-        <div class="chat-h"><span class="face"></span><div><b>VIGIL</b><small>via Grok</small></div></div>
+    </section>
+    <section class="t-panel how-think" id="think" aria-labelledby="h-think">
+      <div class="tp-h"><span class="tp-l" id="h-think">How it thinks</span><span class="ex-tag" id="thinkEx">example</span><span class="tp-meta" id="chatTime">14:06 UTC</span></div>
+      <div class="hd-body">
+        <p class="hd-lede">Claude reasons over the verified facts, the onchain numbers and Buddy's past mistakes. Pick a coin to replay its thinking.</p>
+        <div class="picks" role="tablist" aria-label="Decisions" id="picks"></div>
         <div class="msgs" id="msgs" aria-live="polite"></div>
-        <div class="chat-foot"><span>Hard rules run after this.</span><span class="num" id="chatTime">14:06 UTC</span></div>
-        <div class="home-ind" aria-hidden="true"></div>
       </div>
-      <div class="fl fl-1" aria-hidden="true"><span class="tile" style="background:var(--blue-soft);color:var(--blue-deep)"><svg class="ic"><use href="#i-sparkles"/></svg></span>Grok <small>thinking…</small></div>
-      <div class="fl fl-2" aria-hidden="true"><span class="tile" style="background:var(--green-soft);color:var(--green)"><svg class="ic"><use href="#i-shield-check"/></svg></span>4/4 checks passed</div>
-      <div class="fl fl-3" aria-hidden="true"><span class="sol"><svg class="ic"><use href="#b-solana"/></svg></span>Solana</div>
-      <div class="fl fl-4" aria-hidden="true"><span class="tile" style="background:var(--sand);color:var(--sand-ink)"><svg class="ic"><use href="#i-wallet"/></svg></span>0.5 SOL max <small>per trade</small></div>
-    </div>
+    </section>
   </div>
-</section>
 
-<!-- 2 LAUNCH: launch your own coin by tagging VIGIL on X -->
-<section class="sec launch" id="launch" aria-labelledby="h-launch">
-  <div class="wrap">
-    <div>
-      <span class="kicker"><svg class="ic"><use href="#i-rocket"/></svg>Launchpad</span>
-      <h2 class="h2" id="h-launch">Launch your own coin. <span class="blue">Just tag VIGIL.</span></h2>
-      <ol class="lsteps">
-        <li><b>1</b><div><strong>Fill in your coin</strong><span>Name, ticker, a line about it and the Solana wallet for your fees.</span></div></li>
-        <li><b>2</b><div><strong>Post it on X with your image</strong><span>VIGIL checks every request before it launches anything.</span></div></li>
-        <li><b>3</b><div><strong>VIGIL launches it on pump.fun</strong><span>It replies with your CA. VIGIL pays the launch, and you get 90% of the creator fees from the first trade (VIGIL keeps 10%).</span></div></li>
-      </ol>
-      <div class="lrecent" id="lRecent"><div class="lrh"><span class="sc-lbl">Recently launched</span><a class="lp-link" href="/launchpad">Launchpad →</a></div><div class="rc-view lview" id="lRecentList"></div></div>
-    </div>
-    <div class="panel grid-bg launch-panel">
-      <form class="lform" id="launchForm" autocomplete="off" novalidate>
-        <div class="lrow">
-          <label>Coin name<input id="lfName" maxlength="32" placeholder="Purr Capital" required></label>
-          <label class="lsym">Ticker<span class="lpre">$</span><input id="lfSym" maxlength="10" placeholder="PURR" required></label>
-        </div>
-        <label><span>What is it? <em>optional</em></span><input id="lfDesc" maxlength="100" placeholder="a cat that runs a hedge fund"></label>
-        <div class="lrow lrow-2">
-        <label title="If empty, your coin links to VIGIL's launch post"><span>Coin's X or website <em>optional</em></span><input id="lfLink" maxlength="80" placeholder="x.com/purrcapital"></label>
-        <label>Wallet for your creator fees<input id="lfWallet" maxlength="44" placeholder="Your Solana wallet" spellcheck="false" required></label>
-        </div>
-        <div class="lprev"><span class="sc-lbl">Your post</span><div class="xtl" id="lfPreview"></div><p class="lcredit"><svg class="ic"><use href="#i-badge-check"/></svg>You're credited as the creator: VIGIL tags the X account that posts this.</p></div>
-        <p class="lnote" id="lfNote">Attach your coin's image on X before you post.</p>
-        <button class="btn btn-dark" type="submit" id="lfGo" disabled><svg class="ic"><use href="#b-x"/></svg> Post on X to launch <span class="arr">→</span></button>
-      </form>
-      <div class="lform ldone" id="lDone" hidden aria-live="polite">
-        <span class="ld-ic"><span class="face" aria-hidden="true"></span><i class="ld-badge" id="ldIc"><svg class="ic"><use href="#i-rocket"/></svg></i></span>
-        <span class="pill blue" id="ldPill">Waiting for your post</span>
-        <h3 id="ldTitle">Your launch post is ready</h3>
-        <p id="ldSub">Post it on X with your image attached. VIGIL picks it up within a few minutes and launches your coin.</p>
-        <div class="ldwhy" id="ldWhy" hidden><span class="sc-lbl">What happened</span><b id="ldWhyT"></b><p id="ldWhyD"></p></div>
-        <ol class="ldsteps">
-          <li id="ldS1"><b></b><span>Post it on X with your image</span></li>
-          <li id="ldS2"><b></b><span>VIGIL checks your coin</span></li>
-          <li id="ldS3"><b></b><span id="ldS3t">Your coin goes live on pump.fun</span></li>
-        </ol>
-        <div class="ldlive" id="ldLive" hidden>
-          <span class="sc-lbl">Contract address</span>
-          <div class="ldca"><code id="ldCa"></code><button type="button" id="ldCopy" aria-label="Copy the contract address"><svg class="ic"><use href="#i-copy"/></svg></button></div>
-          <div class="ldlinks" id="ldLinks"></div>
-        </div>
-        <div class="ldbtns"><button type="button" class="btn btn-ghost" id="ldEdit">Edit my post</button><a class="btn btn-dark" id="ldOpen" target="_blank" rel="noopener"><svg class="ic"><use href="#b-x"/></svg> Open X again</a></div>
-      </div>
-    </div>
+  <div class="how-end">
+    <section class="t-panel how-follow" id="follow" aria-labelledby="h-cta">
+      <h2 id="h-cta">Follow along. <span class="blue">Judge it yourself.</span></h2>
+      <p>Every trade, every pass and every loss gets posted. Not financial advice: a public experiment you can check.</p>
+      <div class="how-btns"><a class="btn btn-primary buy-btn" href="#follow" aria-disabled="true">Buy $BUDDY<span class="soon">soon</span></a><a class="btn btn-dark" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#b-x"/></svg> <span data-x-follow>Follow Buddy</span> <span class="arr">→</span></a></div>
+      <div class="ca-row" id="caRow" hidden><span class="lbl">CA</span><code id="caTxt"></code><button type="button" id="caCopy" aria-label="Copy the $BUDDY contract address"><svg class="ic"><use href="#i-copy"/></svg></button></div>
+    </section>
+    <a class="t-panel how-launch" href="launchpad.html">
+      <div class="hl-txt"><span class="tp-l">Launchpad</span><h3>Launch your own coin with one post.</h3><p>Tag Buddy on X with a name, a ticker and an image. Buddy pays the launch on pump.fun and locks 90% of the creator fees to you.</p><span class="hl-more">Open the launchpad →</span></div>
+      <img src="assets/buddy-rocket.webp" alt="" aria-hidden="true" width="773" height="800" decoding="async">
+    </a>
   </div>
-</section>
-
-<!-- 6 LIVE: here it is, working right now -->
-<section class="sec" id="live" aria-labelledby="h-live">
-  <div class="wrap center">
-    <span class="kicker"><span class="dot pulse"></span>Live</span>
-    <h2 class="h2" id="h-live">Here it is, working right now.</h2>
-    <p class="sub">What it's watching, what it's holding and what it'll post next. The same data backs every post.</p>
-    <p class="paused-note"><span class="pill coral">Kill switch on: still watching, no new trades</span></p>
-    <div class="panel grid-bg live-panel">
-    <div class="live-tabs" role="tablist" aria-label="Live">
-      <button type="button" role="tab" aria-selected="true" data-t="0"><svg class="ic"><use href="#i-eye"/></svg>Watching</button>
-      <button type="button" role="tab" aria-selected="false" data-t="1"><svg class="ic"><use href="#i-wallet"/></svg>Holding</button>
-      <button type="button" role="tab" aria-selected="false" data-t="2"><svg class="ic"><use href="#b-x"/></svg>Posting</button>
-    </div>
-    <div class="live-grid">
-      <article class="lc on">
-        <div class="lc-h"><span class="kicker lc-k"><svg class="ic"><use href="#i-eye"/></svg>Watching</span><span class="example">example</span><span class="lc-meta" id="wlCount"></span></div>
-        <div class="lc-scroll"><div id="wl"></div></div>
-        <div class="lc-foot"><span id="wlFootL">Move since the call</span><span class="num" id="wlFootR">+30% = buy</span></div>
-      </article>
-      <article class="lc">
-        <div class="lc-h"><span class="kicker lc-k sand"><svg class="ic"><use href="#i-wallet"/></svg>Holding</span><span class="lc-meta" id="holdCount"></span></div>
-        <div class="lc-scroll">
-          <div class="lc-label">Open now</div>
-          <div id="posList" style="display:grid;gap:8px"></div>
-          <div class="lc-label">Past trades</div>
-          <div id="pastList"></div>
-        </div>
-        <div class="lc-foot"><span class="onchain"><svg class="ic"><use href="#i-wallet"/></svg> <span id="walletTxt">testing phase</span></span><span id="slotsTxt">2 of 3 slots</span></div>
-      </article>
-      <article class="lc">
-        <div class="lc-h"><span class="kicker lc-k ink"><svg class="ic"><use href="#b-x"/></svg>Posting</span><span class="pill blue" id="npPill">in 2 min</span></div>
-        <div class="twrap"><div class="tslider" id="tSlider" tabindex="0" aria-label="Trade posts on X"></div><span class="tmore" id="tMore">scroll for more ↓</span></div>
-        <div class="lc-foot"><span id="postsTxt">4 of 6 posts today</span><span class="tnav"><button type="button" id="tPrev" aria-label="Previous trade">‹</button><span class="tdots" id="tDots"></span><button type="button" id="tNext" aria-label="Next trade">›</button></span></div>
-      </article>
-    </div>
-    </div>
-  </div>
-</section>
-
-<!-- 8 RECORD: every trade on the record, even the losses -->
-<section class="sec record" id="record" aria-labelledby="h-rec">
-  <div class="wrap">
-    <div>
-      <span class="kicker">On the record</span>
-      <h2 class="h2" id="h-rec">Every trade on the record. <span class="blue">Even the losses.</span></h2>
-      <p class="sub">Every decision is sealed in a journal and posted to X by <span data-x-handle>VIGIL</span>, an automated account. Buys, sells, passes and losses, as they happen.</p>
-      <div class="rec-stats">
-        <div><b id="recDay" data-count="19">19</b><span>posts in the last 24h</span></div>
-        <div><b id="recAll" data-count="312">312</b><span>posts in total</span></div>
-      </div>
-      <div class="ctas"><a class="btn btn-dark" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#b-x"/></svg> <span data-x-follow>Follow VIGIL</span> <span class="arr">→</span></a></div>
-    </div>
-    <div class="panel rec-panel">
-      <div class="hz" aria-hidden="true"><i class="hz-sky"></i><svg class="hz-planet" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><use href="#planet"/></svg></div>
-      <img class="vg vg-desk" src="assets/vigil-desk.webp" alt="" aria-hidden="true" width="855" height="800" decoding="async" fetchpriority="low">
-      <div class="rec-card rec-card-0"><div class="xtl"></div></div>
-      <div class="rec-card rec-card-1"><div class="xtl"></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- 9 SCORE: judge it by its numbers -->
-<section class="sec score" id="score" aria-labelledby="h-score">
-  <div class="wrap">
-    <div class="score-head">
-      <div><span class="kicker">Scorecard</span><h2 class="h2" id="h-score">Judge it by its numbers.</h2></div>
-      <span class="pill amber" id="scPill">TESTING PHASE · simulated, not onchain</span>
-    </div>
-    <div class="panel grid-bg score-panel">
-    <div class="score-grid">
-      <div class="sc-card" id="sparkWrap">
-        <div style="display:flex;justify-content:space-between;gap:12px"><span class="sc-lbl">Net P&amp;L · closed trades</span><span class="example">example data</span></div>
-        <div class="sc-net"><span class="big" id="scNet" data-count="0.920" data-dec="3" data-prefix="+">+0.920</span><span class="unit">SOL</span><span class="sc-chip up" id="scRet">+8.0%</span></div>
-        <p class="sc-meta" id="scMeta">on <b>11.500 SOL</b> traded · <b>+0.040 SOL</b> unrealised on 1 open trade</p>
-        <div class="sc-acct" id="scAcct" hidden><span class="sc-lbl">Account balance</span><b id="scAcctV"></b></div>
-        <svg class="spark" id="spark" viewBox="0 0 1000 200" preserveAspectRatio="none" role="img" aria-label="Cumulative profit and loss"></svg>
-        <div class="spark-tip" id="sparkTip"></div>
-        <p class="sc-meta" id="spLbl" style="font-family:var(--f-mono);font-size:12px">Cumulative P&amp;L, trade by trade · hover the line</p>
-      </div>
-      <div class="sc-tiles">
-        <div class="sc-card sc-tile"><span class="sc-lbl">Trades taken</span><span class="v" id="scTaken" data-count="24">24</span><span class="s" id="scTakenS">23 closed · 1 open</span></div>
-        <div class="sc-card sc-tile"><span class="sc-lbl">Win rate</span><span class="v" id="scRate">57%</span><div><div class="wl" id="scWL"><i class="w" style="flex:13"></i><i class="l" style="flex:10"></i></div><span class="s" id="scWLs" style="display:block;margin-top:8px">13 wins · 10 losses</span></div></div>
-        <div class="sc-card sc-tile"><span class="sc-lbl">Avg per trade</span><span class="v up-t" id="scAvg">+0.040<small>SOL</small></span><span class="s" id="scAvgS">same size every trade</span></div>
-        <div class="sc-card sc-tile"><span class="sc-lbl">Avg hold</span><span class="v" id="scHold">3h 10m</span><span class="s">entry to exit</span></div>
-        <div class="sc-card sc-tile"><span class="sc-lbl">Best trade</span><span class="v up-t" id="scBest">+0.205<small>SOL</small></span><span class="s" id="scBestS">$HATCH · +41.0%</span></div>
-        <div class="sc-card sc-tile"><span class="sc-lbl">Worst trade</span><span class="v down-t" id="scWorst">−0.110<small>SOL</small></span><span class="s" id="scWorstS">$MORX · −22.0%</span></div>
-      </div>
-    </div>
-    <div class="sc-recent"><span class="sc-lbl">Latest closes</span><div class="rc-view" id="scRecent"><div class="rc-track"><span class="rc"><b>$HATCH</b><span class="m up-t">+0.205</span><span class="h">4h 02m</span></span><span class="rc"><b>$MORX</b><span class="m down-t">−0.110</span><span class="h">1h 15m</span></span><span class="rc"><b>$PEPU</b><span class="m up-t">+0.065</span><span class="h">2h 48m</span></span><span class="rc"><b>$ROBO</b><span class="m down-t">−0.045</span><span class="h">52m</span></span><span class="rc"><b>$FEATHR</b><span class="m up-t">+0.090</span><span class="h">5h 30m</span></span></div></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- 10 FOLLOW -->
-<section class="sec" id="follow" aria-labelledby="h-cta">
-  <div class="wrap">
-    <div class="panel cta-panel">
-      <div>
-        <h2 id="h-cta">Follow along.<br><span class="blue">Judge it yourself.</span></h2>
-        <p class="sub">Every trade, every pass and every loss gets posted. Not financial advice: a public experiment you can check.</p>
-        <div class="ctas"><a class="btn btn-primary buy-btn" href="#follow" aria-disabled="true"><span class="face" aria-hidden="true"></span>Buy $VIGIL<span class="soon">soon</span></a><a class="btn btn-dark" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#b-x"/></svg> <span data-x-follow>Follow VIGIL</span> <span class="arr">→</span></a></div>
-        <div class="ca-row" id="caRow" hidden><span class="lbl">CA</span><code id="caTxt"></code><button type="button" id="caCopy" aria-label="Copy the $VIGIL contract address"><svg class="ic"><use href="#i-copy"/></svg></button></div>
-      </div>
-      <div class="cta-orb"><div class="hz" aria-hidden="true"><i class="hz-sky"></i><span class="hz-orb"><svg class="orb-svg" viewBox="0 0 400 400" aria-hidden="true"><use href="#orb-lg"/></svg></span><svg class="hz-planet" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><use href="#planet"/></svg></div><img class="vg vg-board" src="assets/vigil-board.webp" alt="VIGIL pointing at a rising chart on a board" width="862" height="800" decoding="async" fetchpriority="low"></div>
-    </div>
-  </div>
-</section>
-</main>
+</div>
+</div>
 
 <footer>
   <div class="wrap">
-    <a class="brand" href="#top"><span class="face" aria-hidden="true"></span><span class="wordmark-t">VIGIL</span><span class="brand-tag">powered by Grok</span></a>
-    <nav aria-label="Footer"><span class="onchain"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span> Trades on Solana</span><a class="onchain" data-x-link href="https://x.com/" target="_blank" rel="noopener"><span class="xl" aria-hidden="true"><svg class="ic"><use href="#b-x"/></svg></span> <span data-x-handle>VIGIL on X</span></a><a href="#record">Journal</a><a href="#score">Scorecard</a><a href="#live">Live</a></nav>
-    <p class="legal">VIGIL, powered by Grok. VIGIL is an automated account run by software; its reasoning uses xAI's Grok model through the public API. Not affiliated with xAI, X, Solana, Jupiter or pump.fun. Not financial advice. Testing Phase trades are simulated and not onchain. Holdings are disclosed in every trade post. <span id="dataNote">All figures on this page are example data.</span></p>
+    <a class="brand" href="#terminal"><span class="face" aria-hidden="true"></span><span class="wordmark-t">Buddy</span><span class="brand-tag">powered by Claude</span></a>
+    <nav aria-label="Footer"><span class="onchain"><span class="sol" aria-hidden="true"><svg class="ic"><use href="#b-solana"/></svg></span> Trades on Solana</span><a href="#terminal">Terminal</a><a href="#ask">Ask Buddy</a><a href="#how">How it works</a><a href="launchpad.html">Launchpad</a></nav>
+    <p class="legal">Buddy, powered by Claude. Buddy is an automated account run by software; its reasoning uses Anthropic's Claude model (Claude Sonnet 5.5) through the public API. Not affiliated with Anthropic, X, Solana, Jupiter or pump.fun. Not financial advice. Testing Phase trades are simulated and not onchain. Holdings are disclosed in every trade post. <span id="dataNote">All figures on this page are example data.</span></p>
   </div>
 </footer>
+</div><!-- .main -->
+</div><!-- .app -->
 
-<script src="config.js"></script>
+<script src="config.js?v=3"></script>
 <script>
 (() => {
   // Per-deployment settings live in config.js (written by scripts/deploy-web.sh from SITE_* variables)
   const C = window.SITE_CONFIG || {};
-  const NAME = C.name || "VIGIL";
+  const NAME = C.name || "Buddy";
   const X_HANDLE = C.xHandle || "";  // the X account, without the @
   const X_PROFILE = "https://x.com/" + X_HANDLE;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1580,7 +2143,7 @@ footer nav a:hover { color: var(--ink); }
   // some internet providers cache a brand-new domain as missing.
   const API = (C.api || "http://localhost:8000").replace(/\/+$/, ""), API_OLD = (C.apiFallback || API).replace(/\/+$/, "");
   const apiFetch = async (path, opts) => { try { return await fetch(API + path, opts); } catch { return fetch(API_OLD + path, opts); } };
-  // $VIGIL: set both once the token is live (gmgn: https://gmgn.ai/sol/token/<mint>) and every Buy button goes to GMGN; until then they show "soon"
+  // $BUDDY: set both once the token is live (gmgn: https://gmgn.ai/sol/token/<mint>) and every Buy button goes to GMGN; until then they show "soon"
   const OWN_TOKEN = { ca: "", gmgn: "", ...(C.token || {}) };
   // The chat needs the newest API; on a local preview it talks to a local API on port 8000.
   const chatFetch = (path, opts) => location.hostname === "localhost" ? fetch("http://localhost:8000" + path, opts) : apiFetch(path, opts);
@@ -1602,12 +2165,11 @@ footer nav a:hover { color: var(--ink); }
   const setCount = (el, n, dec = 0, pre = "") => { if (!el) return; el.dataset.count = n; el.textContent = pre + (dec ? (+n).toFixed(dec) : fmt(Math.round(n))); };
   const onView = (el, fn, t = .35) => { const o = new IntersectionObserver(es => { if (es[0].isIntersecting) { fn(); o.disconnect(); } }, { threshold: t }); o.observe(el); };
 
-  addEventListener("scroll", () => $("#nav").classList.toggle("scrolled", scrollY > 8), { passive: true });
   // the X account, wherever the page names or links it
   $$("[data-x-link]").forEach(a => { a.href = X_PROFILE; });
-  $$("[data-x-handle]").forEach(el => { el.textContent = "@" + X_HANDLE; });
-  $$("[data-x-follow]").forEach(el => { el.textContent = "Follow @" + X_HANDLE; });
-  // Buy $VIGIL
+  $$("[data-x-handle]").forEach(el => { el.textContent = X_HANDLE ? "@" + X_HANDLE : NAME; });
+  $$("[data-x-follow]").forEach(el => { el.textContent = X_HANDLE ? "Follow @" + X_HANDLE : "Follow " + NAME; });
+  // Buy $BUDDY
   if (OWN_TOKEN.gmgn) {
     $$(".buy-btn").forEach(b => { b.href = OWN_TOKEN.gmgn; b.target = "_blank"; b.rel = "noopener"; b.removeAttribute("aria-disabled"); b.querySelector(".soon")?.remove(); });
   } else {
@@ -1620,12 +2182,6 @@ footer nav a:hover { color: var(--ink); }
       try { await navigator.clipboard.writeText(OWN_TOKEN.ca); btn.classList.add("done"); btn.innerHTML = I("check"); setTimeout(() => { btn.classList.remove("done"); btn.innerHTML = I("copy"); }, 1600); } catch {}
     });
   }
-  // phone menu: the button opens the section links; picking one (or tapping outside) closes it
-  const navEl = $("#nav"), menuBtn = $(".menu-btn");
-  const setMenu = open => { navEl.classList.toggle("open", open); menuBtn.setAttribute("aria-expanded", String(open)); };
-  menuBtn.addEventListener("click", () => setMenu(!navEl.classList.contains("open")));
-  $$("#navLinks a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-  document.addEventListener("click", e => { if (!navEl.contains(e.target)) setMenu(false); });
   const pre = $("#preload");
   if (pre) { pre.addEventListener("animationend", e => { if (e.target === pre) pre.remove(); }); setTimeout(() => pre.remove(), 3000); }
 
@@ -1638,170 +2194,11 @@ footer nav a:hover { color: var(--ink); }
     requestAnimationFrame(step);
   }, .5));
 
-  /* coins: 3D-ish decor, embossed with a $ */
+  /* coin avatars: the token's own logo, or its ticker's first letter */
   const logoImg = logo => logo ? `<img class="coin-logo" src="${API}${esc(logo)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">` : "";
   const initial = sym => esc(String(sym || "").replace(/^\$/, "").replace(/&amp;/g, "&").charAt(0).toUpperCase());
   const coinAv = (kind, size, shades = false, logo = null, sym = "") => `<span class="coinav" style="width:${size}px;height:${size}px;font-size:${Math.round(size * .42)}px">${initial(sym)}${logoImg(logo)}</span>`;
   $$(".coinav[data-coin]").forEach(el => { el.style.fontSize = "10px"; el.textContent = initial(el.dataset.sym); });
-  const coins = [];
-  // floating decor: glossy app-icon tiles carrying the site's own marks (where VIGIL listens, what it trades on)
-  const GLYPH = { x: [B("x"), "#FAFAFA", "#000000"], sol: [B("solana"), "#FFFFFF", "#000000"],
-                  ai: [I("sparkles"), "#FAFAFA", "#000000"], shield: [I("shield-check"), "#22C55E", "#0A0A0A"], eye: [I("eye"), "#FAFAFA", "#0A0A0A"] };
-  const addCoin = (host, kind, size, x, y, rot, depth = 1) => {
-    const [ic, fg, bg] = GLYPH[kind];
-    // the X tiles are links to the X account; the rest are decoration
-    const d = document.createElement(kind === "x" ? "a" : "div"); d.className = "coin glyph";
-    if (kind === "x") { d.href = X_PROFILE; d.target = "_blank"; d.rel = "noopener"; d.setAttribute("aria-label", NAME + " on X"); d.classList.add("link"); }
-    else d.setAttribute("aria-hidden", "true");
-    d.style.cssText = `width:${size}px;height:${size}px;left:${x};top:${y};--rot:${rot}deg`;
-    d.innerHTML = `<div class="inner" style="animation-delay:${rnd(-6, 0).toFixed(1)}s"><span class="gl" style="color:${fg};background:${bg}">${ic}</span></div>`;
-    host.appendChild(d); coins.push({ el: d, depth }); return d;
-  };
-  const stage = $("#stage");
-  addCoin(stage, "ai", 52, "26%", "12%", -10, 1.4);
-  addCoin(stage, "x", 42, "3%", "48%", 8, .8);
-  addCoin(stage, "sol", 48, "91%", "44%", 10, 1.2);
-  addCoin($(".cta-panel"), "x", 60, "56%", "12%", -8, 1.3);
-  addCoin($(".chat-panel"), "shield", 48, "80%", "30%", 8, 1.2);
-  addCoin($(".chat-panel"), "eye", 40, "14%", "28%", -10, .9);
-  addCoin($(".chat-panel"), "sol", 34, "20%", "68%", 12, 1.1);
-  addCoin($(".cta-panel"), "ai", 44, "52%", "74%", 10, .9);
-
-  /* hero parallax: floating cards + coins drift with the cursor */
-  if (!reduce) {
-    stage.addEventListener("pointermove", e => {
-      const r = stage.getBoundingClientRect(), dx = (e.clientX - r.left) / r.width - .5, dy = (e.clientY - r.top) / r.height - .5;
-      $$(".float", stage).forEach(f => { const k = +f.dataset.depth; f.style.transform = `translate(${dx * k}px, ${dy * k}px)`; });
-      coins.filter(c => stage.contains(c.el)).forEach(c => c.el.style.transform = `translate(${-dx * 24 * c.depth}px, ${-dy * 24 * c.depth}px)`);
-    });
-    stage.addEventListener("pointerleave", () => { $$(".float", stage).forEach(f => f.style.transform = ""); coins.forEach(c => c.el.style.transform = ""); });
-    addEventListener("scroll", () => { coins.filter(c => !stage.contains(c.el)).forEach(c => { const r = c.el.parentElement.getBoundingClientRect(); c.el.style.transform = `translateY(${(r.top - innerHeight / 2) * -.06 * c.depth}px)`; }); }, { passive: true });
-    let hp = 91; setInterval(() => { if (LIVE) return; hp = hp >= 95 ? 88 : hp + 1; $("#heroBar").style.width = hp + "%"; }, 2600);
-  }
-
-  /* ---------- 2 LAUNCH: the form builds the launch post; X opens with it ready (the image is added on X) ---------- */
-  const lf = { name: $("#lfName"), sym: $("#lfSym"), desc: $("#lfDesc"), link: $("#lfLink"), wallet: $("#lfWallet") };
-  let launchOpen = true;  // the API says whether launches are on; until then the button says "soon"
-  const lPost = () => {
-    const v = Object.fromEntries(Object.entries(lf).map(([k, el]) => [k, el.value.trim()]));
-    v.sym = v.sym.replace(/^\$/, "").toUpperCase();
-    const ok = { name: v.name.length > 0, sym: /^[A-Z0-9]{1,10}$/.test(v.sym), wallet: isAddr(v.wallet) };
-    // the launch request as it's posted on X: a clean card VIGIL reads (ticker, name and wallet must be in it)
-    const text = `@${X_HANDLE} launch $${v.sym || "TICKER"} ${v.name || "Coin name"}` + (v.desc ? `\n\n${v.desc}` : "")
-      + (v.link ? `\n\n${v.link}` : "") + `\n\nfees to: ${v.wallet || "your Solana wallet"}`;
-    return { v, ok, text, valid: ok.name && ok.sym && ok.wallet };
-  };
-  const lRender = (touched = false) => {
-    const p = lPost();
-    $("#lfPreview").innerHTML = xPost({ t: "now", body: esc(p.text), name: "You", who: "your account" });
-    [["name", lf.name], ["sym", lf.sym], ["wallet", lf.wallet]].forEach(([k, el]) => el.classList.toggle("bad", touched && el.value.trim() !== "" && !p.ok[k]));
-    $("#lfGo").disabled = !p.valid || !launchOpen;
-    const note = $("#lfNote");
-    note.classList.toggle("warn", touched && lf.wallet.value.trim() !== "" && !p.ok.wallet);
-    note.textContent = !launchOpen ? "Launches open soon. Get your coin ready." : note.classList.contains("warn")
-      ? "That wallet doesn't look right: it should be a Solana wallet address (32 to 44 letters and numbers)." : "Attach your coin's image on X before you post.";
-  };
-  Object.values(lf).forEach(el => el.addEventListener("input", () => lRender(true)));
-  $("#launchForm").addEventListener("submit", e => {
-    e.preventDefault();
-    const p = lPost();
-    if (!p.valid || !launchOpen) return lRender(true);
-    const url = "https://x.com/intent/post?text=" + encodeURIComponent(p.text);
-    window.open(url, "_blank", "noopener");
-    lTrack(p.v.sym, url, p.v.wallet);
-  });
-  /* confirmation: once they've gone to post, follow their request (by ticker) until it's live or refused */
-  let lTimer = null;
-  const ldStep = (i, st) => { $("#ldS" + i).className = st; };
-  const ldShow = (kind, title, sub) => { $("#lDone").className = "lform ldone " + kind; $("#ldTitle").textContent = title; $("#ldSub").textContent = sub; };
-  const ldIcon = id => { $("#ldIc").innerHTML = `<svg class="ic"><use href="#${id}"/></svg>`; };
-  const ldPill = (cls, txt) => { $("#ldPill").className = "pill " + cls; $("#ldPill").textContent = txt; };
-  // why a request was refused, in plain words, and what to do about it
-  const LD_WHY = {
-    "no image": ["You forgot the image", "Every coin needs a picture. Attach one to your post on X and post it again."],
-    "per-user limit": ["One launch per day", "Each X account can launch one coin a day. You can launch again tomorrow."],
-    "account too new": ["Your X account is too new", "Launches are open to X accounts older than 30 days, to keep bots out."],
-    "no wallet": ["No fee wallet in your post", "Add the wallet for your creator fees (one Solana wallet address) and post again."],
-    "unclear name or ticker": ["VIGIL couldn't read the name or ticker", "Write it as: launch $TICKER Coin name. The ticker is letters and numbers, up to 10."],
-    "reserved ticker": ["$VIGIL is taken", "That's VIGIL's own coin. Pick another ticker and post again."],
-    "daily budget used": ["Launches are full for today", "VIGIL's launch budget for today is used up. Try again tomorrow."],
-  };
-  const lTrack = (sym, url, wallet = "") => {
-    $("#launchForm").hidden = true; $("#lDone").hidden = false; $("#ldLive").hidden = true; $("#ldOpen").href = url;
-    $("#ldWhy").hidden = true; ldIcon("i-rocket"); ldPill("blue", "Waiting for your post");
-    $("#ldS3t").textContent = `$${sym} goes live on pump.fun`;
-    ldShow("", "Your launch post is ready", `Post it on X with your image attached. VIGIL picks it up within a few minutes and launches $${sym}.`);
-    ldStep(1, "on"); ldStep(2, ""); ldStep(3, "");
-    clearInterval(lTimer);
-    const started = Date.now();
-    const poll = async () => {
-      if (Date.now() - started > 20 * 60e3) return clearInterval(lTimer);  // stop after 20 minutes
-      let st;
-      try { const r = await apiFetch("/launchpad/status?symbol=" + encodeURIComponent(sym) + "&wallet=" + encodeURIComponent(wallet), { cache: "no-store" }); st = await r.json(); } catch { return; }
-      if (st.status === "not_seen") return;
-      ldStep(1, "done");
-      if (st.status === "refused") {
-        clearInterval(lTimer); ldStep(2, "fail"); ldIcon("i-x"); ldPill("coral", "Not launched");
-        const [t, d] = LD_WHY[st.reason] || ["It didn't pass VIGIL's check", st.reason || "VIGIL explains why in its reply under your post."];
-        $("#ldWhyT").textContent = t; $("#ldWhyD").textContent = d; $("#ldWhy").hidden = false;
-        return ldShow("bad", `VIGIL couldn't launch $${sym}`, "Nothing was launched and nothing was spent. Fix it and post again.");
-      }
-      if (st.status === "failed") {
-        clearInterval(lTimer); ldStep(2, "done"); ldStep(3, "fail"); ldIcon("i-x"); ldPill("coral", "Not launched");
-        return ldShow("bad", "The launch didn't go through", "Something went wrong on VIGIL's side and no coin was made. Try again in a little while.");
-      }
-      ldStep(2, "done");
-      if (st.status === "approved" || st.status === "launching") {
-        ldStep(3, "on"); ldPill("blue", "Launching");
-        return ldShow("", `$${sym} passed the checks`, "VIGIL is announcing it and launching it on pump.fun now. This takes about a minute.");
-      }
-      clearInterval(lTimer); ldStep(3, "done"); ldIcon("i-check"); ldPill("green", "Live");  // launched (or fees handed over)
-      ldShow("live", `$${sym} is live!`, "Your coin is live on pump.fun. You get 90% of its creator fees from the first trade; VIGIL keeps 10%.");
-      $("#ldCa").textContent = st.token || "";
-      $("#ldLinks").innerHTML = (st.announce_x_id ? `<a href="https://x.com/i/status/${esc(st.announce_x_id)}" target="_blank" rel="noopener">${NAME}'s post ↗</a>` : "")
-        + (st.tx_hash ? `<a href="https://solscan.io/tx/${esc(st.tx_hash)}" target="_blank" rel="noopener">Receipt ↗</a>` : "")
-        + (st.token ? `<a href="https://pump.fun/coin/${esc(st.token)}" target="_blank" rel="noopener">pump.fun ↗</a>`
-          + `<a href="https://gmgn.ai/sol/token/${esc(st.token)}" target="_blank" rel="noopener">Chart ↗</a>` : "");
-      $("#ldLive").hidden = false;
-    };
-    poll(); lTimer = setInterval(poll, 8000);
-  };
-  $("#ldEdit").addEventListener("click", () => { clearInterval(lTimer); $("#lDone").hidden = true; $("#launchForm").hidden = false; });
-  $("#ldCopy").addEventListener("click", () => {
-    const t = $("#ldCa").textContent;
-    if (t && navigator.clipboard) navigator.clipboard.writeText(t).then(() => { $("#ldCopy").style.color = "var(--green)"; setTimeout(() => { $("#ldCopy").style.color = ""; }, 1200); });
-  });
-  lRender();
-  /* recently launched: an endless strip of cards; a short note until the first real launch */
-  const launchCard = r => `<div class="lcard">`
-    + (r.logo ? `<img class="lgo" src="${esc(r.logo)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">`
-      : coinAv("blue", 38, false, null, r.symbol))
-    + `<b>$${esc(r.symbol)}</b><small>${r.handle ? "by @" + esc(r.handle) + " · " : ""}${ago(r.launched_at)} ago</small><span class="lk">`
-    + (r.announce_x_id ? `<a href="https://x.com/i/status/${esc(r.announce_x_id)}" target="_blank" rel="noopener">Post ↗</a>` : "")
-    + (r.tx_hash ? `<a href="https://solscan.io/tx/${esc(r.tx_hash)}" target="_blank" rel="noopener">Receipt ↗</a>` : "")
-    + (r.token ? `<a href="https://pump.fun/coin/${esc(r.token)}" target="_blank" rel="noopener">pump.fun ↗</a>` : "")
-    + `</span></div>`;
-  let lKey = "";
-  const launchStrip = list => {
-    const items = list.slice(0, 12), key = JSON.stringify(items.map(r => r.token));
-    if (key === lKey) return;  // unchanged: leave the strip running where it is
-    lKey = key;
-    const v = $("#lRecentList");
-    if (!items.length) { v.innerHTML = `<p class="lempty">No coins launched yet. Be the first: tag @${esc(X_HANDLE)} with a name and ticker.</p>`; return; }
-    const html = items.map(launchCard).join("");
-    v.innerHTML = `<div class="rc-track">${html}</div>`;
-    if (reduce || items.length < 3) return;  // a strip of one or two launches stays still, no repeats
-    requestAnimationFrame(() => {
-      const tr = v.firstChild, w = tr.scrollWidth;
-      if (!w) return;
-      const copy = html.repeat(Math.max(1, Math.ceil(v.clientWidth / w)));
-      tr.innerHTML = copy + `<span style="display:contents" aria-hidden="true">${copy}</span>`;
-      tr.style.setProperty("--dur", `${tr.scrollWidth / 2 / 35}s`);  // about 35px a second
-      tr.classList.add("run");
-    });
-  };
-  launchStrip([]);
-
   /* ---------- 3 LISTENS ---------- */
   let sources = [
     { ic: B("x"), bg: "#000", who: "@loudtrader", where: "X · 14:01", txt: 'hearing $HATCH gets a big listing 👀 <code>9wFq…pump</code>',
@@ -1814,24 +2211,13 @@ footer nav a:hover { color: var(--ink); }
   const srcs = $("#srcs"), leadCard = $("#leadCard");
   const renderSrcs = () => { srcs.innerHTML = sources.map((s, i) => `<button class="src" type="button" aria-pressed="${i === srcI}" data-i="${i}"><div class="src-top"><span class="src-ic" style="background:${s.bg}">${s.ic}</span><b>${s.who}</b><span>${s.where}</span></div><p>${s.txt}</p></button>`).join(""); };
   let srcI = 2; renderSrcs();
-  const drawWires = () => {
-    const svg = $("#wires"), panel = $("#listenPanel"), pr = panel.getBoundingClientRect(), hub = $(".hub .ring").getBoundingClientRect(), lr = leadCard.getBoundingClientRect();
-    if (!hub.width) { svg.innerHTML = ""; return; }
-    const hx = hub.left - pr.left, hy = hub.top - pr.top + hub.height / 2, hx2 = hub.right - pr.left;
-    let d = "";
-    $$(".src", srcs).forEach((b, i) => { const r = b.getBoundingClientRect(), x = r.right - pr.left, y = r.top - pr.top + r.height / 2; d += `<path class="${i === srcI ? "on" : ""}" d="M ${x} ${y} C ${x + 60} ${y}, ${hx - 60} ${hy}, ${hx} ${hy}"/>`; });
-    d += `<path class="on" d="M ${hx2} ${hy} C ${hx2 + 50} ${hy}, ${lr.left - pr.left - 50} ${lr.top - pr.top + lr.height / 2}, ${lr.left - pr.left} ${lr.top - pr.top + lr.height / 2}"/>`;
-    svg.innerHTML = d;
-  };
   const showSrc = i => {
     srcI = i; $$(".src", srcs).forEach((b, k) => b.setAttribute("aria-pressed", k === i));
     const L = sources[i].lead;
     leadCard.innerHTML = `<span class="pill ${L.st[0]}">${L.st[1]}</span><h4>${L.h}</h4><div class="rows">${L.rows.map(r => `<div><span>${r[0]}</span><span>${r[1]}</span></div>`).join("")}</div>${L.note ? `<p class="lead-note">${L.note}</p>` : ""}`;
-    requestAnimationFrame(drawWires);
   };
   srcs.addEventListener("click", e => { const b = e.target.closest(".src"); if (b) showSrc(+b.dataset.i); });
-  showSrc(2); addEventListener("resize", drawWires); addEventListener("load", drawWires);
-  if (document.fonts) document.fonts.ready.then(drawWires);
+  showSrc(2);
 
   /* ---------- 5 THINKS (chat) ---------- */
   let talks = [
@@ -1880,167 +2266,18 @@ footer nav a:hover { color: var(--ink); }
   onView($("#think"), () => playTalk(0), .35);
   say(talks[0].open, "sys");
 
-  /* ---------- 6 LIVE ---------- */
-  // smart-money calls (example until live data arrives): the trade's P&L, the move since the call, or why it was skipped
-  let watch = [
-    { s: "HATCH", sm: true, st: "bought", move: 12.4, meta: "Smart money · 18m ago · pump.fun curve", c: "blue" },
-    { s: "PIXEL", sm: true, st: "watching", lbl: "+18%", meta: "Smart money · 41m ago · pump.fun curve", c: "beige" },
-    { s: "ANONPAD", sm: true, st: "bought", move: 41.0, meta: "Smart money · 2h ago · PumpSwap", c: "white" },
-    { s: "JOLLY", sm: true, st: "skipped", meta: "Skipped · deployer holds 52%", c: "beige" },
-  ];
-  // closed testing-phase trades, newest first (example until live data arrives)
-  let past = [
-    { s: "PEPU", pl: 41.0, held: "4h 02m", why: "took profit at 1.6x", c: "blue" },
-    { s: "NEZU", pl: -70.4, held: "1h 12m", why: "stop loss", c: "beige" },
-    { s: "ROBO", pl: -9.1, held: "24h 00m", why: "24h timer", c: "white" },
-  ];
+  /* trade helpers: how long a trade was held, why it closed (in a few words) */
   const hfmt = h => h == null ? "" : h < 1 / 60 ? `${Math.max(1, Math.round(h * 3600))}s` : h < 1 ? `${Math.round(h * 60)}m` : h < 48 ? `${Math.floor(h)}h ${String(Math.round(h % 1 * 60)).padStart(2, "0")}m` : `${Math.round(h / 24)}d`;
   const whyShort = r => { r = String(r || "");
     const tp = r.match(/^take profit at ([\d.]+x)/);
     return /^stop loss/.test(r) ? "stop loss" : /^final take profit/.test(r) ? "final target" : tp ? `took profit at ${tp[1]}`
       : /^back to entry/.test(r) ? "back to entry" : /^max hold/.test(r) ? "24h timer" : /^thesis review/.test(r) ? "thesis changed" : r.slice(0, 28); };
-  const WST = { bought: "solid-blue", watching: "sand", passed: "grey", checking: "blue", graduated: "green", expired: "grey", skipped: "grey" };
-  let positions = [
-    { s: "HATCH", entry: .5, c: "blue", age: "18m", hist: [.5, .503, .499, .511, .508, .524, .531, .527, .545, .561] },
-    { s: "MOSS", entry: .5, c: "beige", age: "3h", hist: [.5, .492, .488, .495, .479, .468, .472, .455, .449, .437] },
-  ];
-  const spark = (h, up) => { const mn = Math.min(...h), mx = Math.max(...h), W = 120, H = 34;
-    const pts = h.map((v, i) => `${(i / (h.length - 1) * W).toFixed(1)},${(H - 3 - (v - mn) / ((mx - mn) || 1) * (H - 6)).toFixed(1)}`).join(" ");
-    return `<svg class="spk" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${up ? "#22C55E" : "#F87171"}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`; };
-  const renderLive = (bumpI = -1) => {
-    // smart-money mode: where each coin came from on the left, the trade's P&L (or why it was skipped) on the right
-    const chip = w => w.st === "bought" && w.move != null ? `<span class="wchip ${w.move > 0 ? "up" : w.move < 0 ? "down" : ""}">${w.move > 0 ? "+" : w.move < 0 ? "−" : ""}${Math.abs(w.move).toFixed(1)}%</span>`
-      : w.st === "watching" ? `<span class="wchip watch">${w.lbl || "watching"}</span>` : `<span class="wchip">${w.st}</span>`;
-    $("#wl").innerHTML = watch.map((w, i) => w.sm
-      ? `<div class="wrow ${i === bumpI ? "bump" : ""}"${w.tip ? ` title="${w.tip}"` : ""}>${coinAv(w.c, 36, false, w.logo, w.s)}<div><b>$${w.s}</b><small>${w.meta}</small></div>${chip(w)}</div>`
-      : `<div class="wrow ${i === bumpI ? "bump" : ""}">${coinAv(w.c, 36, false, w.logo, w.s)}<div><b>$${w.s}</b><span class="pill ${WST[w.st] || "grey"}"${w.tip ? ` title="${w.tip}"` : ""}>${w.st}</span></div><div class="wprog ${w.p >= 100 ? "done" : ""}">${w.lbl ?? w.p + "%"}<span class="wbar"><i style="width:${Math.min(100, w.p)}%"></i></span></div></div>`).join("");
-    $("#pastList").innerHTML = past.length ? past.slice(0, 3).map(t => `<div class="prow ${t.pl >= 0 ? "up" : "down"}">${coinAv(t.c, 30, false, t.logo, t.s)}<div><b>$${t.s}</b><small>held ${t.held} · ${t.why}</small></div><span class="plp">${t.pl >= 0 ? "+" : ""}${t.pl.toFixed(1)}%</span></div>`).join("")
-      : `<div class="h-empty">No closed trades yet. The first one shows up here, win or lose.</div>`;
-    $("#posList").innerHTML = (LIVE && !positions.length) ? `<div class="h-empty"><span class="face" aria-hidden="true"></span>No open trades. VIGIL waits for a setup it likes.</div>` : positions.map(p => { const pl = (p.hist.at(-1) / p.entry - 1) * 100, up = pl >= 0; return `<div class="ptile ${up ? "up" : "down"}">${coinAv(p.c, 36, false, p.logo, p.s)}<div class="nm"><b>$${p.s}</b><small>${p.entry.toFixed(p.entry >= 0.1 ? 2 : p.entry >= 0.01 ? 3 : 4)} SOL · ${p.age}</small></div><span class="plp">${up ? "+" : ""}${pl.toFixed(1)}%</span>${spark(p.hist, up)}</div>`; }).join("");
-  };
-  renderLive();
-  /* posting: a slider of trade threads on X, one coin per slide (the buy, the reasons under it, updates, sells) */
-  const tSlider = $("#tSlider"), tKey = { v: "" };
-  const xUrl = id => id ? `https://x.com/i/status/${esc(id)}` : X_PROFILE;  // /i/status works whatever the handle
-  const tIndex = () => Math.round(tSlider.scrollLeft / Math.max(1, tSlider.clientWidth));
-  const tMoreSync = () => {  // is there more of the current slide below the fold?
-    const sl = tSlider.children[tIndex()];
-    [...tSlider.children].forEach(x => x.classList.toggle("more", x.scrollHeight - x.scrollTop - x.clientHeight > 8));
-    $("#tMore").classList.toggle("on", !!sl && sl.classList.contains("more"));
-  };
-  const tSync = () => { tMoreSync(); const n = tSlider.children.length, i = tIndex();
-    $("#tDots").innerHTML = n > 1 ? Array.from({ length: n }, (_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("") : "";
-    $("#tPrev").disabled = i <= 0; $("#tNext").disabled = i >= n - 1; };
-  const renderTweets = threads => {
-    const key = JSON.stringify(threads.map(t => t.posts.map(p => p.x_post_id + p.sent_at)));
-    if (key === tKey.v) return tSync();  // unchanged: keep the slide the visitor is on
-    tKey.v = key; const at = tIndex();
-    tSlider.innerHTML = threads.length ? threads.map(t => `<div class="tslide"><div class="tslide-h"><b>$${esc(t.symbol || "?")}</b>`
-        + `<a href="${xUrl(t.posts[0].x_post_id)}" target="_blank" rel="noopener">View on X ↗</a></div><div class="xtl">`
-        + t.posts.map(p => `<a class="xlink" href="${xUrl(p.x_post_id)}" target="_blank" rel="noopener">${xPost({ t: p.sent_at ? ago(p.sent_at) : "now", body: esc(p.body) })}</a>`).join("")
-        + `</div></div>`).join("")
-      : `<p class="empty">No trades posted yet. Every buy shows up here with its reasons, as posted on X.</p>`;
-    tSlider.scrollLeft = Math.min(at, threads.length - 1) * tSlider.clientWidth;
-    [...tSlider.children].forEach(x => x.addEventListener("scroll", tMoreSync, { passive: true }));
-    requestAnimationFrame(tSync); };
-  const tGo = d => tSlider.scrollBy({ left: d * tSlider.clientWidth, behavior: reduce ? "auto" : "smooth" });
-  $("#tPrev").addEventListener("click", () => tGo(-1)); $("#tNext").addEventListener("click", () => tGo(1));
-  tSlider.addEventListener("scroll", () => { clearTimeout(tSlider._t); tSlider._t = setTimeout(tSync, 80); }, { passive: true });
-  tSlider.addEventListener("keydown", e => { if (e.key === "ArrowLeft") tGo(-1); if (e.key === "ArrowRight") tGo(1); });
-  renderTweets([{ symbol: "TAKO", posts: [{ body: "Bought $TAKO\n\nEntry: $48K MC\nSize: 0.5 SOL\n\nWhy: the team's own post confirms the launch and buyers are spreading out.", sent_at: null, x_post_id: "" }] }]);
-  if (!reduce) {
-    setInterval(() => {
-      if (LIVE) return;
-      watch.forEach(w => { if (w.st === "bought" && w.move != null) w.move = Math.round((w.move + rnd(-1.5, 2)) * 10) / 10; });
-      positions.forEach(p => { p.hist.push(Math.max(.2, p.hist.at(-1) * (1 + rnd(-.02, .022)))); if (p.hist.length > 14) p.hist.shift(); });
-      renderLive(Math.floor(rnd(0, watch.length)));
-    }, 2500);
-  }
 
-  /* phones and tablets: Live cards as tabs */
-  const liveTabs = $$(".live-tabs button"), liveCards = $$(".live-grid .lc");
-  liveTabs.forEach((b, i) => b.addEventListener("click", () => {
-    liveTabs.forEach((x, k) => x.setAttribute("aria-selected", String(k === i)));
-    liveCards.forEach((c, k) => c.classList.toggle("on", k === i));
-  }));
-
-  /* ---------- 8 RECORD: the X timeline ---------- */
-  let feedPosts = [
-    { t: "2m", body: "TEST BUY $HATCH on Solana: 0.5 SOL @ 4.1e-7 SOL.\nRisk: one wallet is 35% of buys. Simulated fill, not onchain.", s: [12, 8, 64, 5100] },
-    { t: "14m", body: "TEST SOLD $NEZU @ 1.2e-7 SOL, −70.4%.\nWhy: stop loss hit. Loss logged, not hidden.", s: [31, 14, 97, 8400] },
-    { t: "31m", body: "Passing on $JOLLY. The deployer bought 52% of its own curve. That isn't demand.", s: [9, 5, 41, 3900] },
-    { t: "1h", body: "Watching $TAKO. Volume is hot, sources aren't.\nWhat would make me wrong: one group trading with itself.", s: [6, 3, 28, 2700] },
-    { t: "3h", body: "Testing Phase scorecard 2026-W39: 23 closed, 13W/10L, net +0.920 SOL.\nEvery fill is in the public journal.", s: [44, 21, 158, 12300] },
-  ];
-  const kfmt = n => n >= 1000 ? (n / 1000).toFixed(1).replace(/\.0$/, "") + "K" : String(n);
-  // Two cards show two posts; every 5s one of them fades to the next post (they take turns).
-  const recCards = $$(".rec-card"); let recNext = 0;
-  const recShow = (card, p) => { card.querySelector(".xtl").innerHTML = xPost({ ...p, s: (p.s || []).map(kfmt) }); card._p = p; };
-  const recReset = () => {
-    recCards.forEach((c, i) => { c.style.visibility = feedPosts[i] ? "" : "hidden"; if (feedPosts[i]) recShow(c, feedPosts[i]); });  // hidden, not removed: nothing moves
-    recNext = recCards.length;
-  };
-  recReset();
-  if (!reduce) {
-    let turn = 0;
-    setInterval(() => {
-      if (feedPosts.length <= recCards.length) return;  // nothing new to show
-      const card = recCards[turn++ % recCards.length], box = card.querySelector(".xtl"), p = feedPosts[recNext++ % feedPosts.length];
-      box.classList.add("out");
-      setTimeout(() => { recShow(card, p); box.classList.remove("out"); }, 320);
-    }, 5000);
-    setInterval(() => {   // likes and views keep ticking up (example posts only; real metrics aren't fetched)
-      if (LIVE) return;
-      const card = pick(recCards), p = card._p;
-      if (!p || !p.s || !p.s.length) return;
-      p.s[2] += 1 + Math.floor(Math.random() * 3); p.s[3] += 20 + Math.floor(Math.random() * 90);
-      const acts = card.querySelectorAll(".xp-act");
-      acts[2].innerHTML = acts[2].innerHTML.replace(/[\d.]*K?$/, kfmt(p.s[2])); acts[3].innerHTML = acts[3].innerHTML.replace(/[\d.]*K?$/, kfmt(p.s[3]));
-      acts[2].classList.add("bump"); setTimeout(() => acts[2].classList.remove("bump"), 700);
-    }, 1600);
-  }
-
-  /* ---------- 9 SCORE latest-closes ticker ---------- */
-  // Repeats the set until one copy is wider than the strip, then doubles it; sliding by half loops seamlessly.
-  let mq = { html: "", loop: false };
-  const marquee = (html, loop) => {
-    mq = { html, loop };
-    const v = $("#scRecent");
-    v.innerHTML = `<div class="rc-track">${html}</div>`;
-    if (!loop || reduce) return;
-    const tr = v.firstChild, w = tr.scrollWidth;
-    if (!w) return;
-    const copy = html.repeat(Math.max(1, Math.ceil(v.clientWidth / w)));
-    tr.innerHTML = copy + `<span style="display:contents" aria-hidden="true">${copy}</span>`;
-    tr.style.setProperty("--dur", `${tr.scrollWidth / 2 / 40}s`);  // about 40px a second whatever the length
-    tr.classList.add("run");
-  };
-  marquee($("#scRecent .rc-track").innerHTML, true);
-  let mqT; addEventListener("resize", () => { clearTimeout(mqT); mqT = setTimeout(() => marquee(mq.html, mq.loop), 200); });
-
-  /* ---------- 9 SCORE sparkline ---------- */
-  let pnlLbl = [];  // symbol of each closed trade, for the tooltip
-  let pnl = [0, .06, .02, -.065, .04, .155, .11, .23, .19, .145, .305, .37, .26, .44, .485, .405, .575, .66, .6, .745, .805, .79, .92];
-  const sp = $("#spark"), SW = 1000, SH = 200, pad = 12;
-  let mn, mx, px, py;
-  const drawSpark = () => {
-  const series = pnl.length > 1 ? pnl : [0, 0];
-  mn = Math.min(...series, 0); mx = Math.max(...series, 0); if (mx === mn) { mx += .01; mn -= .01; }
-  px = i => i / (series.length - 1) * SW; py = v => pad + (1 - (v - mn) / (mx - mn)) * (SH - pad * 2);
-  const pts = series.map((v, i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(" L ");
-  sp.innerHTML = `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DEE6FF" stop-opacity=".16"/><stop offset="1" stop-color="#DEE6FF" stop-opacity="0"/></linearGradient></defs><line x1="0" x2="${SW}" y1="${py(0)}" y2="${py(0)}" stroke="#FFFFFF" stroke-opacity=".22" stroke-dasharray="4 6" vector-effect="non-scaling-stroke"/><path d="M ${pts} L ${SW},${SH} L 0,${SH} Z" fill="url(#sg)"/><path d="M ${pts}" fill="none" stroke="#FAFAFA" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><line id="spX" x1="0" x2="0" y1="0" y2="${SH}" stroke="#FFFFFF" stroke-opacity="0" vector-effect="non-scaling-stroke"/><circle id="spEnd" cx="${px(series.length - 1)}" cy="${py(series.at(-1))}" r="5" fill="#FAFAFA" stroke="#000" stroke-width="2.5"/>`;
-  };
-  drawSpark();
-  const sTip = $("#sparkTip"), sWrap = $("#sparkWrap");
-  sp.addEventListener("pointermove", e => { if (pnl.length < 2) return; const r = sp.getBoundingClientRect(), i = Math.max(0, Math.min(pnl.length - 1, Math.round((e.clientX - r.left) / r.width * (pnl.length - 1)))), x = px(i), y = py(pnl[i]), wr = sWrap.getBoundingClientRect(); $("#spX").setAttribute("x1", x); $("#spX").setAttribute("x2", x); $("#spX").setAttribute("stroke-opacity", .25); $("#spEnd").setAttribute("cx", x); $("#spEnd").setAttribute("cy", y); sTip.style.left = (r.left - wr.left + x / SW * r.width) + "px"; sTip.style.top = (r.top - wr.top + y / SH * r.height) + "px"; const v1n = +(/\bv1 \((\d+)/.exec(pnlLbl[0] || "") || [])[1] || 0, lb = pnlLbl[i - 1];
-    sTip.textContent = `${v1n && i === 1 ? `trades 1–${v1n}` : `trade ${i + (v1n && i ? v1n - 1 : 0)}`}${lb ? " · " + (/\bv1 \(/.test(lb) ? "v1" : "$" + lb) : ""} · ${pnl[i] >= 0 ? "+" : ""}${pnl[i].toFixed(Math.abs(pnl[i]) >= 0.1 || !pnl[i] ? 3 : Math.abs(pnl[i]) >= 0.01 ? 4 : 5)} SOL`; sTip.style.opacity = 1; });
-  sp.addEventListener("pointerleave", () => { sTip.style.opacity = 0; $("#spX").setAttribute("stroke-opacity", 0); $("#spEnd").setAttribute("cx", px(pnl.length - 1)); $("#spEnd").setAttribute("cy", py(pnl.at(-1))); });
-
-  /* ---------- 5b ASK VIGIL: a real chat (VIGIL researches with Grok), rate limited by the API ---------- */
+  /* ---------- 5b ASK Buddy: a real chat (Buddy researches with Claude), rate limited by the API ---------- */
   const askBox = $("#askMsgs"), askIn = $("#askIn"), askSend = $("#askSend"), askLeft = $("#askLeft");
   const askHist = [];   // this visit only: {role, text}
   let askBusy = false, askOut = false, askToken = null;  // askToken: address of the coin being discussed
-  // short lines that end in ":" (like "Why it could run:") read as bold labels in VIGIL's replies
+  // short lines that end in ":" (like "Why it could run:") read as bold labels in Buddy's replies
   const askFmt = t => esc(t).replace(/^([^\n]{2,40}):[ \t]*$/gm, "<b class=\"lbl\">$1:</b>").replace(new RegExp(`\\b${B58}\\b`, "g"), m => `<code>${m}</code>`)
     .replace(/(^|[\s(])\$([A-Za-z][A-Za-z0-9]{0,19})\b/g, '$1<span class="tag">$$$2</span>');
   const askAdd = (cls, html) => { const d = document.createElement("div"); d.className = "msg " + cls; d.innerHTML = html; askBox.appendChild(d); askBox.scrollTop = askBox.scrollHeight; return d; };
@@ -2058,8 +2295,10 @@ footer nav a:hover { color: var(--ink); }
   const SCAN = {
     coin: [I("search"), "", "Finding the coin"], onchain: [B("solana"), "sol", "Checking onchain"],
     lore: [I("notebook-pen"), "", "Reading its lore"], x: [B("x"), "xl", "Checking the X account"],
-    website: [I("globe"), "", "Visiting the website"], grok: [I("sparkles"), "", "Grok is thinking"],
+    website: [I("globe"), "", "Visiting the website"], claude: [I("sparkles"), "", "Claude is thinking"],
   };
+  SCAN.grok = SCAN.claude;
+  const isBrain = id => id === "claude" || id === "grok";  // the model's own step: its row reads "Buddy's take" once it's done
   const scanCard = () => { const c = askAdd("scan", `<div class="scan-h">Researching<span class="spin"></span></div>`); c._rows = {}; return c; };
   const scanStep = (card, e) => {
     let row = card._rows[e.id];
@@ -2072,7 +2311,7 @@ footer nav a:hover { color: var(--ink); }
     row.className = "scan-row " + e.status;
     if (e.detail) row.querySelector("small").textContent = e.detail;
     row.querySelector(".st").innerHTML = e.status === "run" ? '<span class="spin"></span>' : e.status === "done" ? I("check") : e.status === "fail" ? I("x") : "–";
-    if (e.id === "grok" && e.status === "done") row.querySelector("b").textContent = NAME + "'s take";
+    if (isBrain(e.id) && e.status === "done") row.querySelector("b").textContent = NAME + "'s take";
     askBox.scrollTop = askBox.scrollHeight;
   };
   const pace = () => new Promise(r => setTimeout(r, reduce ? 0 : 260));  // bursts still read one step at a time
@@ -2101,13 +2340,13 @@ footer nav a:hover { color: var(--ink); }
       }
       const handle = async e => {
         if (e.type === "step") {
-          if (e.id !== "grok" || card) { if (!card) { hideTyping(); card = scanCard(); } scanStep(card, e); await pace(); }
-          if (e.id === "grok" && e.status === "run" && !card) showTyping();  // with a card, its own row shows progress
+          if (!isBrain(e.id) || card) { if (!card) { hideTyping(); card = scanCard(); } scanStep(card, e); await pace(); }
+          if (isBrain(e.id) && e.status === "run" && !card) showTyping();  // with a card, its own row shows progress
           return;
         }
         hideTyping(); card?.classList.add("done");
         if (e.type === "error") { fail(e.detail); return; }
-        askHist.push({ role: "user", text }, { role: "grok", text: e.reply });
+        askHist.push({ role: "user", text }, { role: "claude", text: e.reply });
         if (e.token) { askAdd("att ask-card", askCard(e.token)); askToken = e.token.address; }
         askAdd("bot rich", askFmt(e.reply));
         askLimit(e.remaining);
@@ -2156,49 +2395,293 @@ footer nav a:hover { color: var(--ink); }
   const hideFloat = id => hide($(id)?.closest(".float"));
   const seen = { decisions: "", sources: "", leads: "", posts: "" };
 
+
+  /* ---------- TERMINAL: the one-screen dashboard (KPIs, a chart, Buddy's status, the latest call, three lists) ---------- */
+  const EXAMPLE = location.hostname === "localhost" && location.search.includes("example");
+  const T = { loaded: false, mode: "paper", positions: [], trades: [], watching: [], posts: [], postsDay: null, call: null, score: null, funnel: null, wallet: null, sm: true, trigger: 30, buyOnCall: false };
+  let tSel = "", tPicked = false;  // what the chart shows (an open position's key, or "pnl"), and whether the visitor chose it
+  const posKey = p => p.token || p.symbol || String(p.id);
+  const sgnPct = v => v == null ? "—" : `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v).toFixed(1)}%`;
+  const dpS = v => { const a = Math.abs(v || 0); return a === 0 || a >= 0.1 ? 3 : a >= 0.01 ? 4 : 5; };
+  const solS = (v, signed = true) => v == null ? "—" : (signed ? (v > 0 ? "+" : v < 0 ? "−" : "") : "") + Math.abs(v).toFixed(dpS(v));
+  const upCls = v => v > 0 ? "up-t" : v < 0 ? "down-t" : "";
+  const heldS = h => h == null ? "—" : h < 1 ? `${Math.max(1, Math.round(h * 60))}m` : h < 48 ? `${Math.floor(h)}h ${String(Math.round(h % 1 * 60)).padStart(2, "0")}m` : `${Math.round(h / 24)}d`;
+  const empty = txt => `<p class="tp-empty">${txt}</p>`;
+  const wait = () => empty("Loading…");
+
+  /* example data: only on a local preview with ?example in the address (the live site never shows made-up numbers) */
+  const exampleData = () => {
+    const at = m => new Date(Date.now() - m * 60e3).toISOString();
+    let seed = 7; const r = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+    const walk = (n, v, drift, vol) => { const out = [v]; for (let i = 1; i < n; i++) { v = Math.max(.15, v * (1 + drift + (r() - .5) * vol)); out.push(+v.toFixed(5)); } return out; };
+    const series = [0, .06, .02, -.065, .04, .155, .11, .23, .19, .145, .305, .37, .26, .44, .485, .405, .575, .66, .6, .745, .805, .79, .92];
+    return {
+      loaded: true, mode: "paper", sm: true, trigger: 30,
+      positions: [
+        { symbol: "HATCH", token: "", entry_sol: .5, opened_at: at(18), marks: walk(64, .5, .0032, .055), stage: "curve", dex: "pumpfun" },
+        { symbol: "MOSS", token: "", entry_sol: .5, opened_at: at(190), marks: walk(52, .5, -.0024, .05), stage: "pool", dex: "pumpswap" },
+      ],
+      trades: [
+        { symbol: "PEPU", pnl_sol: .205, pnl_pct: 41, hold_h: 4.03, closed_at: at(42), reason: "take profit at 1.6x" },
+        { symbol: "NEZU", pnl_sol: -.352, pnl_pct: -70.4, hold_h: 1.2, closed_at: at(96), reason: "stop loss" },
+        { symbol: "FEATHR", pnl_sol: .09, pnl_pct: 18, hold_h: 5.5, closed_at: at(260), reason: "take profit at 1.2x" },
+        { symbol: "ROBO", pnl_sol: -.045, pnl_pct: -9.1, hold_h: 24, closed_at: at(420), reason: "max hold" },
+        { symbol: "TAKO", pnl_sol: .065, pnl_pct: 13, hold_h: 2.8, closed_at: at(610), reason: "thesis review" },
+      ],
+      watching: [
+        { symbol: "HATCH", status: "bought", move_pct: 12.4, called_at: at(18), stage: "curve", dex: "pumpfun" },
+        { symbol: "PIXEL", status: "watching", move_pct: 18, called_at: at(41), stage: "curve", dex: "pumpfun" },
+        { symbol: "ANONPAD", status: "bought", move_pct: 41, called_at: at(130), stage: "pool", dex: "pumpswap" },
+        { symbol: "ORBIT", status: "watching", move_pct: 6, called_at: at(55), stage: "curve", dex: "pumpfun" },
+        { symbol: "JOLLY", status: "skipped", note: "deployer holds 52%", called_at: at(70), stage: "curve", dex: "pumpfun" },
+        { symbol: "KIWI", status: "expired", called_at: at(400), stage: "curve", dex: "pumpfun" },
+      ],
+      call: { symbol: "HATCH", action: "buy", confidence: .72, ts: at(18),
+              thesis: "The team's own post links this exact contract, and buyers are spreading out across 38 wallets. The creator hasn't bought any." },
+      score: { net_sol: .92, return_pct: 8, wins: 13, losses: 10, closed: 23, taken: 25, open: 2, win_rate: 56.5, avg_hold_h: 3.17,
+               best: { symbol: "PEPU", pnl_sol: .205, pnl_pct: 41 }, worst: { symbol: "NEZU", pnl_sol: -.352, pnl_pct: -70.4 }, series },
+      funnel: { calls_24h: 148, screened_24h: 61, bought_24h: 3 },
+      postsDay: 19,
+      posts: [
+        { body: "TEST BUY $HATCH on Solana: 0.5 SOL @ 4.1e-7 SOL.\nRisk: one wallet is 35% of buys. Simulated fill, not onchain.", sent_at: at(18) },
+        { body: "TEST SOLD $PEPU @ 6.6e-7 SOL, +41.0%.\nWhy: took profit at 1.6x.", sent_at: at(42) },
+        { body: "Passing on $JOLLY. The deployer bought 52% of its own curve. That isn't demand.", sent_at: at(70) },
+        { body: "TEST SOLD $NEZU @ 1.2e-7 SOL, −70.4%.\nWhy: stop loss hit. Loss logged, not hidden.", sent_at: at(96) },
+        { body: "Watching $TAKO. Volume is hot, sources aren't.\nWhat would make me wrong: one group trading with itself.", sent_at: at(130) },
+        { body: "Testing Phase scorecard: 23 closed, 13W/10L, net +0.920 SOL.\nEvery fill is in the public journal.", sent_at: at(200) },
+      ],
+    };
+  };
+
+  /* KPIs */
+  const kpi = (id, html, cls, sub) => { const el = $("#" + id); el.className = "k-v " + (cls || ""); el.innerHTML = html; $("#" + id + "S").textContent = sub || ""; };
+  const tradeKpi = (id, t) => kpi(id, t ? `${solS(t.pnl_sol)}<small>SOL</small>` : "—", t ? upCls(t.pnl_sol) : "",
+    t ? `${t.symbol ? "$" + t.symbol : "v1"}${t.pnl_pct != null ? " · " + sgnPct(t.pnl_pct) : ""}` : "no closed trades yet");
+  const renderKpis = () => {
+    const s = T.score;
+    if (!s) return;
+    kpi("kNet", `${solS(s.net_sol ?? 0)}<small>SOL</small>`, upCls(s.net_sol), s.closed ? `${sgnPct(s.return_pct ?? 0)} on ${s.closed} closed` : "no closed trades yet");
+    kpi("kRate", s.win_rate == null ? "—" : `${Math.round(s.win_rate)}%`, "", `${s.wins ?? 0} wins · ${s.losses ?? 0} losses`);
+    kpi("kTaken", fmt(s.taken ?? s.closed ?? 0), "", `${s.closed ?? 0} closed · ${s.open ?? 0} open`);
+    kpi("kHold", heldS(s.avg_hold_h), "", "entry to exit");
+    tradeKpi("kBest", s.best); tradeKpi("kWorst", s.worst);
+  };
+
+  /* the chart: an open trade's value since entry (candles, an entry line, the price now), or the running P&L */
+  const tcBox = $("#tcBox"), tcSvg = $("#tcSvg");
+  const axFmt = v => Math.abs(v) >= 10 ? v.toFixed(1) : Math.abs(v) >= 1 ? v.toFixed(2) : Math.abs(v) >= .01 ? v.toFixed(3) : v.toFixed(5);
+  const chartNow = () => {
+    const p = T.positions.find(x => posKey(x) === tSel);
+    if (p) return { kind: "pos", p, s: (p.marks || []).length > 1 ? p.marks : [p.entry_sol, p.entry_sol], base: p.entry_sol };
+    const s = T.score?.series;
+    return { kind: "pnl", s: s && s.length > 1 ? s : null, base: 0 };
+  };
+  const pillSvg = (x, y, txt, fill, color) => { const w = txt.length * 6.6 + 12;
+    return `<g><rect x="${x}" y="${y - 9}" width="${w}" height="18" rx="5" fill="${fill}"/><text x="${x + 6}" y="${y + 3.6}" class="tc-pill" fill="${color}">${txt}</text></g>`; };
+  const drawChart = () => {
+    const W = tcBox.clientWidth, H = tcBox.clientHeight;
+    if (!W || !H) return;
+    const c = chartNow(), s = c.s, note = $("#tcEmpty");
+    note.hidden = !!s;
+    if (!s) { tcSvg.innerHTML = ""; note.textContent = T.loaded ? "No closed trades yet. Buddy's P&L charts here from the first one." : "Loading trades…"; return; }
+    tcSvg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    const pL = 10, pR = 78, pT = 16, pB = 18, plotW = W - pL - pR;
+    let mn = Math.min(...s, c.base), mx = Math.max(...s, c.base);
+    const span = (mx - mn) || Math.abs(mx) * .2 || .01; mn -= span * .1; mx += span * .1;
+    const y = v => pT + (1 - (v - mn) / (mx - mn)) * (H - pT - pB);
+    let g = "";
+    for (let k = 0; k <= 4; k++) { const v = mn + (mx - mn) * k / 4, yy = y(v).toFixed(1);
+      g += `<line x1="${pL}" x2="${W - pR}" y1="${yy}" y2="${yy}" class="tc-grid"/><text x="${W - pR + 10}" y="${+yy + 3.5}" class="tc-ax">${axFmt(v)}</text>`; }
+    const last = s.at(-1), up = last >= c.base;
+    if (c.kind === "pos" && s.length >= 12) {
+      // candles: the marks in groups, open/high/low/close per group
+      const n = Math.max(6, Math.min(48, Math.floor(s.length / 1.4))), per = s.length / n, slot = plotW / n, cw = Math.max(2, slot * .58);
+      for (let k = 0; k < n; k++) {
+        const a = Math.floor(k * per), b = Math.min(s.length - 1, Math.max(a + 1, Math.floor((k + 1) * per)));
+        const grp = s.slice(a, b + 1), o = s[a], cl = s[b], hi = Math.max(...grp), lo = Math.min(...grp), xc = pL + (k + .5) * slot, col = cl >= o ? "#2E7D4F" : "#C0392B";
+        g += `<line x1="${xc.toFixed(1)}" x2="${xc.toFixed(1)}" y1="${y(hi).toFixed(1)}" y2="${y(lo).toFixed(1)}" stroke="${col}" stroke-width="1.2"/>`
+          + `<rect x="${(xc - cw / 2).toFixed(1)}" y="${Math.min(y(o), y(cl)).toFixed(1)}" width="${cw.toFixed(1)}" height="${Math.max(1.2, Math.abs(y(o) - y(cl))).toFixed(1)}" rx="1" fill="${col}"/>`;
+      }
+    } else {
+      const x = i => pL + i / (s.length - 1) * plotW, pts = s.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" L ");
+      g += `<defs><linearGradient id="tcg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D97757" stop-opacity=".22"/><stop offset="1" stop-color="#D97757" stop-opacity="0"/></linearGradient></defs>`
+        + `<path d="M ${pts} L ${x(s.length - 1).toFixed(1)},${H - pB} L ${pL},${H - pB} Z" fill="url(#tcg)"/>`
+        + `<path d="M ${pts}" fill="none" stroke="#C15F3C" stroke-width="2" stroke-linejoin="round"/>`;
+      if (s.length <= 60) s.forEach((v, i) => { g += `<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.4" fill="#FFFFFF" stroke="#C15F3C" stroke-width="1.4"/>`; });
+    }
+    // the reference line: the entry for a trade, zero for the P&L
+    const yb = y(c.base).toFixed(1);
+    g += `<line x1="${pL}" x2="${W - pR}" y1="${yb}" y2="${yb}" stroke="${c.kind === "pos" ? "#D97757" : "#141413"}" stroke-opacity="${c.kind === "pos" ? 1 : .35}" stroke-width="1.2" stroke-dasharray="5 5"/>`;
+    if (c.kind === "pos") {
+      g += pillSvg(W - pR + 4, +yb, "ENTRY", "#F6E4DA", "#C15F3C");
+      g += `<g><circle cx="${pL + 6}" cy="${y(s[0]).toFixed(1)}" r="8" fill="#D97757" stroke="#141413" stroke-width="1.2"/><text x="${pL + 6}" y="${(y(s[0]) + 3.6).toFixed(1)}" text-anchor="middle" class="tc-b">B</text></g>`;
+    }
+    const yl = y(last);
+    if (Math.abs(yl - yb) > 16 || c.kind !== "pos") g += pillSvg(W - pR + 4, yl, axFmt(last), up ? "#2E7D4F" : "#C0392B", "#FFFFFF");
+    tcSvg.innerHTML = g;
+  };
+  if (window.ResizeObserver) new ResizeObserver(() => drawChart()).observe(tcBox); else addEventListener("resize", drawChart);
+
+  const renderChartHead = () => {
+    if (!tPicked || (tSel !== "pnl" && !T.positions.some(p => posKey(p) === tSel))) tSel = T.positions[0] ? posKey(T.positions[0]) : "pnl";
+    $("#tcTabs").innerHTML = T.positions.slice(0, 4).map(p => { const v = p.marks?.at(-1) ?? p.entry_sol, pl = p.entry_sol ? (v / p.entry_sol - 1) * 100 : 0;
+      return `<button type="button" role="tab" data-k="${esc(posKey(p))}" aria-selected="${posKey(p) === tSel}">$${esc(p.symbol || "?")} <span class="${upCls(pl)}">${sgnPct(pl)}</span></button>`; }).join("")
+      + `<button type="button" role="tab" data-k="pnl" aria-selected="${tSel === "pnl"}">P&amp;L</button>`;
+    const c = chartNow();
+    if (c.kind === "pos") {
+      const p = c.p, now = c.s.at(-1), pl = p.entry_sol ? (now / p.entry_sol - 1) * 100 : 0;
+      $("#tcCoin").innerHTML = `${coinAv("blue", 30, false, p.logo, p.symbol)}<div><b>$${esc(p.symbol || "?")}</b><small>Holding · ${esc(stageTxt(p) || "Solana")}</small></div>`;
+      $("#tcStats").innerHTML = `<span>Entry<b>${solS(p.entry_sol, false)} SOL</b></span><span>Now<b>${solS(now, false)} SOL</b></span>`
+        + `<span>P&amp;L<b class="${upCls(pl)}">${sgnPct(pl)}</b></span><span>Opened<b>${ago(p.opened_at) ? ago(p.opened_at) + " ago" : "—"}</b></span>`
+        + (p.token ? `<a href="https://dexscreener.com/solana/${esc(p.token)}" target="_blank" rel="noopener">Full chart ↗</a>` : "");
+    } else {
+      const sc = T.score || {};
+      $("#tcCoin").innerHTML = `<span class="tc-ic">${I("trending-up")}</span><div><b>Running P&amp;L</b><small>every closed trade, in SOL</small></div>`;
+      $("#tcStats").innerHTML = `<span>Net<b class="${upCls(sc.net_sol)}">${solS(sc.net_sol ?? 0)} SOL</b></span><span>Return<b class="${upCls(sc.return_pct)}">${sgnPct(sc.return_pct ?? 0)}</b></span>`
+        + `<span>Closed<b>${sc.closed ?? 0}</b></span><span>Win rate<b>${sc.win_rate == null ? "—" : Math.round(sc.win_rate) + "%"}</b></span>`;
+    }
+  };
+  $("#tPnlBtn").addEventListener("click", () => { tSel = "pnl"; tPicked = true; renderChartHead(); drawChart(); });
+  $("#tcTabs").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; tSel = b.dataset.k; tPicked = true; renderChartHead(); drawChart(); });
+
+  /* Buddy right now, and the last 24 hours as a funnel */
+  const renderBuddy = () => {
+    if (!T.loaded) return;
+    const nW = T.watching.filter(w => w.status !== "skipped" && w.status !== "expired").length, nP = T.positions.length;
+    $("#tbState").textContent = nP ? `Holding ${nP} trade${nP === 1 ? "" : "s"}` : nW ? "On watch" : "Scanning";
+    $("#tbSub").textContent = `${nW} coin${nW === 1 ? "" : "s"} on the watch list · ${T.sm ? (T.buyOnCall ? "buys on the call" : `buys at +${T.trigger}%`) : "checks every claim"}`;
+    const f = T.funnel || {}, top = Math.max(1, f.calls_24h || 0);
+    $("#tbFun").innerHTML = [["Calls", f.calls_24h], ["Screened", f.screened_24h], ["Bought", f.bought_24h]].map(([l, v]) =>
+      `<div><span>${l}</span><i><span style="width:${Math.max(v ? 3 : 0, Math.round((v || 0) / top * 100))}%"></span></i><b>${fmt(v || 0)}</b></div>`).join("")
+      + `<small>last 24 hours</small>`;
+  };
+
+  /* the latest call: what Claude decided on the newest coin, in one card */
+  const renderCall = () => {
+    const x = T.call, box = $("#tCall");
+    if (!T.loaded) { box.innerHTML = wait(); return; }
+    if (!x) { box.innerHTML = empty("No calls yet. The newest decision shows up here."); $("#tCallTime").textContent = ""; return; }
+    const act = { buy: ["solid-blue", "BUY"], watch: ["sand", "WATCH"], pass: ["ink", "PASS"] }[x.action] || ["ink", String(x.action || "").toUpperCase()];
+    const conf = Math.max(0, Math.min(1, x.confidence || 0));
+    $("#tCallTime").textContent = ago(x.ts) ? ago(x.ts) + " ago" : "";
+    box.innerHTML = `<div class="tcall-top"><span class="pill ${act[0]}">${act[1]}</span><b>$${esc(x.symbol || "?")}</b></div>`
+      + `<p>${esc(cut(x.thesis || (x.reasons || [])[0] || "", 200))}</p>`
+      + `<div class="tcall-conf"><span>Confidence</span><span class="vd-bar"><i style="width:${conf * 100}%"></i></span><b>${conf.toFixed(2)}</b></div>`;
+  };
+
+  /* the three lists */
+  const renderTrades = () => {
+    const box = $("#tTrades");
+    if (!T.loaded) { box.innerHTML = wait(); return; }
+    box.innerHTML = T.trades.length ? T.trades.map(t => `<div class="tr-row">${coinAv("blue", 28, false, t.logo, t.symbol)}`
+      + `<div class="tr-nm"><b>$${esc(t.symbol || "?")}</b><small>held ${heldS(t.hold_h)} · ${esc(whyShort(t.reason))}</small></div>`
+      + `<div class="tr-pl ${upCls(t.pnl_sol)}"><b>${sgnPct(t.pnl_pct ?? 0)}</b><small>${solS(t.pnl_sol)} SOL</small></div></div>`).join("")
+      : empty("No closed trades yet. The first one shows up here, win or lose.");
+  };
+  const renderTxs = () => {
+    const box = $("#tTxs"), live = T.mode === "live", wal = T.wallet;
+    $("#tTxMeta").innerHTML = live && wal?.address ? `<a href="https://solscan.io/account/${esc(wal.address)}" target="_blank" rel="noopener">${esc(shortA(wal.address))} ↗</a>` : "simulated";
+    if (!T.loaded) { box.innerHTML = wait(); return; }
+    // every buy and sell: open trades are buys; a closed trade is a sell, plus the buy that opened it
+    const tx = [];
+    T.positions.forEach(p => tx.push({ side: "buy", sym: p.symbol, sol: p.entry_sol, at: p.opened_at, token: p.token }));
+    T.trades.forEach(t => {
+      const entry = t.pnl_pct ? t.pnl_sol / (t.pnl_pct / 100) : null, closed = Date.parse(t.closed_at || "");
+      if (entry != null) tx.push({ side: "sell", sym: t.symbol, sol: entry + t.pnl_sol, at: t.closed_at, token: t.token });
+      if (entry != null && t.hold_h != null && closed) tx.push({ side: "buy", sym: t.symbol, sol: entry, at: new Date(closed - t.hold_h * 3600e3).toISOString(), token: t.token });
+    });
+    tx.sort((a, b) => (Date.parse(b.at || "") || 0) - (Date.parse(a.at || "") || 0));
+    box.innerHTML = tx.length ? tx.slice(0, 14).map(t => `<div class="tx-row"><span class="tx-side ${t.side}">${t.side.toUpperCase()}</span>`
+      + `<div class="tx-nm"><b>$${esc(t.sym || "?")}</b><small>${ago(t.at) ? ago(t.at) + " ago" : ""}</small></div>`
+      + `<span class="tx-amt">${solS(t.sol, false)} SOL</span>`
+      + (t.token ? `<a class="tx-link" href="https://solscan.io/token/${esc(t.token)}" target="_blank" rel="noopener" aria-label="$${esc(t.sym || "")} on Solscan">${I("arrow-up-right")}</a>` : `<span class="tx-link"></span>`) + `</div>`).join("")
+      : empty("No transactions yet. Every buy and sell lands here.");
+  };
+  /* the journal: Buddy's own posts on X, newest first (each opens on X) */
+  const xUrl = id => id ? `https://x.com/i/status/${esc(id)}` : X_PROFILE;
+  const renderJournal = () => {
+    const box = $("#tJournal");
+    $("#tJourMeta").textContent = T.loaded && T.postsDay != null ? `${T.postsDay} post${T.postsDay === 1 ? "" : "s"} · 24h` : "";
+    if (!T.loaded) { box.innerHTML = wait(); return; }
+    box.innerHTML = T.posts.length ? T.posts.map(p => `<a class="j-row" href="${xUrl(p.x_post_id)}" target="_blank" rel="noopener"><span class="face" aria-hidden="true"></span>`
+      + `<div class="j-body"><div class="j-top"><b>${esc(NAME)}</b><small>${X_HANDLE ? "@" + esc(X_HANDLE) + " · " : ""}${ago(p.sent_at) || "now"}</small></div>`
+      + `<p>${xText(esc(p.body || ""))}</p></div></a>`).join("")
+      : empty("No posts yet. Every trade gets posted to X, losses included.");
+  };
+
+  /* the trading mode, in the sidebar and the terminal's header */
+  const renderMode = () => {
+    const live = T.mode === "live", killed = document.body.classList.contains("killed");
+    const label = killed ? "Paused" : live ? "Live trading" : "Testing phase";
+    $("#tMode").className = "t-chip " + (killed ? "off" : live ? "live" : "");
+    $("#tMode").lastChild.textContent = label;
+    $("#sideStatus").className = "side-status " + (killed ? "off" : live ? "live" : "");
+    $("#sideMode").textContent = label;
+    $("#sideModeS").textContent = killed ? "Kill switch on: watching, not trading" : live ? "Real trades, onchain" : "Simulated trades, not onchain";
+  };
+  const renderTerminal = () => { renderMode(); renderKpis(); renderChartHead(); drawChart(); renderBuddy(); renderCall(); renderTrades(); renderJournal(); renderTxs(); };
+  renderTerminal();
+
+  /* the clock, in UTC like the journal */
+  const tick = () => { $("#tClock").textContent = new Date().toISOString().slice(11, 19) + " UTC"; };
+  tick(); setInterval(tick, 1000);
+
+  /* ---------- VIEWS: the sidebar switches pages; old #section links still land on the right page ---------- */
+  const views = $$("[data-view]"), sideLinks = $$(".side-nav a[data-v]");
+  const TITLES = { terminal: "Terminal", ask: "Ask Buddy", how: "How it works" };
+  const setSide = open => { document.body.classList.toggle("side-open", open); $("#sideBtn").setAttribute("aria-expanded", String(open)); };
+  $("#sideBtn").addEventListener("click", () => setSide(!document.body.classList.contains("side-open")));
+  $("#sideScrim").addEventListener("click", () => setSide(false));
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && document.body.classList.contains("side-open")) { setSide(false); $("#sideBtn").focus(); } });
+  const route = () => {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (id === "launch") { location.replace("launchpad.html#launch"); return; }
+    let target = id && document.getElementById(id);
+    if (!target || id === "live" || id === "top") target = $("#terminal");
+    const view = target.matches("[data-view]") ? target : target.closest("[data-view]") || $("#terminal");
+    const name = view.id === "ask-view" ? "ask" : view.id;
+    views.forEach(v => { v.hidden = v !== view; });
+    document.body.dataset.view = name;
+    sideLinks.forEach(a => { const on = a.dataset.v === name; a.classList.toggle("on", on); if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+    document.title = name === "terminal" ? `${NAME} · powered by Claude` : `${TITLES[name] || name} · ${NAME}`;
+    setSide(false);
+    // a page switch jumps (no smooth scroll): to the top, or to the section a link named
+    if (target === view || name === "ask") scrollTo({ top: 0, behavior: "instant" }); else target.scrollIntoView({ block: "start", behavior: "instant" });
+    // things that measure themselves once their page is on screen
+    if (name === "terminal") requestAnimationFrame(drawChart);
+  };
+  addEventListener("hashchange", route);
+  route();
+
+  /* the terminal's command bar: ask Buddy straight from the dashboard */
+  $("#tCmd").addEventListener("submit", e => {
+    e.preventDefault();
+    const q = $("#tCmdIn").value.trim();
+    if (!q) return;
+    $("#tCmdIn").value = "";
+    location.hash = "#ask";
+    askIn.value = q; askSize(); askSync();
+    ask(q);
+  });
+
+  /* ---------- LIVE DATA: swap in the real thing ---------- */
   const hydrate = d => {
     LIVE = true;
     document.body.classList.toggle("killed", !!d.kill_switch?.on);
     $$(".example").forEach(hide);
     $("#dataNote").textContent = `Figures on this page are live from ${NAME}'s public API.`;
-    const f = d.funnel || {}, st = d.stats || {};
+    const st = d.stats || {};
 
-    /* hero */
-    // the funnel: smart-money calls seen, screened onchain and bought in the last 24h
-    setCount($("#hsCalls"), f.calls_24h ?? 0); setCount($("#hsScreened"), f.screened_24h ?? 0); setCount($("#hsBought"), f.bought_24h ?? 0);
-    const top = d.watching[0];
-    if (top) {
-      // the bar: full once the coin has graduated to a pool; else its move toward the buy trigger (hidden when there's no such number)
-      const mv = top.move_pct, bar = top.stage === "pool" ? 100
-        : (!d.buy_on_call && mv != null && d.trigger_pct > 0) ? Math.max(4, Math.min(100, Math.round(mv / d.trigger_pct * 100))) : null;
-      $("#hfWatch").textContent = `Watching $${top.symbol || "?"}`;
-      $("#heroBar").style.width = (bar ?? 0) + "%"; $("#heroBar").parentElement.style.display = bar == null ? "none" : "";
-      const hc = $("#hfWatch").previousElementSibling; if (hc) hc.innerHTML = initial(top.symbol) + logoImg(top.logo);
-      $("#heroBarTxt").textContent = [stageTxt(top), mv != null ? `${mv > 0 ? "+" : mv < 0 ? "−" : ""}${Math.abs(Math.round(mv))}%` : "", top.status].filter(Boolean).join(" · ");
-    } else hideFloat("#hfWatch");
-    const lead = d.leads.find(l => l.status === "verified");
-    if (lead) {
-      $("#hfLead").textContent = `${lead.symbol ? "$" + lead.symbol + " · " : ""}${shortA(lead.address)} checks out onchain`;
-      $("#hfChecks").lastChild.textContent = buyGrade(lead.source_confidence) ? " 4/4 checks" : " 3/4 checks";
-    } else hideFloat("#hfLead");
-    const call = d.decisions.find(x => x.action === "buy") || d.decisions.find(x => x.action === "watch");
-    if (call) {
-      $("#hfCallPill").textContent = call.action === "buy" ? (d.mode === "live" ? "BOUGHT" : "TEST BUY") : "WATCH";
-      $("#hfCallSym").textContent = "$" + (call.symbol || "?");
-      $("#hfCallTxt").textContent = cut(call.risks[0] ? "risk: " + call.risks[0] : call.thesis, 46);
-    } else hideFloat("#hfCallPill");
-    const pass = d.decisions.find(x => x.action === "pass");
-    if (pass) { $("#hfPassSym").textContent = "$" + (pass.symbol || "?"); $("#hfPassTxt").textContent = cut(pass.reasons[0] || pass.thesis, 46); }
-    else hideFloat("#hfPassSym");
-
-    /* launchpad: open or not yet */
-    launchOpen = !!(d.launchpad && d.launchpad.enabled); lRender();
-    launchStrip((d.launchpad && d.launchpad.recent) || []);
+    /* terminal */
+    Object.assign(T, { loaded: true, mode: d.mode, positions: d.positions || [], trades: (d.score || {}).recent || [], watching: d.watching || [], posts: d.posts || [], postsDay: d.posts_24h ?? null,
+      call: (d.decisions || [])[0] || null, score: d.score || null, funnel: d.funnel || null, wallet: d.wallet || null,
+      sm: d.watch_mode === "scanner", trigger: d.trigger_pct ?? 30, buyOnCall: !!d.buy_on_call });
+    renderTerminal();
 
     /* listening: the newest real source of each kind */
     const sk = JSON.stringify(d.sources.map(x => x.id));
     if (d.sources.length && sk !== seen.sources) {
-      seen.sources = sk;
+      seen.sources = sk; hide($("#srcEx"));
       sources = d.sources.map(x => {
         const K = kindOf(x.kind), C = CONF[x.confidence] || ["sand", x.confidence], who = x.author || x.channel || K[2];
         const ld = x.lead;
@@ -2215,10 +2698,10 @@ footer nav a:hover { color: var(--ink); }
       srcI = 0; renderSrcs(); showSrc(srcI);
     }
 
-    /* thinking: Grok's actual reasoning on real tokens */
+    /* thinking: Claude's actual reasoning on real tokens */
     const dk = JSON.stringify(d.decisions.map(x => x.id));
     if (d.decisions.length && dk !== seen.decisions) {
-      seen.decisions = dk;
+      seen.decisions = dk; hide($("#thinkEx"));
       talks = d.decisions.map(x => {
         if ((x.thesis || "").replace(/[^a-z0-9]/gi, "").length < 8) x.thesis = "";  // ignore a garbled one-word thesis
         const sym = "$" + esc(x.symbol || "?");
@@ -2234,108 +2717,17 @@ footer nav a:hover { color: var(--ink); }
       if (run > 0) playTalk(0); else { msgs.innerHTML = ""; say(talks[0].open, "sys"); }
     }
 
-    /* live */
-    const sm = d.watch_mode === "scanner", sgnPct = v => v == null ? "—" : `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(Math.round(v))}%`;
-    // why a call was skipped, in a few words
-    const skipWhy = n => (n || "").slice(0, 32);
-    // where it trades, short: "pump.fun curve" or the DEX it graduated to
-    const whereShort = w => w.stage === "pool" ? dexName(w.dex) || "DEX pool" : stageTxt(w);
-    watch = d.watching.map((w, i) => ({ s: esc(w.symbol || "?"), logo: w.logo, p: w.stage === "pool" ? 100 : 0,
-      st: w.status === "screening" ? "checking" : w.status, c: ["blue", "beige", "white", "green", "ink", "beige"][i % 6],
-      lbl: sm ? sgnPct(w.move_pct) : esc(whereShort(w) || w.status), sm, move: w.move_pct,
-      meta: esc(w.status === "skipped" || w.status === "expired"
-        ? `${w.status === "skipped" ? "Skipped" : "Expired"}${w.note ? " · " + skipWhy(w.note) : ""}`
-        : `Smart money · ${ago(w.called_at)} ago${whereShort(w) ? " · " + whereShort(w) : ""}`),
-      tip: sm ? esc(w.note || (w.left_h != null ? `${Math.max(0, w.left_h).toFixed(1)}h left to reach +${d.trigger_pct}%` : `called ${ago(w.called_at)} ago`)) : "" }));
-    const nb = watch.filter(w => w.st === "bought").length;
-    const ns = watch.filter(w => w.st === "skipped" || w.st === "expired").length;
-    $("#wlCount").textContent = sm ? `${nb} bought` + (ns ? ` · ${ns} skipped` : "") : `${watch.length} coins`;
-    $("#wlFootL").textContent = sm ? (d.buy_on_call ? "Bought the moment a call lands" : `+${d.trigger_pct}% = buy`) : "Where each coin trades";
-    $("#wlFootR").textContent = sm ? (d.buy_on_call ? "P&L since the buy" : `${d.window_h}h window`) : "curve → pool";
-    $("#holdCount").textContent = `${d.positions.length} open`;
-    const wal = d.wallet;
-    $("#walletTxt").innerHTML = d.mode !== "live" ? "testing phase" : !wal ? "live wallet"
-      : `<a href="https://solscan.io/account/${esc(wal.address)}" target="_blank" rel="noopener">${esc(shortA(wal.address))}</a> · ${Number(wal.sol).toFixed(3)} SOL`;
-    $("#scAvgS").textContent = d.size_pct > 0 ? `${d.size_pct}% of the account per trade` : "same size every trade";
-    positions = d.positions.map((p, i) => ({ s: esc(p.symbol || "?"), logo: p.logo, entry: p.entry_sol, c: ["blue", "beige", "green"][i % 3], age: ago(p.opened_at),
-      hist: p.marks.length > 1 ? p.marks : [p.entry_sol, p.entry_sol] }));
-    past = ((d.score || {}).recent || []).map((t, i) => ({ s: esc(t.symbol || "?"), logo: t.logo, pl: t.pnl_pct || 0, held: hfmt(t.hold_h),
-      why: esc(whyShort(t.reason)), c: ["blue", "beige", "white"][i % 3] }));
-    renderLive();
+    /* ask: chips for coins on the watch list */
     askSuggest(d.watching.filter(w => w.symbol && /^[A-Za-z][A-Za-z0-9]{0,19}$/.test(w.symbol) && isAddr(w.token))
       .map(w => ({ s: w.symbol, t: w.token })));
-    if (!watch.length) $("#wl").innerHTML = `<p class="empty">${sm ? "No smart-money calls on Solana yet." : "Nothing on the watch list right now."}</p>`;
-    const inTr = d.positions.reduce((a, p) => a + (p.marks.length ? p.marks[p.marks.length - 1] : p.entry_sol || 0), 0);
-    $("#slotsTxt").textContent = d.slots < 100 ? `${positions.length} of ${d.slots} slots` : positions.length ? `${inTr.toFixed(inTr < 0.1 ? 4 : 3)} SOL in trades` : "";
-    const th = d.trade_threads || [];
-    $("#npPill").textContent = `${th.length} trade${th.length === 1 ? "" : "s"}`;
-    renderTweets(th);
-    $("#postsTxt").textContent = `${d.posts_24h} post${d.posts_24h === 1 ? "" : "s"} in the last 24h`;
 
-    /* on the record: real posts from the X account */
-    const pk = JSON.stringify(d.posts.map(p => p.x_post_id));
-    if (d.posts.length && pk !== seen.posts) {
-      seen.posts = pk;
-      feedPosts = d.posts.map(p => ({ t: ago(p.sent_at), body: esc(p.body) }));
-      recReset();
-    }
-    setCount($("#recDay"), d.posts_24h); setCount($("#recAll"), st.posts_sent);
-
-    /* scorecard */
-    // live trades are small: show enough decimals that a real move never reads as 0.000
-    const dp = v => { const a = Math.abs(v || 0); return a === 0 || a >= 0.1 ? 3 : a >= 0.01 ? 4 : 5; };
-    const sc = d.score, sgn = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(dp(v)), cls = v => v > 0 ? "up-t" : v < 0 ? "down-t" : "";
-    const held = h => h == null ? "—" : h < 1 ? `${Math.max(1, Math.round(h * 60))}m` : h < 48 ? `${Math.floor(h)}h ${String(Math.round(h % 1 * 60)).padStart(2, "0")}m` : `${Math.round(h / 24)}d`;
-    const solV = (el, v) => { el.className = "v " + cls(v ?? 0); el.innerHTML = v == null ? "—" : `${sgn(v)}<small>SOL</small>`; };
-    const netV = sc.net_sol ?? 0;
-    const net = $("#scNet"); net.dataset.prefix = netV > 0 ? "+" : netV < 0 ? "-" : ""; net.dataset.dec = dp(netV); setCount(net, Math.abs(netV), dp(netV), net.dataset.prefix);
-    const ret = sc.return_pct ?? 0; $("#scRet").style.display = ""; $("#scRet").className = "sc-chip " + (ret > 0 ? "up" : ret < 0 ? "down" : ""); $("#scRet").textContent = `${ret > 0 ? "+" : ""}${ret.toFixed(1)}%`;
-    const open = sc.open ?? 0, unreal = sc.unrealized_sol ?? 0;
-    const inOpen = (d.positions || []).reduce((a, p) => a + (p.entry_sol || 0), 0);
-    const unrealPct = inOpen ? ` (${unreal > 0 ? "+" : unreal < 0 ? "−" : ""}${Math.abs(unreal / inOpen * 100).toFixed(1)}%)` : "";
-    $("#scMeta").innerHTML = (sc.closed ? `on <b>${(sc.deployed_sol ?? 0).toFixed(dp(sc.deployed_sol))} SOL</b> traded` : "No closed trades yet")
-      + (open ? ` · <b class="${cls(unreal)}">${sgn(unreal)} SOL${unrealPct}</b> unrealised on ${open} open trade${open === 1 ? "" : "s"}` : " · nothing open right now")
-      + (sc.history ? ((sc.history.includes || []).includes("net_sol") ? " · incl. v1" : " · v1 not in P&amp;L") : "");
-    const live = d.mode === "live";
-    $("#scPill").style.display = ""; $("#scPill").className = "pill " + (live ? "green" : "amber");
-    $("#scPill").textContent = live ? "LIVE · real trades, onchain" : "TESTING PHASE · simulated, not onchain";
-    /* account balance: the trading wallet's SOL plus what the open trades are worth now */
-    const acct = $("#scAcct");
-    if (live && d.wallet && d.wallet.sol != null) {
-      const inTrades = (d.positions || []).reduce((a, p) => a + (p.marks.length ? p.marks[p.marks.length - 1] : p.entry_sol || 0), 0);
-      $("#scAcctV").textContent = `${(Number(d.wallet.sol) + inTrades).toFixed(3)} SOL`;
-      acct.hidden = false;
-    } else acct.hidden = true;
-    setCount($("#scTaken"), sc.taken ?? sc.closed); const v1 = sc.history?.v1_trades || 0;
-    $("#scTakenS").textContent = v1 ? `incl. ${v1} test trades from v1 · ${open} open` : `${sc.closed} closed · ${open} open`;
-    $("#scRate").textContent = sc.win_rate == null ? "—" : `${Math.round(sc.win_rate)}%`;
-    $("#scWL").innerHTML = sc.closed ? `<i class="w" style="flex:${sc.wins}"></i><i class="l" style="flex:${sc.losses}"></i>` : "";
-    $("#scWLs").textContent = `${sc.wins} win${sc.wins === 1 ? "" : "s"} · ${sc.losses} loss${sc.losses === 1 ? "" : "es"}` + (v1 ? " · incl. v1" : "");
-    solV($("#scAvg"), sc.avg_sol); $("#scHold").textContent = held(sc.avg_hold_h);
-    const bw = (t, v, sub) => { solV(v, t ? t.pnl_sol : null); sub.textContent = !t ? "no closed trades yet" : t.v1 ? (t.symbol ? `$${t.symbol} · v1` : "v1 · testing phase")
-      : `$${t.symbol || "?"} · ${t.pnl_pct > 0 ? "+" : ""}${t.pnl_pct.toFixed(1)}%`; };
-    bw(sc.best, $("#scBest"), $("#scBestS")); bw(sc.worst, $("#scWorst"), $("#scWorstS"));
-    const rec = sc.recent || [];
-    marquee(rec.length ? rec.map(t => `<span class="rc" title="${esc(t.reason || "")}"><b>$${esc(t.symbol || "?")}</b><span class="m ${cls(t.pnl_sol)}">${sgn(t.pnl_sol)}</span><span class="h">${held(t.hold_h)}</span></span>`).join("")
-      : `<span class="rc-empty">The first closed trade shows up here, win or lose.</span>`, rec.length > 0);
-    pnl = sc.series; pnlLbl = sc.labels || []; drawSpark();
-    $("#spLbl").textContent = sc.closed ? "Cumulative P&L, trade by trade · hover the line" : "No closed trades yet. The line starts with the first one.";
   };
   const load = async () => {
     try { const r = await apiFetch("/site", { cache: "no-store" }); if (!r.ok) throw new Error(r.status); hydrate(await r.json()); }
     catch (e) { console.warn("live data unavailable, retrying", e); }
   };
-  if (!(location.hostname === "localhost" && location.search.includes("example"))) {
-    /* the scorecard never shows made-up numbers: blank until the real data lands (a failed load just retries) */
-    ["#scNet", "#scTaken", "#scRate", "#scAvg", "#scHold", "#scBest", "#scWorst"].forEach(s => {
-      const el = $(s); el.removeAttribute("data-count"); el.classList.remove("up-t", "down-t"); el.textContent = "—"; });
-    ["#scTakenS", "#scWLs", "#scBestS", "#scWorstS", "#scAvgS"].forEach(s => { $(s).textContent = ""; });
-    hide($("#scRet")); hide($("#scPill")); $("#scWL").innerHTML = ""; $$("#score .example").forEach(hide);
-    $("#scMeta").textContent = "Loading live trades…"; $("#spLbl").textContent = "";
-    marquee(`<span class="rc-empty">Loading live trades…</span>`, false);
-    pnl = [0]; drawSpark();
-    load(); setInterval(load, 30000);
-  }
+  if (!EXAMPLE) { load(); setInterval(load, 30000); }
+  else { Object.assign(T, exampleData()); renderTerminal(); }
 
 })();
 </script>

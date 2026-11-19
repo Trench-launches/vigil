@@ -19,7 +19,7 @@ cp .env.example .env                  # paper mode; no keys needed to run the te
 .venv/bin/pytest
 ```
 
-The tests run offline against fakes of the chain, X and Grok (`tests/fakes.py`). They never need a real key,
+The tests run offline against fakes of the chain, X and Claude (`tests/fakes.py`). They never need a real key,
 and they must never make a real network call or trade.
 
 ## Pull requests

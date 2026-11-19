@@ -1,5 +1,5 @@
 """Every module must import, and the CLI must start: the server runs
-`ctagent run-all`, so a syntax error anywhere here stops all of VIGIL."""
+`ctagent run-all`, so a syntax error anywhere here stops all of Buddy."""
 import importlib
 import pkgutil
 

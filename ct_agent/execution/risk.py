@@ -1,4 +1,4 @@
-"""Hard limits and the stop switch. Grok can never loosen these.
+"""Hard limits and the stop switch. Claude can never loosen these.
 
 Limits are in the quote asset (SOL, see units.py): every trade is a swap between SOL and the coin, so a
 trade quoted in anything else is refused.

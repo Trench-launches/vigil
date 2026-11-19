@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS kv (
     value TEXT NOT NULL
 );
 
--- Every Solana coin VIGIL has looked at (from scanner calls, chat look-ups, launches), filled on demand.
+-- Every Solana coin Buddy has looked at (from scanner calls, chat look-ups, launches), filled on demand.
 CREATE TABLE IF NOT EXISTS tokens (
     mint            TEXT PRIMARY KEY,        -- base58, case-sensitive: never lowercased
     name            TEXT,
@@ -186,12 +186,12 @@ CREATE TABLE IF NOT EXISTS scanner_calls (
     triggered_at    TEXT,
     checked_at      TEXT,
     first_seen      TEXT NOT NULL,
-    decision_id     INTEGER                 -- Grok's analysis of the call
+    decision_id     INTEGER                 -- Claude's analysis of the call
 );
 CREATE INDEX IF NOT EXISTS ix_scanner_calls_status ON scanner_calls(status, called_at);
 CREATE INDEX IF NOT EXISTS ix_scanner_calls_token ON scanner_calls(token);
 
--- Public "Ask VIGIL" chat: one row per request, for rate limits. `who` is a salted hash of the IP.
+-- Public "Ask Buddy" chat: one row per request, for rate limits. `who` is a salted hash of the IP.
 CREATE TABLE IF NOT EXISTS chat_requests (
     id      INTEGER PRIMARY KEY AUTOINCREMENT,
     ts      TEXT NOT NULL,
@@ -202,11 +202,11 @@ CREATE TABLE IF NOT EXISTS chat_requests (
 CREATE INDEX IF NOT EXISTS ix_chat_requests_who ON chat_requests(who, ts);
 CREATE INDEX IF NOT EXISTS ix_chat_requests_ts ON chat_requests(ts);
 
--- Launchpad: coins VIGIL launches on pump.fun for people who ask on X. One row per request, from the tweet to
--- the coin's creator-fee split (90% to the requester, 10% to VIGIL, set once at launch and locked by pump.fun).
+-- Launchpad: coins Buddy launches on pump.fun for people who ask on X. One row per request, from the tweet to
+-- the coin's creator-fee split (90% to the requester, 10% to Buddy, set once at launch and locked by pump.fun).
 CREATE TABLE IF NOT EXISTS launch_requests (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
-    x_post_id       TEXT NOT NULL UNIQUE,   -- the request tweet (VIGIL replies under it)
+    x_post_id       TEXT NOT NULL UNIQUE,   -- the request tweet (Buddy replies under it)
     author_id       TEXT NOT NULL,
     handle          TEXT,
     created_at      TEXT NOT NULL,
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS launch_requests (
     metadata_uri    TEXT,                   -- IPFS metadata the coin points to
     image_uri       TEXT,                   -- the coin's image as pinned on IPFS (what pump.fun shows)
     tx_hash         TEXT,                   -- the create transaction signature
-    cost_lamports   TEXT,                   -- what the launch cost VIGIL (fees, rent, dev buy)
+    cost_lamports   TEXT,                   -- what the launch cost Buddy (fees, rent, dev buy)
     fee_share_tx    TEXT,                   -- the transaction that set the creator-fee split
     fee_shares      TEXT,                   -- JSON [{address, bps}] as set on chain
     launched_at     TEXT

@@ -1,10 +1,10 @@
 """Launch requests from X, the pump.fun launches themselves, and each coin's creator-fee split.
 
-1. take_request (in the mentions loop): a post asking VIGIL to launch a coin is checked (per-account daily limit,
-   account age, one Solana wallet for the fees, an attached image, the daily SOL budget) and screened by Grok (a real
+1. take_request (in the mentions loop): a post asking Buddy to launch a coin is checked (per-account daily limit,
+   account age, one Solana wallet for the fees, an attached image, the daily SOL budget) and screened by Claude (a real
    request, no impersonation, nothing unsafe). It's approved, or refused with a short reply.
 2. launchpad_once (its own loop): approved requests are announced on X, then launched on pump.fun from the launcher
-   wallet, and VIGIL replies with the contract address. Right after, the coin's creator fees are split once and
+   wallet, and Buddy replies with the contract address. Right after, the coin's creator fees are split once and
    pump.fun locks it: launch_creator_share_bps (90%) to the requester's wallet, the rest to the launcher. Coins with a
    split get their fees paid out every few hours.
 
@@ -63,7 +63,7 @@ def _spent_24h(conn: Any, s: Any) -> int:
 
 
 def _wallets(text: str, s: Any) -> list[str]:
-    """Solana wallets in the post, as written (base58 is case-sensitive). Program ids, well-known mints, VIGIL's own
+    """Solana wallets in the post, as written (base58 is case-sensitive). Program ids, well-known mints, Buddy's own
     coin and anything off the ed25519 curve (token accounts, PDAs: they can't be someone's wallet) are skipped."""
     skip = NOT_A_WALLET | {a for a in (getattr(s, "agent_token_address", ""),) if a}
     out = []
@@ -127,12 +127,12 @@ def take_request(ctx: Any, m: dict[str, Any]) -> str:
     if not m.get("images"):
         return _refuse(conn, m, "no image", "Attach an image for the coin and ask again 🌅", **fields)
     if not d.approve:
-        return _refuse(conn, m, "grok declined: " + d.reason, (d.reason or "I can't launch that one.")[:200], **fields)
+        return _refuse(conn, m, "claude declined: " + d.reason, (d.reason or "I can't launch that one.")[:200], **fields)
     if not name or not SYMBOL.match(sym) or sym.lower() not in text.lower() or name.lower() not in text.lower():
         return _refuse(conn, m, "unclear name or ticker", "Give me a name and a ticker (letters and numbers, up to 10) "
                                                           "and I'll launch it 🌅", **fields)
-    own = (s.agent_ticker or "VIGIL").upper()  # an empty CT_AGENT_TICKER still reserves the default
-    if sym == own:  # any name goes, except a copy of VIGIL's own coin
+    own = (s.agent_ticker or "BUDDY").upper()  # an empty CT_AGENT_TICKER still reserves the default
+    if sym == own:  # any name goes, except a copy of Buddy's own coin
         return _refuse(conn, m, "reserved ticker", f"${own} is my own coin, so I can't launch another one. "
                                                    "Pick another ticker 🌅", **fields)
     if _spent_24h(conn, s) + _est_cost(s) > lamports(s.launch_daily_cap_sol):
@@ -183,7 +183,7 @@ def _pct(bps: int) -> str:
 
 def _launch(ctx: Any, launcher: PumpLauncher, r: dict[str, Any]) -> int:
     """Announce, launch, then post the receipt. The coin's X link is written into its metadata at launch and can't
-    change, so VIGIL's announcement goes out first and the coin links to it (unless they gave their own link)."""
+    change, so Buddy's announcement goes out first and the coin links to it (unless they gave their own link)."""
     conn, s = ctx.conn, ctx.settings
     if r.get("tx_hash"):  # signed before: never again
         conn.execute("UPDATE launch_requests SET status='launching' WHERE id=?", (r["id"],))
@@ -193,7 +193,7 @@ def _launch(ctx: Any, launcher: PumpLauncher, r: dict[str, Any]) -> int:
     if ann is None:
         desc = f"\n\n{r['description']}" if r["description"] else ""
         creator = f"\nCreator: @{r['handle']}" if r["handle"] else ""
-        enqueue(conn, Draft("launch_announce", f"🚀 New on the VIGIL launchpad\n\n${r['symbol']} · {r['name']}{creator}"
+        enqueue(conn, Draft("launch_announce", f"🚀 New on the Buddy launchpad\n\n${r['symbol']} · {r['name']}{creator}"
                                                f"{desc}\n\nLaunching now on pump.fun. CA and receipt below 👇",
                             f"launch:{r['id']}", key))
         return 0
@@ -206,7 +206,7 @@ def _launch(ctx: Any, launcher: PumpLauncher, r: dict[str, Any]) -> int:
     socials = json.loads(r["socials"] or "{}")
     if not socials.get("twitter") and posted:
         socials["twitter"] = f"https://x.com/i/status/{ann['x_post_id']}"  # works whatever the handle becomes
-    via = f"@{s.x_handle}" if s.x_handle else "VIGIL"
+    via = f"@{s.x_handle}" if s.x_handle else "Buddy"
     credit = f"Created by @{r['handle']}, launched via {via}" if r["handle"] else f"Launched via {via}"
     own = (r["description"] or "").strip().rstrip(".").strip()
     desc = f"{own}. {credit}" if own else credit  # one full stop, whatever they typed
@@ -262,9 +262,9 @@ def _launched(ctx: Any, launcher: PumpLauncher, r: dict[str, Any], mint: str, si
     theirs = next((sh.bps for sh in shares if sh.address == r["recipient"]), 0)
     explorer = (s.explorer_url or "https://solscan.io").rstrip("/")
     pump = f"https://pump.fun/coin/{mint}"
-    fees = (f"{_pct(theirs)} to {_by(r)}, {_pct(10_000 - theirs)} to VIGIL" if 0 < theirs < 10_000
-            else f"all to {_by(r)}" if theirs else "all to VIGIL")
-    cost_line = f"Launch cost: {sol(cost):.4f} SOL (paid by VIGIL)\n" if cost is not None else ""
+    fees = (f"{_pct(theirs)} to {_by(r)}, {_pct(10_000 - theirs)} to Buddy" if 0 < theirs < 10_000
+            else f"all to {_by(r)}" if theirs else "all to Buddy")
+    cost_line = f"Launch cost: {sol(cost):.4f} SOL (paid by Buddy)\n" if cost is not None else ""
     receipt = (f"✅ ${r['symbol']} is live on Solana\n\nCA: {mint}\nTx: {explorer}/tx/{sig}\n{pump}\n\n"
                f"{cost_line}Creator fees: {fees} (set on pump.fun right after launch, then locked)")
     if posted:
@@ -310,7 +310,7 @@ def _due(conn: Any, key: str) -> bool:
 
 
 def _split(ctx: Any, launcher: PumpLauncher, r: dict[str, Any]) -> int:
-    """Set the coin's creator-fee split once (requester first, then VIGIL). Retried until it's on chain."""
+    """Set the coin's creator-fee split once (requester first, then Buddy). Retried until it's on chain."""
     conn, s = ctx.conn, ctx.settings
     key = f"launch_split_next:{r['id']}"
     if not _due(conn, key):
@@ -363,7 +363,7 @@ def import_launch(conn: Any, s: Any, launcher: PumpLauncher, mint: str, *, handl
                   fee_share_tx: str | None = None) -> dict[str, Any]:
     """Put a coin the launcher made outside the X flow (ctagent launch-test runs on the owner's machine, with its
     own database) on the launch list, so the site shows it. Everything comes from the chain, nothing from the caller:
-    the curve must point at a locked fee split that includes VIGIL's launcher; the name, ticker and image come from
+    the curve must point at a locked fee split that includes Buddy's launcher; the name, ticker and image come from
     the token's metadata; the launch transaction and time from the mint's first transaction. A coin already on the
     list is left as it is. Raises LaunchBlocked when the coin isn't one of the launcher's, or can't be read."""
     old = conn.execute("SELECT id, symbol FROM launch_requests WHERE token=?", (mint,)).fetchone()
@@ -375,13 +375,13 @@ def import_launch(conn: Any, s: Any, launcher: PumpLauncher, mint: str, *, handl
     from .pumpfun import sharing_config_pda
     bc = launcher.curve(mint)
     if bc["creator"] != str(sharing_config_pda(mint)):
-        raise LaunchBlocked("this coin has no creator-fee split, so it isn't a finished VIGIL launch")
+        raise LaunchBlocked("this coin has no creator-fee split, so it isn't a finished Buddy launch")
     cfg = launcher.sharing_config(mint)
     if not cfg or not cfg["admin_revoked"]:
         raise LaunchBlocked("this coin's fee split isn't locked yet")
     owners = [sh.address for sh in cfg["shareholders"]]
     if me not in owners:
-        raise LaunchBlocked("VIGIL's launcher isn't in this coin's fee split: not one of its launches")
+        raise LaunchBlocked("Buddy's launcher isn't in this coin's fee split: not one of its launches")
     recipient = next((a for a in owners if a != me), me)
     asset = launcher.rpc.get_asset(mint) or {}
     content = asset.get("content") or {}

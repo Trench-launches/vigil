@@ -53,7 +53,7 @@ class TranscriptIn(BaseModel):
 
 
 class ChatMsg(BaseModel):
-    role: str = Field(pattern="^(user|grok|muse)$")  # "muse": pages opened before the Grok switch
+    role: str = Field(pattern="^(user|claude|grok|muse)$")  # "grok", "muse": pages opened before the Claude switch
     text: str = Field(max_length=2000)
 
 
@@ -62,7 +62,7 @@ class ChatIn(BaseModel):
     history: list[ChatMsg] = Field(default_factory=list, max_length=20)
     # a coin the visitor picked (a suggestion chip): researched with the live card
     token: str | None = Field(default=None, pattern=BASE58_MINT)
-    # the coin discussed earlier: passed to Grok quietly, used only if the new message is about it
+    # the coin discussed earlier: passed to Claude quietly, used only if the new message is about it
     context_token: str | None = Field(default=None, pattern=BASE58_MINT)
 
 
@@ -73,7 +73,7 @@ class PostIn(BaseModel):
 
 class ImportLaunchIn(BaseModel):
     mint: str = Field(max_length=44)
-    handle: str | None = Field(default=None, max_length=16)       # who to credit; VIGIL's own X handle by default
+    handle: str | None = Field(default=None, max_length=16)       # who to credit; Buddy's own X handle by default
     fee_share_tx: str | None = Field(default=None, max_length=100)  # the split's transaction, for the record
 
 
@@ -119,7 +119,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "kill_switch": {"on": killed, "reason": why},
             "journal": {"entries": count("journal"), "chain_intact": ok, "first_bad_id": bad},
             "integrations": {
-                "rpc": redact(s.solana_rpc_url), "jupiter": bool(s.jupiter_api_key), "grok": bool(s.grok_api_key),
+                "rpc": redact(s.solana_rpc_url), "jupiter": bool(s.jupiter_api_key), "claude": bool(s.anthropic_api_key),
                 "x_read": bool(s.x_bearer_token),
                 "x_post": bool(s.x_user_access_token or (s.x_client_id and s.x_refresh_token)) and s.x_posting_enabled,
                 "twitch": bool(s.twitch_client_id and s.twitch_eventsub_secret), "news_feeds": len(s.news_feeds),
@@ -140,7 +140,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/tokens")
     @app.get("/launches")  # the old name, kept for existing links
     def token_list(stage: str | None = None, limit: int = 50, conn=Depends(db)) -> list[dict[str, Any]]:
-        """Coins VIGIL has looked at (the token cache), newest first. stage: curve | pool."""
+        """Coins Buddy has looked at (the token cache), newest first. stage: curve | pool."""
         limit = min(limit, 500)
         if stage in ("curve", "pool"):
             return rows(conn, "SELECT * FROM tokens WHERE stage=? ORDER BY first_seen DESC LIMIT ?", (stage, limit))
@@ -194,7 +194,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/scanner")
     def scanner_calls(limit: int = 50, conn=Depends(db)) -> dict[str, Any]:
-        """The smart-money scanner's Solana calls as VIGIL sees them: moved how far, and what it did."""
+        """The smart-money scanner's Solana calls as Buddy sees them: moved how far, and what it did."""
         calls = rows(conn, "SELECT id, token, symbol, called_at, call_price_usd, status, note, last_move_pct, "
                            "peak_move_pct, triggered_at, checked_at, decision_id FROM scanner_calls "
                            "ORDER BY id DESC LIMIT ?", (min(limit, 500),))
@@ -222,8 +222,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         out = dict(r)
         out.pop("id")
         out["fee_shares"] = _json(out["fee_shares"])
-        if out["status"] == "refused":  # the short public reason VIGIL replied with, not the internal note
-            out["reason"] = (out["reason"] or "").removeprefix("grok declined: ")
+        if out["status"] == "refused":  # the short public reason Buddy replied with, not the internal note
+            out["reason"] = (out["reason"] or "").removeprefix("claude declined: ").removeprefix("grok declined: ")
         return out
 
     @app.get("/launchpad/recent")
@@ -290,7 +290,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.get("/outcomes")
     def outcomes(hours: float | None = None, conn=Depends(db)) -> dict[str, Any]:
-        """What happened after each call, split by the variables VIGIL saw."""
+        """What happened after each call, split by the variables Buddy saw."""
         from ..strategy.outcomes import report
         return report(conn, hours)
 
@@ -309,13 +309,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return rows(conn, "SELECT * FROM posts WHERE status=? ORDER BY id DESC LIMIT 200", (status,))
         return rows(conn, "SELECT * FROM posts ORDER BY id DESC LIMIT 200")
 
-    # --- ask VIGIL (public chat, answered by Grok) ---------------------------------------------
+    # --- ask Buddy (public chat, answered by Claude) ---------------------------------------------
 
     import threading
     chat_lock = threading.Lock()
 
     def chat_services() -> dict[str, Any]:
-        """Chain, market and Grok clients for the chat, built once. Tests can preset app.state.chat_services."""
+        """Chain, market and Claude clients for the chat, built once. Tests can preset app.state.chat_services."""
         svc = getattr(app.state, "chat_services", None)
         if svc is None:
             with chat_lock:  # the start-up warm-up and a first visitor must not build it twice
@@ -328,7 +328,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                                                      "brain": ctx.brain, "x": ctx.x, "web": ctx.web}
         return svc
 
-    if s.chat_enabled and s.grok_api_key:  # building the clients takes ~10s: do it at start-up, not on a visitor's first question
+    if s.chat_enabled and s.anthropic_api_key:  # building the clients takes ~10s: do it at start-up, not on a visitor's first question
         threading.Thread(target=chat_services, name="chat-warmup", daemon=True).start()
 
     def visitor(request: Request, conn: Any) -> str:
@@ -357,20 +357,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(429, str(exc), headers={"Retry-After": str(exc.retry_after_s)})
         svc = chat_services()
         if not svc["brain"].enabled:
-            raise HTTPException(503, "VIGIL isn't connected right now.")
+            raise HTTPException(503, "Buddy isn't connected right now.")
         history = [{"role": m.role, "text": m.text[:600]} for m in body.history[-8:]]
         return svc, who, msg, history
 
     @app.post("/chat")
     def ask_vigil(body: ChatIn, request: Request, conn=Depends(db)) -> dict[str, Any]:
-        """Ask VIGIL (Grok) about a Solana coin. Rate limited per visitor and per day overall."""
+        """Ask Buddy (Claude) about a Solana coin. Rate limited per visitor and per day overall."""
         svc, who, msg, history = chat_start(body, request, conn)
         for e in chat.answer_events(svc, s, s.database_path, who, msg, history, body.token, body.context_token):
             if e["type"] == "error":
                 raise HTTPException(502, e["detail"])
             if e["type"] == "answer":
                 return {k: v for k, v in e.items() if k != "type"}
-        raise HTTPException(502, "VIGIL didn't answer that one. Try again in a moment.")
+        raise HTTPException(502, "Buddy didn't answer that one. Try again in a moment.")
 
     @app.post("/chat/stream")
     def ask_vigil_live(body: ChatIn, request: Request, conn=Depends(db)) -> StreamingResponse:
@@ -422,7 +422,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.post("/admin/launches/import")
     def import_launch(body: ImportLaunchIn, who: str = Depends(admin), conn=Depends(db)) -> dict[str, Any]:
         """Put a launch made outside the X flow (ctagent launch-test) on the launch list, so the site shows it.
-        The coin is checked on chain: its fee split must be locked and include VIGIL's launcher."""
+        The coin is checked on chain: its fee split must be locked and include Buddy's launcher."""
         from ..launchpad.pumpfun import LaunchBlocked, PumpLauncher
         from ..launchpad.service import import_launch as do_import
         from . import site as site_mod

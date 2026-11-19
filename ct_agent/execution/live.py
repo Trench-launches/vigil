@@ -9,7 +9,7 @@ Refuses to sign unless every gate passes:
   * a fresh Jupiter order for this exact swap, with its price impact inside max_slippage_bps and the same
     bound as its slippage limit
 
-Jupiter builds the transaction (Swap V2 `order`), VIGIL signs it with the trading key, and Jupiter lands it
+Jupiter builds the transaction (Swap V2 `order`), Buddy signs it with the trading key, and Jupiter lands it
 (`execute`). The fill is what Jupiter reports changed hands. Every submission, fill and failure is journalled.
 `CT_LIVE_VENUE=gmgn` sends the same swaps through GMGN's trading API instead (see gmgn.py).
 """

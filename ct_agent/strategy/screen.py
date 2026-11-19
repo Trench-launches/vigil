@@ -11,7 +11,7 @@ Flags (worth knowing, not disqualifying): volume many times the liquidity (wash 
 big share.
 
 The scanner's buy rule doesn't wait on the screen (only the wallet's limits can stop a triggered buy, and unsafe
-mints are never tradeable at all); the screen's findings go to Grok with every analysis.
+mints are never tradeable at all); the screen's findings go to Claude with every analysis.
 """
 from __future__ import annotations
 

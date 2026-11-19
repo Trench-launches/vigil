@@ -1,6 +1,6 @@
-"""End-to-end: fake Solana + fake Jupiter + fake scanner + fake Grok + fake X, real code in between.
+"""End-to-end: fake Solana + fake Jupiter + fake scanner + fake Claude + fake X, real code in between.
 
-scanner call -> tradeable check (mint safety, Jupiter route) -> Grok's read -> +30% rule buy (paper fill from a
+scanner call -> tradeable check (mint safety, Jupiter route) -> Claude's read -> +30% rule buy (paper fill from a
 Jupiter quote) -> exits (stop, take-profit ladder, timer) -> posts -> API reads it all back.
 """
 import json
@@ -45,7 +45,7 @@ def _settings(tmp_path, **kw) -> Settings:
     return Settings(**base)
 
 
-def _grok(action="watch"):
+def _claude(action="watch"):
     calls = []
 
     def complete(instructions, text, schema, name):
@@ -88,24 +88,24 @@ def _world(coin=None, calls=None):
     return ch, jup
 
 
-def _ctx(tmp_path, ch, jup, calls, sent=None, grok=None, full=False, **kw):
+def _ctx(tmp_path, ch, jup, calls, sent=None, claude=None, full=False, **kw):
     return build(_settings(tmp_path, **kw), rpc_transport=ch.transport(),
                  market_transport=market_transport(ch, supabase=calls), jupiter_transport=jup.transport(),
-                 x_transport=_x_transport(sent if sent is not None else [], full), completer=grok or _grok())
+                 x_transport=_x_transport(sent if sent is not None else [], full), completer=claude or _claude())
 
 
 def test_full_paper_cycle(tmp_path):
     ch, jup = _world()
     hot = ch.coins[mint(1)]
     sent: list[str] = []
-    grok = _grok()
-    ctx = _ctx(tmp_path, ch, jup, [_call(1, hot)], sent, grok)
+    claude = _claude()
+    ctx = _ctx(tmp_path, ch, jup, [_call(1, hot)], sent, claude)
 
     out = trader_once(ctx)
     buy = [d for d in out["decisions"] if d.get("action") == "buy"]
     assert buy and buy[0]["entered"], out
-    assert "<untrusted_evidence>" in grok.calls[0] and '"chain": "Solana"' in grok.calls[0]
-    assert '"mint_safety"' in grok.calls[0] and '"top10_share": 0.06' in grok.calls[0]  # the pool's 20% isn't a holder
+    assert "<untrusted_evidence>" in claude.calls[0] and '"chain": "Solana"' in claude.calls[0]
+    assert '"mint_safety"' in claude.calls[0] and '"top10_share": 0.06' in claude.calls[0]  # the pool's 20% isn't a holder
 
     pos = rows(ctx.conn, "SELECT * FROM positions")
     assert len(pos) == 1 and pos[0]["mode"] == "paper" and pos[0]["quote_symbol"] == "SOL"
@@ -118,7 +118,7 @@ def test_full_paper_cycle(tmp_path):
     assert (coin["symbol"], coin["decimals"], coin["stage"], coin["dex_id"]) == ("HOT", 6, "pool", "pumpswap")
 
     social_once(ctx)
-    assert sent[0].startswith("👀 $HOT is on my radar")                     # Grok's read on the call
+    assert sent[0].startswith("👀 $HOT is on my radar")                     # Claude's read on the call
     assert sent[1].startswith("🟢 Test buy $HOT") and hot.mint not in sent[1]  # ticker only
     assert "\nPlan: -70% stop" in sent[1] and "Size: 0.5000 SOL" in sent[1] and len(sent[1]) <= 280
     assert "\nEntry: $" in sent[1] and " MC\n" in sent[1] and "smart-money call on Solana" in sent[1], sent[1]
@@ -130,14 +130,14 @@ def test_full_paper_cycle(tmp_path):
 
     # price collapses -> stop loss -> exit posted, loss logged
     hot.price_usd = CALL_PRICE * 0.3
-    calls = len(grok.calls)
+    calls = len(claude.calls)
     jup.calls.clear()
     out3 = exits_once(ctx)
     assert out3["exits"][0]["action"] == "exit" and "stop loss" in out3["exits"][0]["reason"]
     assert jup.calls == ["/price/v3", "/swap/v2/order"]  # one batched mark, then a real quote for the sale
-    assert len(grok.calls) == calls and journal_recent(ctx.conn, kind="post_job")  # the sell didn't wait on Grok
+    assert len(claude.calls) == calls and journal_recent(ctx.conn, kind="post_job")  # the sell didn't wait on Claude
     social_once(ctx)
-    assert len(grok.calls) > calls  # the post-mortem is written in the posting loop
+    assert len(claude.calls) > calls  # the post-mortem is written in the posting loop
     assert sent[-1].startswith("🔴 Top blasted $HOT (testing) · -") and "\nRealised P&L: -" in sent[-1], sent[-1]
     assert " SOL (-" in sent[-1] and "Lesson: wait for buys from more wallets." in sent[-1]
     assert journal_verify(ctx.conn) == (True, None)
@@ -184,15 +184,15 @@ def test_untradeable_calls_are_skipped_in_plain_words_but_still_read(tmp_path):
                             "transferFeeBasisPoints": 500}}}]))
     evm = {"id": 5, "token_address": "0x" + "ab" * 20, "token_symbol": "EVM", "alert_price": 1.0, "alert_mcap": 1,
            "alert_timestamp": int(datetime.now(timezone.utc).timestamp() * 1000), "source": "x"}
-    grok = _grok()
-    ctx = _ctx(tmp_path, ch, jup, [_call(2, risky), _call(3, stuck), _call(4, taxed), evm], grok=grok)
+    claude = _claude()
+    ctx = _ctx(tmp_path, ch, jup, [_call(2, risky), _call(3, stuck), _call(4, taxed), evm], claude=claude)
     trader_once(ctx)
     st = {r["token"]: r for r in rows(ctx.conn, "SELECT token, status, note FROM scanner_calls")}
     assert st[risky.mint]["status"] == "skipped" and "freeze" in st[risky.mint]["note"]
     assert "can't route" in st[stuck.mint]["note"] and "5% tax on every transfer" in st[taxed.mint]["note"]
     assert "not a Solana token" in st["0x" + "ab" * 20]["note"]
     assert rows(ctx.conn, "SELECT COUNT(*) c FROM positions")[0]["c"] == 0
-    assert any('"tradeable_by_vigil": false' in c for c in grok.calls)  # untradeable calls still get Grok's read
+    assert any('"tradeable_by_buddy": false' in c for c in claude.calls)  # untradeable calls still get Claude's read
 
 
 def test_buy_on_call_buys_first_and_reads_under_it(tmp_path):
@@ -400,18 +400,18 @@ def test_repeat_calls_are_not_reposted(tmp_path):
 
 def _chat_api(tmp_path, coin=None, **kw):
     ch, jup = _world(coin)
-    grok = _grok()
-    ctx = _ctx(tmp_path, ch, jup, [], grok=grok, **kw)
+    claude = _claude()
+    ctx = _ctx(tmp_path, ch, jup, [], claude=claude, **kw)
     app = create_app(ctx.settings)
     app.state.chat_services = {"rpc": ctx.rpc, "market": ctx.market, "jupiter": ctx.jupiter, "brain": ctx.brain,
                                "web": ctx.web}
-    return TestClient(app), ch.coins[mint(1)], grok, ctx
+    return TestClient(app), ch.coins[mint(1)], claude, ctx
 
 
 def test_ask_vigil_researches_a_mint(tmp_path):
     from ct_agent.api import chat
     chat._RESEARCH.clear()
-    api, hot, grok, ctx = _chat_api(tmp_path)
+    api, hot, claude, ctx = _chat_api(tmp_path)
     d = api.post("/chat", json={"message": "Research $HOT", "token": hot.mint}).json()  # a suggestion chip
     card = d["token"]
     assert card["symbol"] == "HOT" and card["explorer"] == f"https://solscan.io/token/{hot.mint}", d
@@ -424,18 +424,18 @@ def test_ask_vigil_researches_a_mint(tmp_path):
     assert r.status_code == 200, r.text
     d = r.json()
     assert d["reply"].startswith("HOT is a cat coin") and d["remaining"]["hour"] == 8
-    sent = grok.calls[-1]
+    sent = claude.calls[-1]
     assert '"mint_safety"' in sent and '"holders"' in sent and "<visitor_conversation>" in sent
 
     d = api.post("/chat", json={"message": "is $hot risky?"}).json()  # ticker lookup (token cache), any case
     assert d["token"]["address"] == hot.mint
 
-    # a follow-up with no coin named: the earlier coin goes to Grok quietly (no card), marked as context
+    # a follow-up with no coin named: the earlier coin goes to Claude quietly (no card), marked as context
     d = api.post("/chat", json={"message": "and the holders?", "context_token": hot.mint}).json()
-    assert d["token"] is None and '"context_only": true' in grok.calls[-1] and '"symbol": "HOT"' in grok.calls[-1]
+    assert d["token"] is None and '"context_only": true' in claude.calls[-1] and '"symbol": "HOT"' in claude.calls[-1]
 
     d = api.post("/chat", json={"message": f"check {mint(404)}"}).json()  # a valid address, but no token mint
-    assert d["token"] is None and '"is_solana_token": false' in grok.calls[-1]
+    assert d["token"] is None and '"is_solana_token": false' in claude.calls[-1]
     assert api.post("/chat", json={"message": "hi", "token": "0x" + "ab" * 20}).status_code == 422  # EVM refused
 
     assert api.post("/chat", json={"message": "x" * 501}).status_code == 400
@@ -446,13 +446,13 @@ def test_ask_vigil_researches_a_mint(tmp_path):
 
 def test_ticker_falls_back_to_dexscreener_search(tmp_path):
     from ct_agent.api.chat import find_token
-    api, hot, grok, ctx = _chat_api(tmp_path)
+    api, hot, claude, ctx = _chat_api(tmp_path)
     assert find_token(ctx.conn, "what about $HOT", ctx.market) == (hot.mint, "ticker")  # not seen before: searched
     assert find_token(ctx.conn, "what about $NOPE", ctx.market)[0] is None
 
 
 def test_ask_vigil_is_rate_limited(tmp_path):
-    api, hot, grok, ctx = _chat_api(tmp_path, chat_per_ip_hour=2, chat_global_day=3)
+    api, hot, claude, ctx = _chat_api(tmp_path, chat_per_ip_hour=2, chat_global_day=3)
     one = {"x-forwarded-for": "1.1.1.1"}
     assert api.get("/chat/limits", headers=one).json()["remaining"] == {"hour": 2, "day": 30}
     for _ in range(2):
@@ -463,26 +463,26 @@ def test_ask_vigil_is_rate_limited(tmp_path):
     assert api.post("/chat", json={"message": "hi"}, headers={"x-forwarded-for": "2.2.2.2"}).status_code == 200
     r = api.post("/chat", json={"message": "hi"}, headers={"x-forwarded-for": "3.3.3.3"})
     assert r.status_code == 429 and "all it can for today" in r.json()["detail"]
-    assert len(grok.calls) == 3  # refused requests never reached Grok
+    assert len(claude.calls) == 3  # refused requests never reached Claude
 
 
 def test_chat_streams_each_research_step(tmp_path):
     from ct_agent.api import chat
     chat._RESEARCH.clear()
     hot = _hot(description="HOT is the cat who guards every fridge on Solana.", twitter="https://x.com/hotcoin")
-    api, hot, grok, ctx = _chat_api(tmp_path, hot)
+    api, hot, claude, ctx = _chat_api(tmp_path, hot)
     r = api.post("/chat/stream", json={"message": f"look at {hot.mint}"})
     assert r.status_code == 200 and r.headers["content-type"].startswith("application/x-ndjson")
     ev = [json.loads(line) for line in r.text.splitlines() if line.strip()]
     done = [(e["id"], e["status"]) for e in ev if e["type"] == "step" and e["status"] != "run"]
     assert done == [("coin", "done"), ("onchain", "done"), ("lore", "done"), ("x", "skip"), ("website", "skip"),
-                    ("grok", "done")], done
+                    ("claude", "done")], done
     steps = {e["id"]: e["detail"] for e in ev if e["type"] == "step" and e["status"] != "run"}
     assert steps["coin"] == "$HOT · Hot" and "pool on pumpswap" in steps["onchain"]
     assert "guards every fridge" in steps["lore"] and steps["x"] == "@hotcoin (profile not checked)"
-    assert ev[-1]["type"] == "answer" and "guards every fridge" in grok.calls[-1].split("<untrusted_evidence>")[1]
-    ev = [json.loads(line) for line in api.post("/chat/stream", json={"message": "how does VIGIL pick trades?"}).text.splitlines()]
-    assert [e["id"] for e in ev if e["type"] == "step"] == ["grok", "grok"] and ev[-1]["type"] == "answer"
+    assert ev[-1]["type"] == "answer" and "guards every fridge" in claude.calls[-1].split("<untrusted_evidence>")[1]
+    ev = [json.loads(line) for line in api.post("/chat/stream", json={"message": "how does Buddy pick trades?"}).text.splitlines()]
+    assert [e["id"] for e in ev if e["type"] == "step"] == ["claude", "claude"] and ev[-1]["type"] == "answer"
 
 
 def test_launchpad_status_reads_the_new_columns(tmp_path):
@@ -518,7 +518,7 @@ def test_v1_history_folds_into_the_scorecard():
     sc = _with_v1(now, {"trades": 100, "wins": 54, "net_sol": 0.35, "deployed_sol": 5.0, "avg_hold_h": 3.0})
     assert sc["net_sol"] == 0.3 and sc["deployed_sol"] == 5.1 and sc["return_pct"] == 5.88
     assert "net_sol" in sc["history"]["includes"]
-    assert sc["avg_hold_h"] == 2.96 and sc["series"] == [0.0, 0.35, 0.345, 0.3] and sc["labels"][0] == "VIGIL v1 (100 trades)"
+    assert sc["avg_hold_h"] == 2.96 and sc["series"] == [0.0, 0.35, 0.345, 0.3] and sc["labels"][0] == "Buddy v1 (100 trades)"
 
 
 def test_admin_can_queue_a_hand_written_post(tmp_path):

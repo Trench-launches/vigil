@@ -1,5 +1,5 @@
 """The launcher wallet on Solana: put a coin's image and metadata on IPFS, launch it on pump.fun, then split its
-creator fees once (the requester's share and VIGIL's) and pay them out.
+creator fees once (the requester's share and Buddy's) and pay them out.
 
 Sources (checked 2026-10-28):
 - Pinata uploads, v3: POST https://uploads.pinata.cloud/v3/files, `Authorization: Bearer <JWT>`, multipart `file` +
@@ -230,7 +230,7 @@ def check_shares(shares: list[Share] | list[dict[str, Any]]) -> list[Share]:
 
 
 def split_for(requester: str, launcher: str, requester_bps: int) -> list[Share]:
-    """Requester first, then VIGIL's launcher. Either side at 0 (or the same wallet) leaves one shareholder."""
+    """Requester first, then Buddy's launcher. Either side at 0 (or the same wallet) leaves one shareholder."""
     requester_bps = max(0, min(TOTAL_BPS, int(requester_bps)))
     if requester == launcher or requester_bps == TOTAL_BPS:
         return [Share(requester, TOTAL_BPS)]

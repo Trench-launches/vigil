@@ -1,6 +1,6 @@
 """Calls from the smart-money scanner (its Supabase table `alert_performance`), Solana only.
 
-The scanner is VIGIL's only source of coins. A call only becomes a candidate once the coin has run
+The scanner is Buddy's only source of coins. A call only becomes a candidate once the coin has run
 +scanner_trigger_pct from the call price (USD, DexScreener), within scanner_window_hours of the call.
 A coin is tradeable when it is a real token mint, nobody can still mint or freeze it (and no Token-2022
 extension can take or tax holders' coins), and Jupiter can route a small SOL swap into it. Anything else
@@ -71,7 +71,7 @@ def fetch_fibbot(ctx: Context) -> int:
     """Fibbot's Solana smart-money calls (its table `smart_money_calls`, source 'smart_money' only; its
     Nansen alerts and fib alerts are ignored). Most are the same calls as the main scanner's; what Fibbot adds
     is re-calls: a coin called again later, which starts a fresh call with its own price and window. A Fibbot
-    call within 15 minutes of a call VIGIL already has for that coin is the same call and is skipped."""
+    call within 15 minutes of a call Buddy already has for that coin is the same call and is skipped."""
     s, conn = ctx.settings, ctx.conn
     if not (s.fibbot_supabase_url and s.fibbot_supabase_key):
         return 0
@@ -198,8 +198,8 @@ def refresh(ctx: Context) -> list[dict[str, Any]]:
 
 
 def to_analyse(conn: Any, window_hours: float, limit: int = 3) -> list[dict[str, Any]]:
-    """Calls Grok hasn't looked at yet, oldest first: every Solana call gets a read and a post, including
-    ones VIGIL can't trade (unsafe, or Jupiter can't route it). Only our own token is left out."""
+    """Calls Claude hasn't looked at yet, oldest first: every Solana call gets a read and a post, including
+    ones Buddy can't trade (unsafe, or Jupiter can't route it). Only our own token is left out."""
     cutoff = (_now() - timedelta(hours=window_hours)).isoformat(timespec="seconds")
     return rows(conn, "SELECT * FROM scanner_calls WHERE decision_id IS NULL AND called_at>=? AND "
                       "((status IN ('watching','bought') AND pool_id IS NOT NULL) OR "
@@ -217,7 +217,7 @@ def mark_bought(conn: Any, token: str) -> None:
 
 
 def call_facts(call: dict[str, Any], trigger_pct: float) -> dict[str, Any]:
-    """What the scanner saw at the call, plus the move since, for Grok's briefing."""
+    """What the scanner saw at the call, plus the move since, for Claude's briefing."""
     d = json.loads(call.get("data") or "{}")
     try:
         signals = json.loads(d.get("alert_signals") or "{}")
@@ -233,7 +233,7 @@ def call_facts(call: dict[str, Any], trigger_pct: float) -> dict[str, Any]:
                         "held_usd": d.get("alert_sm_held_usd"), "supply_controlled_pct": d.get("alert_supply_ctl_pct")},
         "signals": signals,
         "move_since_call_pct": call.get("last_move_pct"), "peak_move_since_call_pct": call.get("peak_move_pct"),
-        "rule": (f"VIGIL buys this call automatically, by rule, if the coin gets to +{trigger_pct:g}% from the call "
+        "rule": (f"Buddy buys this call automatically, by rule, if the coin gets to +{trigger_pct:g}% from the call "
                  "price. Your job here is the analysis: what the coin is, why smart money may be in, what could go "
                  "wrong. Your action does not decide the trade."),
     }

@@ -128,7 +128,7 @@ def og(ss=2) -> Image.Image:
         im = planet(im, circle)
         d = ImageDraw.Draw(im)
         tracked(d, w / 2, h * .27, "VIGIL", font("seguisb.ttf", 92 * s), (250, 250, 250), .34)
-        tracked(d, w / 2, h * .35, "POWERED BY GROK", font("segoeui.ttf", 20 * s), (150, 150, 150), .32)
+        tracked(d, w / 2, h * .35, "POWERED BY CLAUDE", font("segoeui.ttf", 20 * s), (150, 150, 150), .32)
         tracked(d, w / 2, h * .45, "Watches every memecoin launch on Solana. Trades in public, losses included.",
                 font("segoeuisl.ttf", 25 * s), (205, 205, 205), 0)
         return im
