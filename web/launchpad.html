@@ -19,7 +19,7 @@
 <meta name="twitter:image" content="https://example.com/assets/og-vigil.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..600&family=DM+Sans:opsz,wght@9..40,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 /* The launchpad dashboard. Layout from the Hookd launchpad (sidebar, sticky top bar, centred hero, a 6-column bento
    of tiles with a footer, then two lists); styling from VIGIL's home page: the same black, greys, pill buttons,
@@ -274,6 +274,84 @@ a.lrow:hover { background: var(--panel); }
           mask-image: radial-gradient(120px circle at var(--mx) var(--my), #000 0%, transparent 80%); }
 .bg-glow { background: radial-gradient(360px circle at var(--mx) var(--my), rgba(255,255,255,.055), transparent 70%); }
 @media (hover: none), (prefers-reduced-motion: reduce) { .bg-fx { display: none; } }
+
+/* ================= BUDDY: warm paper, ink and clay orange (same look as the home page) ================= */
+/* Last in the sheet, so it wins over the dark styles above: the same tokens are re-pointed, then the few
+   hard-coded dark colours are overridden. */
+:root {
+  color-scheme: light;
+  --bg: #F5F4ED; --ink: #141413; --ink-2: #5E5D59; --ink-3: #75736B; --ink-4: #9B998F;
+  --line: #E3E0D5; --line-soft: #E8E5DB; --btn-line: #D9D5C8; --kick-line: #E3E0D5;
+  --surface: #F0EEE6; --sand: #F3E9DC; --panel: #FAF9F5; --card: #FFFFFF;
+  --clay: #D97757; --clay-deep: #C15F3C; --clay-soft: #F6E4DA;
+  --green: #2E7D4F; --green-soft: #E2F0E6; --amber: #B26A1E; --coral: #C0392B;
+  --glow: 217, 119, 87;
+  --f-display: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r-panel: 18px;
+  --shadow: 0 1px 2px rgba(20,20,19,.04), 0 18px 36px -26px rgba(20,20,19,.3);
+}
+html, body { background: var(--bg); }
+body { background-image: radial-gradient(rgba(20,20,19,.085) 1px, transparent 1.2px); background-size: 22px 22px; }
+::selection { background: var(--clay); color: var(--ink); }
+.sidebar { background: rgba(245,244,237,.92); border-right-color: var(--line); }
+.logo .face, .setup .sw { background: var(--sand) url("assets/buddy-face.png") center / cover no-repeat; box-shadow: inset 0 0 0 1px rgba(20,20,19,.1); }
+.logo .word { font-family: var(--f-display); font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+.nav a:hover { background: rgba(20,20,19,.05); }
+.nav a.active { background: var(--card); border-color: var(--line); box-shadow: 3px 3px 0 var(--clay); }
+.topbar { background: rgba(245,244,237,.86); border-bottom-color: var(--line); }
+.search input, .icon-btn { background: var(--card); }
+.search input:focus { border-color: var(--clay); box-shadow: 0 0 0 3px rgba(var(--glow), .18); }
+.icon-btn:hover { background: var(--surface); }
+
+/* buttons: ink and clay, squarer, with a hard offset shadow on hover */
+.btn { border-radius: 10px; background: var(--card); transition: transform .2s ease, box-shadow .2s ease, background .2s; }
+.btn:hover { background: var(--card); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.btn.primary { background: var(--clay); color: var(--ink); border-color: var(--ink); }
+.btn.primary:hover { opacity: 1; background: var(--clay); }
+.btn.ghost { background: var(--card); }
+.btn:disabled, .btn:disabled:hover { background: var(--surface); color: var(--ink-3); border-color: var(--line); box-shadow: none; transform: none; }
+
+/* tags */
+.kicker { background: rgba(255,255,255,.6); color: var(--ink-2); font-size: 11.5px; }
+.kicker:not(:has(.dot))::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--clay); flex: none; }
+.kicker .dot { box-shadow: none; }
+.kicker.off .dot { box-shadow: none; }
+
+/* hero: copy on the left, Buddy and his rocket on the right */
+.hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, .65fr); align-items: center; gap: 24px; text-align: left; padding: 30px 0 36px; }
+.hero .kickers, .hero .ctas { justify-content: flex-start; }
+.hero h1 { margin: 22px 0 0; font-family: var(--f-display); font-weight: 450; letter-spacing: -0.025em; line-height: 1.04; }
+.hero h1 span { color: var(--clay-deep); font-style: italic; font-weight: 400; }
+.hero p { margin: 20px 0 0; }
+.hero-buddy { width: 100%; height: auto; max-height: 360px; object-fit: contain; filter: drop-shadow(0 18px 22px rgba(20,20,19,.16)); }
+@media (max-width: 980px) { .hero { grid-template-columns: minmax(0, 1fr); } .hero-buddy { max-height: 240px; order: -1; } }
+
+/* tiles, cards and panels: white on the paper */
+.tile, .card, .tok, .panel, .fact { background: var(--card); border-color: var(--line); }
+.tile:hover { border-color: var(--ink); }
+.tile-foot { background: var(--card); border-top-color: var(--line); }
+.tile-big, .fact b, .panel h3 { font-family: var(--f-display); font-weight: 450; letter-spacing: -0.025em; }
+.panel h3 > span { color: var(--clay-deep); font-style: italic; font-weight: 400; }
+.wt { background: var(--panel); }
+.wall-empty span { background: rgba(255,255,255,.94); }
+.rule, .setup .row, .checks i, .tok-meta div { background: var(--panel); }
+.rule .ri { background: var(--clay-soft); color: var(--clay-deep); }
+.bars i { background: linear-gradient(180deg, var(--clay), rgba(var(--glow), .25)); }
+.split .you { border-color: rgba(46,125,79,.35); }
+.prog .fill { background: linear-gradient(90deg, rgba(var(--glow), .45), var(--clay)); }
+a.lrow:hover { background: var(--panel); }
+.lsteps li:before { background: var(--clay); color: var(--ink); font-family: var(--f-mono); }
+.form input { background: var(--panel); }
+.form input:focus { border-color: var(--clay); background: var(--card); box-shadow: 0 0 0 3px rgba(var(--glow), .18); }
+.preview { background: var(--panel); }
+.section-head a:hover { color: var(--clay-deep); }
+
+/* the cursor grid over the bare page: ink lines, a clay glow */
+.bg-grid { background-image: linear-gradient(rgba(20,20,19,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(20,20,19,.06) 1px, transparent 1px); }
+.bg-hot { background-image: linear-gradient(rgba(var(--glow), .5) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--glow), .5) 1px, transparent 1px); }
+.bg-glow { background: radial-gradient(360px circle at var(--mx) var(--my), rgba(var(--glow), .08), transparent 70%); }
 </style>
 </head>
 <body>
@@ -329,10 +407,13 @@ a.lrow:hover { background: var(--panel); }
 
     <main id="top">
       <section class="hero">
+        <div class="hero-copy">
         <div class="kickers"><span class="kicker">VIGIL launchpad</span><span class="kicker soft" id="statusPill"><span class="dot"></span>Launches on pump.fun</span></div>
         <h1>Launch a coin with one post.<span>Your fees, locked on chain.</span></h1>
         <p>Tag <span data-x-handle>VIGIL</span> on X with a name, a ticker, an image and your Solana wallet. VIGIL checks the request, pays the launch on pump.fun and locks 90% of the coin's creator fees to you.</p>
         <div class="ctas"><a class="btn primary big" href="#tokens">Explore tokens →</a><a class="btn ghost big" href="#launch">Launch a coin</a></div>
+        </div>
+        <img class="hero-buddy" src="assets/buddy-rocket.webp" alt="Buddy, an ant in a suit, giving a thumbs up next to a rocket lifting off" width="773" height="800" fetchpriority="high">
       </section>
 
       <div class="bento">

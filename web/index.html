@@ -19,7 +19,7 @@
 <meta name="twitter:image" content="https://example.com/assets/og-vigil.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..600&family=DM+Sans:opsz,wght@9..40,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 
 
@@ -1178,6 +1178,265 @@ footer nav a:hover { color: var(--ink); }
   0% { box-shadow: 0 0 0 1px rgba(var(--glow), .5), 0 0 34px rgba(var(--glow), .45), 0 0 0 0 rgba(var(--glow), .35), 0 18px 34px -16px rgba(0,0,0,.9); }
   100% { box-shadow: 0 0 0 1px rgba(var(--glow), .5), 0 0 34px rgba(var(--glow), .45), 0 0 0 14px rgba(var(--glow), 0), 0 18px 34px -16px rgba(0,0,0,.9); } }
 @media (prefers-reduced-motion: reduce) { .btn-cta, .btn-cta::before { transition: none; } .btn-cta:hover, .btn-cta:focus-visible { animation: none; } }
+
+/* ================= BUDDY: warm paper, ink and clay orange ================= */
+/* Last in the sheet, so it wins over the dark blocks above. Claude-style colours and type: an ivory page with a
+   dot grid, near-black ink, clay orange as the one accent; a serif for headlines, a sans for reading and a mono for
+   labels. Buddy (the ant in the suit) is a black silhouette, so he always stands on a light surface. Green and red
+   stay, for gains and losses only. */
+:root {
+  color-scheme: light;
+  --paper: #F5F4ED;       /* the page */
+  --white: #FFFFFF;       /* cards, and text on ink */
+  --surface: #F0EEE6;     /* soft fills: tags, inputs, bars */
+  --line: #E3E0D5;        /* borders and dividers */
+  --ink: #141413;
+  --ink-2: #5E5D59;
+  --ink-3: #75736B;       /* ~4.6:1 on white */
+  --clay: #D97757;        /* the accent */
+  --clay-deep: #C15F3C;   /* the accent as text: ~4.5:1 on white */
+  --clay-soft: #F6E4DA;
+  --kraft: #D4A27F;
+  --blue: var(--clay); --blue-deep: var(--clay-deep); --blue-soft: var(--clay-soft);   /* old names, new colour */
+  --beige: #D4A27F; --sand: #F3E9DC; --sand-ink: #8A5A36; --sand-deep: #EAD9C3;
+  --green: #2E7D4F; --green-soft: #E2F0E6; --coral: #C0392B; --coral-soft: #F8E1DD;
+  --panel: #EEEBE1; --panel-cool: #EEEBE1; --panel-warm: #F3E9DC;
+  --card: #FFFFFF; --card-2: #FAF9F5;
+  --accent: var(--ink);
+  --glow: 217, 119, 87;   /* clay, as r, g, b */
+  --f-display: "Source Serif 4", "Tiempos Headline", Georgia, "Times New Roman", serif;
+  --f-body: "DM Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --r-card: 14px; --r-panel: 22px; --r-pill: 999px;
+  --shadow: 0 1px 2px rgba(20,20,19,.05), 0 14px 32px -20px rgba(20,20,19,.22);
+  --dots: radial-gradient(rgba(20,20,19,.085) 1px, transparent 1.2px);
+}
+body { background: var(--paper) var(--dots); background-size: 22px 22px; color: var(--ink); }
+::selection { background: var(--clay); color: var(--ink); }
+:focus-visible { outline-color: var(--clay-deep); }
+h1, h2, h3, h4 { font-family: var(--f-display); font-weight: 450; letter-spacing: -0.025em; line-height: 1.04; }
+h1 .blue, h2 .blue { color: var(--clay-deep); font-style: italic; font-weight: 400; }
+.hero h1 { color: var(--ink); font-weight: 450; }
+.hero h1 .blue::after { display: none; }
+.sub { color: var(--ink-2); }
+.nav { background: rgba(245,244,237,.86); }
+.nav.scrolled { border-bottom-color: var(--line); }
+
+/* the wordmark: serif, with Buddy's face as the badge */
+.wordmark-t { font-family: var(--f-display); font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin-right: 0; color: var(--ink); }
+.nav .wordmark-t, footer .wordmark-t { color: var(--ink); }
+.brand-tag { font-family: var(--f-mono); color: var(--ink-3); font-size: 11px; }
+.brand-tag .ic { color: var(--clay); }
+.nav-links a { font-family: var(--f-mono); font-size: 12.5px; text-transform: none; letter-spacing: 0; color: var(--ink-2); border-radius: 8px; }
+.nav-links a:hover { background: rgba(20,20,19,.05); color: var(--ink); }
+.nav-links a.nav-hl, .nav.open .nav-links a.nav-hl { color: var(--ink); }
+.nav-links a.nav-hl::before { background: var(--clay); box-shadow: none; }
+.nav-links a.nav-hl:hover { color: var(--ink); background: rgba(20,20,19,.05); }
+@media (max-width: 1200px) { .nav.open .nav-links { background: var(--white); } }
+
+/* Buddy's face: the avatar everywhere a small round portrait is used */
+.face { background: var(--sand) url("assets/buddy-face.png") center / cover no-repeat; box-shadow: inset 0 0 0 1px rgba(20,20,19,.1); }
+.xp .face { box-shadow: inset 0 0 0 1px rgba(20,20,19,.08); }
+
+/* buttons: ink and clay, squarer, with a hard offset shadow on hover */
+.btn { border-radius: 10px; font-weight: 600; letter-spacing: -0.005em; transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s, border-color .2s, color .2s; }
+.btn-primary { background: var(--clay); color: var(--ink); border-color: var(--ink); }
+.btn-primary:hover { background: var(--clay); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.btn-dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn-dark:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--clay); }
+.btn-ghost { background: var(--white); color: var(--ink); border-color: var(--line); }
+.btn-ghost:hover { border-color: var(--ink); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--ink); }
+.buy-btn .soon { background: rgba(20,20,19,.12); color: var(--ink); }
+.buy-btn[aria-disabled="true"]:hover { background: var(--clay); transform: none; box-shadow: none; }
+.btn-cta::before { display: none; }
+.btn-cta:hover, .btn-cta:focus-visible { animation: none; transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--ink); }
+.btn-cta:active { transform: translate(-1px, -1px); box-shadow: 2px 2px 0 var(--ink); }
+.menu-btn, .tnav button, .ca-row button, .ldca button { background: var(--white); border-color: var(--line); color: var(--ink); }
+
+/* tags: mono labels with a clay dot */
+.kicker { font-family: var(--f-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2);
+  background: rgba(255,255,255,.6); border: 1px solid var(--line); border-radius: var(--r-pill); }
+.kicker:not(:has(.ic, .dot))::before { content: ""; width: 7px; height: 7px; border-radius: 2px; background: var(--clay); flex: none; }
+.kicker .ic { color: var(--clay-deep); }
+.kicker .dot { color: var(--clay); }
+.kicker.soft { background: transparent; border-color: var(--line); color: var(--ink-2); }
+.pill { font-family: var(--f-mono); }
+.pill.blue { background: var(--clay-soft); color: var(--clay-deep); box-shadow: none; }
+.pill.solid-blue { background: var(--clay); color: var(--ink); }
+.pill.sand, .pill.amber { background: var(--sand); color: var(--sand-ink); box-shadow: none; }
+.pill.grey { background: var(--surface); color: var(--ink-2); box-shadow: none; }
+.pill.ink { background: var(--ink); color: var(--paper); box-shadow: none; }
+.pill.green { background: var(--green-soft); color: var(--green); }
+.pill.coral { background: var(--coral-soft); color: var(--coral); }
+.example { background: var(--white); border-color: var(--line); color: var(--ink-3); }
+.lc-k.sand { background: var(--sand); color: var(--sand-ink); }
+.lc-k.ink { background: var(--ink); color: var(--paper); }
+
+/* surfaces: sand panels with a dot grid, white cards with a hairline */
+.panel { background: var(--panel); border: 1px solid #E2DED2; }
+.panel.grid-bg::before { background-image: radial-gradient(rgba(20,20,19,.13) 1px, transparent 1.3px); background-size: 20px 20px; }
+.card, .lc, .sc-card, .lform, .chat, .lead, .src, .fl, .lcard, .lempty, .lrow2, .msg.att, .msg.scan, .msg.verdict-msg {
+  background: var(--card); border: 1px solid var(--line); box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 18px 36px -26px rgba(20,20,19,.3); }
+.float { background: rgba(255,255,255,.92); border: 1px solid var(--line); box-shadow: 0 16px 30px -22px rgba(20,20,19,.4); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.float b { font-family: var(--f-body); font-weight: 700; }
+.float .bar { background: var(--surface); }
+.float .bar i { background: var(--clay); }
+.coin { filter: drop-shadow(0 10px 14px rgba(20,20,19,.18)); }
+.glyph .gl { box-shadow: inset 0 0 0 1px rgba(20,20,19,.12); }
+.coinav { background: linear-gradient(160deg, #FFFFFF, var(--surface)); color: var(--ink-2); box-shadow: inset 0 0 0 1px var(--line); }
+.coin-logo { background: var(--white); box-shadow: inset 0 0 0 1px rgba(20,20,19,.08); }
+.chip-ic, .src-ic { color: #FFFFFF; box-shadow: none; }
+.sol, .xl, .scan-row .si.sol, .scan-row .si.xl { background: var(--ink); color: #FFFFFF; box-shadow: none; }
+.tile { background: var(--surface); }
+.hero-stats { color: var(--ink-2); }
+.hero-stats b { color: var(--ink); }
+
+/* inputs */
+.lform input, .lform textarea, .ask-bar { background: var(--white); border: 1.5px solid var(--line); color: var(--ink); }
+.lform input { background: var(--card-2); }
+.lform input:focus, .ask-bar:focus-within { background: var(--white); border-color: var(--clay); box-shadow: 0 0 0 3px rgba(var(--glow), .18); }
+.lform label, .lform .lbl { color: var(--ink-2); }
+.lform input::placeholder, .ask-bar textarea::placeholder { color: #9B998F; }
+.lform .btn:disabled, .lform .btn:disabled:hover { opacity: 1; background: var(--surface); color: var(--ink-3); border-color: var(--line); box-shadow: none; transform: none; }
+.ask-send { background: var(--clay); color: var(--ink); }
+.ask-send:hover:not(:disabled) { background: var(--clay-deep); color: var(--white); }
+.ask-send:disabled { background: var(--surface); color: var(--ink-3); box-shadow: inset 0 0 0 1px var(--line); }
+.ask-sugg button { background: var(--white); border-color: var(--line); color: var(--ink-2); font-family: var(--f-mono); font-size: 12px; font-weight: 500; text-transform: none; letter-spacing: 0; }
+.ask-sugg button:hover { border-color: var(--ink); color: var(--ink); }
+.ask-sugg button .ic { color: var(--clay); }
+.ask-points .ic-b { background: var(--clay-soft); color: var(--clay-deep); box-shadow: none; }
+.ca-row { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.ca-row:hover { background: var(--white); box-shadow: inset 0 0 0 1px var(--ink); }
+.ca-row button:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.gate { background: var(--white); border-color: var(--line); color: var(--ink); }
+.gate.ok .ic { color: var(--green); }
+.gate.no { background: var(--coral-soft); border-color: rgba(192,57,43,.25); color: var(--coral); }
+.gate.no .ic { color: var(--coral); }
+
+/* chats: Buddy's replies on white, yours on sand; the decision card in ink and clay */
+.chat { background: var(--card); }
+.chat-h { border-bottom-color: var(--line); }
+.chat-foot { border-top-color: var(--line); color: var(--ink-3); }
+.msg.bot { background: var(--card-2); color: var(--ink); border: 1px solid var(--line); }
+.msg.sys { background: var(--ink); color: var(--paper); }
+.msg.sys code { background: rgba(255,255,255,.14); }
+.msg code { background: rgba(20,20,19,.06); }
+.msg .tag { color: var(--clay-deep); }
+.msg.warn { background: var(--sand); color: var(--sand-ink); }
+.typing { background: var(--card-2); box-shadow: inset 0 0 0 1px var(--line); }
+.vd-head { background: var(--card-2); border-bottom-color: var(--line); }
+.vd-act { font-family: var(--f-mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; box-shadow: none; }
+.vd-act.buy { background: var(--clay); color: var(--ink); }
+.vd-act.watch { background: var(--sand-deep); color: var(--ink); }
+.vd-act.pass { background: var(--ink); color: var(--paper); box-shadow: none; }
+.vd-label b { font-family: var(--f-display); }
+.vd-bar { background: var(--surface); box-shadow: inset 0 0 0 1px var(--line); }
+.vd-bar i, .wbar i { background: var(--clay); }
+.wprog.done .wbar i { background: var(--kraft); }
+.vd-risk { background: var(--sand); }
+.vd-risk .ri { background: var(--white); color: var(--coral); box-shadow: none; }
+.wrow.bump { background: var(--clay-soft); }
+.spin { border-color: var(--clay-soft); border-top-color: var(--clay); }
+.scan-row .si { background: var(--clay-soft); color: var(--clay-deep); box-shadow: none; }
+.pick { border-color: var(--line); background: rgba(255,255,255,.55); }
+.pick:hover { border-color: var(--ink); }
+.pick[aria-selected="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.pick[aria-selected="true"] .pill.ink { background: var(--clay); color: var(--ink); }
+.pick .sym { font-family: var(--f-display); }
+
+/* the phone: a black bezel round an ivory screen */
+.chat.phone { background: var(--card-2); border: 9px solid var(--ink); border-radius: 46px;
+  box-shadow: 0 0 0 1px #2A2926, 0 0 0 3px #8E8B82, 0 0 0 4px #3A3935, 0 40px 70px -36px rgba(20,20,19,.55); }
+.chat.phone::before, .chat.phone::after { background: linear-gradient(90deg, #3A3935, #8E8B82 55%, #4A4945); }
+.phone-bar { color: var(--ink); }
+.home-ind { background: var(--ink); }
+.chat-panel::before { background: radial-gradient(closest-side, rgba(var(--glow), .16), transparent); }
+.lc-scroll, .tslide { scrollbar-color: var(--line) transparent; }
+
+/* X posts: X's own light theme */
+.xtl { background: #FFFFFF; border: 1px solid #E1E8ED; border-radius: 14px; }
+.xp, .xp:hover, .lc .xp:hover, .rec-card .xp:hover { background: #FFFFFF; }
+.tslide .xtl a.xlink:hover .xp { background: #F7F9F9; }
+.xp { color: #0F1419; }
+.xp + .xp { border-top-color: #EFF3F4; }
+.xp-name, .xp-text { color: #0F1419; }
+.xp-meta, .xp-more, .xp-actions { color: #536471; }
+.rec-card .xtl { border-color: #E1E8ED; box-shadow: 0 1px 3px rgba(20,20,19,.06), 0 24px 44px -24px rgba(20,20,19,.4); }
+
+/* sources: Buddy in the middle ring, the wires in clay */
+.src { background: var(--card); }
+.src[aria-pressed="true"] { border-color: var(--ink); box-shadow: 4px 4px 0 var(--clay); }
+.src p code, .lead code { background: var(--surface); }
+.wires path { stroke: var(--clay); opacity: .55; }
+.hub .ring { background: var(--sand); box-shadow: 0 0 0 1px var(--line), 0 0 0 12px rgba(255,255,255,.55), 0 0 0 13px var(--line), 0 0 0 26px rgba(255,255,255,.3); }
+.hub .ring::after { box-shadow: none; animation: none; }
+.hub .ring img { width: 96%; transform: translate(3%, 10%); }
+.hub p { color: var(--ink-2); }
+.lead-note { color: var(--sand-ink); background: var(--sand); }
+
+/* live, record, scorecard */
+.lc-foot { border-top-color: var(--line); }
+.tdots i.on, .post-dots i.on { background: var(--clay); }
+.tmore { background: var(--ink); color: var(--paper); }
+.sc-recent { background: rgba(255,255,255,.7); box-shadow: inset 0 0 0 1px var(--line); }
+.rc { background: var(--white); box-shadow: inset 0 0 0 1px var(--line); }
+.sc-net .big, .sc-tile .v, .rec-stats b, .giant { font-family: var(--f-display); font-weight: 450; }
+.spark-tip { background: var(--ink); color: var(--paper); }
+@media (max-width: 1000px) {
+  .live-tabs { background: rgba(255,255,255,.7); box-shadow: inset 0 0 0 1px var(--line); }
+  .live-tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); box-shadow: none; }
+}
+.lsteps b { background: var(--clay); color: var(--ink); font-family: var(--f-mono); }
+.ld-ic { background: var(--clay-soft); }
+.ld-badge { background: var(--clay); color: var(--ink); }
+.ldlinks a, .lcard .lk a, .lcard .lk span, .lrow2 .lk a { background: var(--clay-soft); color: var(--clay-deep); }
+.ldlinks a:hover, .lcard .lk a:hover, .lrow2 .lk a:hover { background: var(--clay); color: var(--ink); }
+.lcredit .ic { color: var(--clay-deep); }
+
+/* ---- scenes: a clay sun behind Buddy, a sand hill under him */
+.hz-sky { background: radial-gradient(46% 64% at 50% 100%, rgba(var(--glow), .16), rgba(var(--glow), .05) 50%, transparent 78%); }
+.hz-orb::before { display: none; }
+.hero-stage { background: var(--panel); border-color: #E2DED2; }
+.hero-stage::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgba(20,20,19,.11) 1px, transparent 1.3px); background-size: 20px 20px;
+  -webkit-mask-image: radial-gradient(80% 75% at 50% 45%, #000 30%, transparent 90%); mask-image: radial-gradient(80% 75% at 50% 45%, #000 30%, transparent 90%); pointer-events: none; z-index: 0; }
+.hero .hz-orb { top: 12%; height: 72%; }
+.rec-panel, .cta-panel { background: var(--panel); }
+.cta-panel { background: var(--clay); border-color: var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+.cta-panel h2, .cta-panel .sub { color: var(--ink); }
+.cta-panel h2 .blue { color: var(--paper); }
+.cta-panel .btn-primary { background: var(--paper); }
+.cta-panel .btn-primary:hover, .cta-panel .buy-btn[aria-disabled="true"]:hover { background: var(--paper); }
+.cta-panel .btn-dark:hover { box-shadow: 4px 4px 0 var(--paper); }
+.cta-orb .hz { display: none; }   /* on the clay panel the sun is the panel itself */
+.vg-board { bottom: 0; height: 100%; filter: drop-shadow(0 14px 18px rgba(20,20,19,.22)); }
+.vg-holder { right: -9%; height: 44%; }
+/* the launchpad: Buddy and his rocket stand on the top edge of the form's panel, the smoke tucked behind the card */
+.launch-panel { overflow: visible; }
+.vg-rocket { right: 5%; top: 0; height: clamp(150px, 21vh, 220px); width: auto; transform: translateY(-80%); z-index: 0; }
+@media (max-width: 900px) { .vg-rocket { display: none; } }
+
+/* ---- Buddy, wherever he appears: flat 2D cut-outs, a soft paper shadow, a gentle bob */
+.vg { filter: drop-shadow(0 18px 22px rgba(20,20,19,.16)); }
+.vg-hero { bottom: 0; height: 88%; }
+.pl-orb { filter: drop-shadow(0 14px 18px rgba(20,20,19,.18)); }
+.preload { background: var(--paper) var(--dots); background-size: 22px 22px; }
+.pl-word { font-family: var(--f-display); font-weight: 600; letter-spacing: -0.01em; gap: .04em; margin-right: 0; color: var(--ink); }
+.pl-sub { font-family: var(--f-mono); color: var(--ink-3); letter-spacing: .18em; }
+.pl-sub .gk, .pl-sub .st { color: var(--clay-deep); }
+.buddy-tag { position: absolute; z-index: 3; left: 50%; bottom: 5%; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px;
+  border-radius: var(--r-pill); background: var(--ink); color: var(--paper); font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.buddy-tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--clay); }
+
+/* ---- the cursor grid over the bare page: ink lines, a clay glow */
+.bg-grid { background-image: linear-gradient(rgba(20,20,19,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(20,20,19,.06) 1px, transparent 1px); }
+.bg-hot { background-image: linear-gradient(rgba(var(--glow), .5) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--glow), .5) 1px, transparent 1px); }
+.bg-glow { background: radial-gradient(360px circle at var(--mx) var(--my), rgba(var(--glow), .08), transparent 70%); }
+
+/* footer */
+footer { color: var(--ink-2); }
+footer .wrap { border-top-color: var(--line); }
+footer nav a:hover { color: var(--clay-deep); }
+.foot, footer { border-top-color: var(--line); }
 </style>
 <!-- Icons: brand marks from Simple Icons (CC0), UI icons from Lucide (ISC) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -1226,39 +1485,17 @@ footer nav a:hover { color: var(--ink); }
 <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
 <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" /> <path d="M20 3v4" /> <path d="M22 5h-4" /> <path d="M4 17v2" /> <path d="M5 18H3" /></symbol>
 <symbol id="orb-lg" viewBox="0 0 400 400">
-  <defs>
-    <radialGradient id="orbCorona" cx="200" cy="200" r="200" gradientUnits="userSpaceOnUse">
-      <stop offset=".5" stop-color="#DEE6FF" stop-opacity="0"/><stop offset=".535" stop-color="#DEE6FF" stop-opacity=".6"/>
-      <stop offset=".58" stop-color="#DEE6FF" stop-opacity=".24"/><stop offset=".72" stop-color="#DEE6FF" stop-opacity=".07"/>
-      <stop offset="1" stop-color="#DEE6FF" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="orbRim" x1="0" y1="94" x2="0" y2="306" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".45"/><stop offset="1" stop-color="#FFFFFF"/>
-    </linearGradient>
-  </defs>
-  <circle cx="200" cy="200" r="200" fill="url(#orbCorona)"/>
-  <circle cx="200" cy="200" r="106" fill="#000"/>
-  <circle cx="200" cy="200" r="99" fill="none" stroke="#FFFFFF" stroke-opacity=".07" stroke-width="5"/>
-  <circle cx="200" cy="200" r="106" fill="none" stroke="url(#orbRim)" stroke-width="2.4"/>
+  <circle cx="200" cy="200" r="196" fill="#D97757" fill-opacity=".12"/>
+  <circle cx="200" cy="200" r="168" fill="none" stroke="#D97757" stroke-opacity=".35" stroke-width="1.5" stroke-dasharray="3 7"/>
+  <circle cx="200" cy="200" r="140" fill="#D97757"/>
 </symbol>
 <symbol id="planet" viewBox="0 0 1000 300" preserveAspectRatio="none">
-  <defs>
-    <linearGradient id="planetEdge" x1="0" y1="0" x2="1000" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-    </linearGradient>
-    <radialGradient id="planetShine" cx="500" cy="205" r="460" gradientUnits="userSpaceOnUse" gradientTransform="translate(0 133) scale(1 .35)">
-      <stop offset="0" stop-color="#DEE6FF" stop-opacity=".09"/><stop offset="1" stop-color="#DEE6FF" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <path d="M0 262 Q 500 148 1000 262 V 300 H 0 Z" fill="#000"/>
-  <path d="M0 262 Q 500 148 1000 262 V 300 H 0 Z" fill="url(#planetShine)"/>
-  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="url(#planetEdge)" stroke-opacity=".08" stroke-width="16" vector-effect="non-scaling-stroke"/>
-  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="url(#planetEdge)" stroke-opacity=".2" stroke-width="5" vector-effect="non-scaling-stroke"/>
-  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="url(#planetEdge)" stroke-width="1.4" vector-effect="non-scaling-stroke"/>
+  <path d="M0 262 Q 500 148 1000 262 V 300 H 0 Z" fill="#E4D9C6"/>
+  <path d="M0 262 Q 500 148 1000 262" fill="none" stroke="#141413" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
 </symbol>
 </svg>
 
-<div class="preload" id="preload" aria-hidden="true"><div><img class="pl-orb" src="assets/vigil-head.webp" alt="" width="619" height="512" decoding="async" fetchpriority="high"><div class="pl-word"><span style="--i:0">V</span><span style="--i:1">I</span><span style="--i:2">G</span><span style="--i:3">I</span><span style="--i:4">L</span></div><p class="pl-sub"><span class="st" style="--i:0"><svg class="ic"><use href="#i-sparkles"/></svg> </span><span style="--i:1">p</span><span style="--i:2">o</span><span style="--i:3">w</span><span style="--i:4">e</span><span style="--i:5">r</span><span style="--i:6">e</span><span style="--i:7">d</span><span style="--i:8"> </span><span style="--i:9">b</span><span style="--i:10">y</span><span style="--i:11"> </span><span class="gk" style="--i:12">G</span><span class="gk" style="--i:13">r</span><span class="gk" style="--i:14">o</span><span class="gk" style="--i:15">k</span></p></div></div>
+<div class="preload" id="preload" aria-hidden="true"><div><img class="pl-orb" src="assets/buddy.webp" alt="" width="533" height="656" decoding="async" fetchpriority="high"><div class="pl-word"><span style="--i:0">V</span><span style="--i:1">I</span><span style="--i:2">G</span><span style="--i:3">I</span><span style="--i:4">L</span></div><p class="pl-sub"><span class="st" style="--i:0"><svg class="ic"><use href="#i-sparkles"/></svg> </span><span style="--i:1">p</span><span style="--i:2">o</span><span style="--i:3">w</span><span style="--i:4">e</span><span style="--i:5">r</span><span style="--i:6">e</span><span style="--i:7">d</span><span style="--i:8"> </span><span style="--i:9">b</span><span style="--i:10">y</span><span style="--i:11"> </span><span class="gk" style="--i:12">G</span><span class="gk" style="--i:13">r</span><span class="gk" style="--i:14">o</span><span class="gk" style="--i:15">k</span></p></div></div>
 
 <header class="nav" id="nav">
   <div class="wrap">
@@ -1293,9 +1530,10 @@ footer nav a:hover { color: var(--ink); }
       <a class="btn btn-ghost" href="#live">See it live</a>
     </div>
     <div class="panel hero-stage" id="stage">
-      <!-- the VIGIL orb rising over the horizon, VIGIL waving in front of it -->
+      <!-- a clay sun over a sand hill, Buddy in front of it -->
       <div class="hz" aria-hidden="true"><i class="hz-sky"></i><span class="hz-orb"><svg class="orb-svg" viewBox="0 0 400 400" aria-hidden="true"><use href="#orb-lg"/></svg></span><svg class="hz-planet" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><use href="#planet"/></svg></div>
-      <img class="vg vg-hero" fetchpriority="high" src="assets/vigil-wave.webp" alt="VIGIL, a small white robot with a headset, waving" width="663" height="900">
+      <img class="vg vg-hero" fetchpriority="high" src="assets/buddy.webp" alt="Buddy, an ant in a black suit and an orange tie" width="533" height="656">
+      <span class="buddy-tag">Meet Buddy</span>
       <div class="float f1" data-depth="18">
         <div class="row"><span class="coinav" data-coin="blue" data-sym="HATCH" style="width:22px;height:22px"></span><b id="hfWatch">Watching $HATCH</b><span class="dot pulse" style="color:var(--green)"></span></div>
         <div class="bar"><i id="heroBar" style="width:91%"></i></div>
@@ -1353,7 +1591,7 @@ footer nav a:hover { color: var(--ink); }
     <div class="panel grid-bg listen-panel" id="listenPanel" style="text-align:left">
       <svg class="wires" id="wires" aria-hidden="true"></svg>
       <div class="srcs" id="srcs"></div>
-      <div class="hub" aria-hidden="true"><div class="ring"><img src="assets/vigil-head.webp" alt="" width="619" height="512" decoding="async" fetchpriority="low"></div><p>VIGIL is listening</p></div>
+      <div class="hub" aria-hidden="true"><div class="ring"><img src="assets/buddy-binoculars.webp" alt="" width="582" height="700" decoding="async" fetchpriority="low"></div><p>Buddy is on watch</p></div>
       <div class="lead" id="leadCard" aria-live="polite"></div>
     </div>
   </div>
@@ -1369,7 +1607,7 @@ footer nav a:hover { color: var(--ink); }
       <div class="picks" role="tablist" aria-label="Decisions (example data)" id="picks"></div>
     </div>
     <div class="chat-panel">
-      <img class="vg vg-holder" src="assets/vigil-phone.webp" alt="" aria-hidden="true" width="498" height="900" decoding="async" fetchpriority="low">
+      <img class="vg vg-holder" src="assets/buddy-magnify.webp" alt="" aria-hidden="true" width="799" height="900" decoding="async" fetchpriority="low">
       <div class="chat phone">
         <div class="phone-bar" aria-hidden="true"><span class="time">9:41</span><span class="island"></span><span class="sys"><svg viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12"><path d="M1.64 4.64a9 9 0 0 1 12.72 0M3.76 6.76a6 6 0 0 1 8.48 0" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M8 11 5.88 8.88a3 3 0 0 1 4.24 0z" fill="currentColor"/></svg><svg class="bat" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="18" height="9" rx="2" fill="currentColor"/><rect x="24.5" y="4.5" width="1.6" height="4" rx=".8" fill="currentColor" opacity=".4"/></svg></span></div>
         <div class="chat-h"><span class="face"></span><div><b>VIGIL</b><small>via Grok</small></div></div>
@@ -1399,6 +1637,7 @@ footer nav a:hover { color: var(--ink); }
       <div class="lrecent" id="lRecent"><div class="lrh"><span class="sc-lbl">Recently launched</span><a class="lp-link" href="/launchpad">Launchpad →</a></div><div class="rc-view lview" id="lRecentList"></div></div>
     </div>
     <div class="panel grid-bg launch-panel">
+      <img class="vg vg-rocket" src="assets/buddy-rocket.webp" alt="" aria-hidden="true" width="773" height="800" decoding="async" fetchpriority="low">
       <form class="lform" id="launchForm" autocomplete="off" novalidate>
         <div class="lrow">
           <label>Coin name<input id="lfName" maxlength="32" placeholder="Purr Capital" required></label>
@@ -1489,7 +1728,7 @@ footer nav a:hover { color: var(--ink); }
     </div>
     <div class="panel rec-panel">
       <div class="hz" aria-hidden="true"><i class="hz-sky"></i><svg class="hz-planet" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><use href="#planet"/></svg></div>
-      <img class="vg vg-desk" src="assets/vigil-desk.webp" alt="" aria-hidden="true" width="855" height="800" decoding="async" fetchpriority="low">
+      <img class="vg vg-desk" src="assets/buddy-desk.webp" alt="" aria-hidden="true" width="900" height="885" decoding="async" fetchpriority="low">
       <div class="rec-card rec-card-0"><div class="xtl"></div></div>
       <div class="rec-card rec-card-1"><div class="xtl"></div></div>
     </div>
@@ -1538,7 +1777,7 @@ footer nav a:hover { color: var(--ink); }
         <div class="ctas"><a class="btn btn-primary buy-btn" href="#follow" aria-disabled="true"><span class="face" aria-hidden="true"></span>Buy $VIGIL<span class="soon">soon</span></a><a class="btn btn-dark" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#b-x"/></svg> <span data-x-follow>Follow VIGIL</span> <span class="arr">→</span></a></div>
         <div class="ca-row" id="caRow" hidden><span class="lbl">CA</span><code id="caTxt"></code><button type="button" id="caCopy" aria-label="Copy the $VIGIL contract address"><svg class="ic"><use href="#i-copy"/></svg></button></div>
       </div>
-      <div class="cta-orb"><div class="hz" aria-hidden="true"><i class="hz-sky"></i><span class="hz-orb"><svg class="orb-svg" viewBox="0 0 400 400" aria-hidden="true"><use href="#orb-lg"/></svg></span><svg class="hz-planet" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><use href="#planet"/></svg></div><img class="vg vg-board" src="assets/vigil-board.webp" alt="VIGIL pointing at a rising chart on a board" width="862" height="800" decoding="async" fetchpriority="low"></div>
+      <div class="cta-orb"><div class="hz" aria-hidden="true"><i class="hz-sky"></i><span class="hz-orb"><svg class="orb-svg" viewBox="0 0 400 400" aria-hidden="true"><use href="#orb-lg"/></svg></span><svg class="hz-planet" viewBox="0 0 1000 300" preserveAspectRatio="none" aria-hidden="true"><use href="#planet"/></svg></div><img class="vg vg-board" src="assets/buddy-board.webp" alt="Buddy pointing at a rising chart on an easel" width="882" height="900" decoding="async" fetchpriority="low"></div>
     </div>
   </div>
 </section>
@@ -1646,7 +1885,7 @@ footer nav a:hover { color: var(--ink); }
   const coins = [];
   // floating decor: glossy app-icon tiles carrying the site's own marks (where VIGIL listens, what it trades on)
   const GLYPH = { x: [B("x"), "#FAFAFA", "#000000"], sol: [B("solana"), "#FFFFFF", "#000000"],
-                  ai: [I("sparkles"), "#FAFAFA", "#000000"], shield: [I("shield-check"), "#22C55E", "#0A0A0A"], eye: [I("eye"), "#FAFAFA", "#0A0A0A"] };
+                  ai: [I("sparkles"), "#141413", "#D97757"], shield: [I("shield-check"), "#FFFFFF", "#2E7D4F"], eye: [I("eye"), "#FAF9F5", "#141413"] };
   const addCoin = (host, kind, size, x, y, rot, depth = 1) => {
     const [ic, fg, bg] = GLYPH[kind];
     // the X tiles are links to the X account; the rest are decoration
@@ -1906,7 +2145,7 @@ footer nav a:hover { color: var(--ink); }
   ];
   const spark = (h, up) => { const mn = Math.min(...h), mx = Math.max(...h), W = 120, H = 34;
     const pts = h.map((v, i) => `${(i / (h.length - 1) * W).toFixed(1)},${(H - 3 - (v - mn) / ((mx - mn) || 1) * (H - 6)).toFixed(1)}`).join(" ");
-    return `<svg class="spk" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${up ? "#22C55E" : "#F87171"}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`; };
+    return `<svg class="spk" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="${up ? "#2E7D4F" : "#C0392B"}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>`; };
   const renderLive = (bumpI = -1) => {
     // smart-money mode: where each coin came from on the left, the trade's P&L (or why it was skipped) on the right
     const chip = w => w.st === "bought" && w.move != null ? `<span class="wchip ${w.move > 0 ? "up" : w.move < 0 ? "down" : ""}">${w.move > 0 ? "+" : w.move < 0 ? "−" : ""}${Math.abs(w.move).toFixed(1)}%</span>`
@@ -2028,7 +2267,7 @@ footer nav a:hover { color: var(--ink); }
   mn = Math.min(...series, 0); mx = Math.max(...series, 0); if (mx === mn) { mx += .01; mn -= .01; }
   px = i => i / (series.length - 1) * SW; py = v => pad + (1 - (v - mn) / (mx - mn)) * (SH - pad * 2);
   const pts = series.map((v, i) => `${px(i).toFixed(1)},${py(v).toFixed(1)}`).join(" L ");
-  sp.innerHTML = `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DEE6FF" stop-opacity=".16"/><stop offset="1" stop-color="#DEE6FF" stop-opacity="0"/></linearGradient></defs><line x1="0" x2="${SW}" y1="${py(0)}" y2="${py(0)}" stroke="#FFFFFF" stroke-opacity=".22" stroke-dasharray="4 6" vector-effect="non-scaling-stroke"/><path d="M ${pts} L ${SW},${SH} L 0,${SH} Z" fill="url(#sg)"/><path d="M ${pts}" fill="none" stroke="#FAFAFA" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><line id="spX" x1="0" x2="0" y1="0" y2="${SH}" stroke="#FFFFFF" stroke-opacity="0" vector-effect="non-scaling-stroke"/><circle id="spEnd" cx="${px(series.length - 1)}" cy="${py(series.at(-1))}" r="5" fill="#FAFAFA" stroke="#000" stroke-width="2.5"/>`;
+  sp.innerHTML = `<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D97757" stop-opacity=".22"/><stop offset="1" stop-color="#D97757" stop-opacity="0"/></linearGradient></defs><line x1="0" x2="${SW}" y1="${py(0)}" y2="${py(0)}" stroke="#141413" stroke-opacity=".25" stroke-dasharray="4 6" vector-effect="non-scaling-stroke"/><path d="M ${pts} L ${SW},${SH} L 0,${SH} Z" fill="url(#sg)"/><path d="M ${pts}" fill="none" stroke="#C15F3C" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><line id="spX" x1="0" x2="0" y1="0" y2="${SH}" stroke="#141413" stroke-opacity="0" vector-effect="non-scaling-stroke"/><circle id="spEnd" cx="${px(series.length - 1)}" cy="${py(series.at(-1))}" r="5" fill="#D97757" stroke="#141413" stroke-width="2"/>`;
   };
   drawSpark();
   const sTip = $("#sparkTip"), sWrap = $("#sparkWrap");
