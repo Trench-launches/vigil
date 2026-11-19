@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VIGIL launchpad</title>
-<meta name="description" content="Launch a coin on pump.fun with one post on X. VIGIL checks every request, pays the launch and locks 90% of the creator fees to you on chain.">
+<title>Buddy launchpad</title>
+<meta name="description" content="Launch a coin on pump.fun with one post on X. Buddy checks every request, pays the launch and locks 90% of the creator fees to you on chain.">
 <!-- canonical, og:url, the share image and twitter:site are filled in from SITE_URL and SITE_X_HANDLE by scripts/deploy-web.sh -->
 <link rel="canonical" href="https://example.com/launchpad">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="/assets/icon-180.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://example.com/launchpad">
-<meta property="og:title" content="VIGIL launchpad">
+<meta property="og:title" content="Buddy launchpad">
 <meta property="og:description" content="Launch a coin on pump.fun with one post on X. 90% of the creator fees, locked to you on chain.">
 <meta property="og:image" content="https://example.com/assets/og-vigil.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -352,6 +352,90 @@ a.lrow:hover { background: var(--panel); }
 .bg-grid { background-image: linear-gradient(rgba(20,20,19,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(20,20,19,.06) 1px, transparent 1px); }
 .bg-hot { background-image: linear-gradient(rgba(var(--glow), .5) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--glow), .5) 1px, transparent 1px); }
 .bg-glow { background: radial-gradient(360px circle at var(--mx) var(--my), rgba(var(--glow), .08), transparent 70%); }
+
+/* the sidebar: the whole site's menu, this page's sections nested under Launchpad */
+.sidebar .logo { border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.side-lbl { padding: 6px 12px 2px; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.nav.site a { padding: 9px 12px; font-size: 14.5px; }
+.nav.site a.here { background: var(--card); color: var(--ink); border-color: var(--line); box-shadow: 3px 3px 0 var(--clay); }
+.nav.site a.here .ic { color: var(--clay-deep); }
+.nav.sub { margin: 4px 0 0 25px; padding-left: 10px; border-left: 1px solid var(--line); gap: 0; }
+.nav.sub a { gap: 8px; padding: 6px 10px; font-size: 13.5px; border: 0; }
+.nav.sub a.active { background: transparent; box-shadow: none; color: var(--ink); font-weight: 600; }
+.nav.sub a.active::before { content: ""; width: 6px; height: 6px; border-radius: 2px; background: var(--clay); margin-left: -2px; }
+.side-foot { display: grid; gap: 8px; }
+.side-btn { width: 100%; height: 40px; }
+.side-doc { padding: 2px 12px; font-size: 12.5px; color: var(--ink-3); }
+.side-doc:hover { color: var(--ink); }
+
+/* the launch tracker: after the post, the request's progress until it's live or refused */
+.form[hidden], .track[hidden], .track-why[hidden], .track-live[hidden] { display: none; }
+.track { display: grid; gap: 16px; }
+.track-h { display: flex; gap: 14px; align-items: flex-start; }
+.track-ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; flex: none; background: var(--clay-soft); color: var(--clay-deep); }
+.track.live .track-ic { background: var(--green-soft); color: var(--green); }
+.track.bad .track-ic { background: #F8E1DD; color: var(--coral); }
+.track-ic .ic { width: 20px; height: 20px; }
+.track-h b { display: block; font-family: var(--f-display); font-size: 22px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+.track-h p { margin: 4px 0 0; font-size: 14.5px; color: var(--ink-2); }
+.track-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.track-steps li { display: flex; align-items: center; gap: 12px; font-size: 14.5px; color: var(--ink-3); }
+.track-steps li i { width: 22px; height: 22px; flex: none; border-radius: 50%; border: 2px solid var(--line); display: grid; place-items: center; font-style: normal; font-size: 12px; color: #FFFFFF; }
+.track-steps li.now { color: var(--ink); font-weight: 600; }
+.track-steps li.now i { border-color: var(--clay); box-shadow: 0 0 0 4px var(--clay-soft); }
+.track-steps li.done { color: var(--ink-2); }
+.track-steps li.done i { background: var(--green); border-color: var(--green); }
+.track-steps li.done i::after { content: "\2713"; }
+.track-steps li.fail { color: var(--coral); font-weight: 600; }
+.track-steps li.fail i { background: var(--coral); border-color: var(--coral); }
+.track-steps li.fail i::after { content: "\2715"; }
+.track-why { padding: 12px 14px; border-radius: 12px; background: #F8E1DD; border: 1px solid rgba(192,57,43,.2); }
+.track-why b { display: block; font-size: 15px; }
+.track-why p { margin: 4px 0 0; font-size: 14px; color: var(--ink-2); }
+.track-ca { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 12px; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); }
+.track-ca code { flex: 1; min-width: 0; font-family: var(--f-mono); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.track-ca button { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 1px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink-2); }
+.track-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.track-links a { font-family: var(--f-mono); font-size: 12px; padding: 5px 11px; border-radius: 999px; background: var(--clay-soft); color: var(--clay-deep); }
+.track-links a:hover { background: var(--clay); color: var(--ink); }
+.track-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* the page heading, in the top bar: the same as every page's heading on the main site */
+.lp-title { margin: 0 8px 0 0; font-family: var(--f-display); font-size: 28px; font-weight: 450; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
+@media (max-width: 980px) { .lp-title { font-size: 24px; } }
+
+/* ---- the same frame as the main site: sidebar, heading bar and content width match the terminal ---- */
+@media (min-width: 981px) { :root { --head-h: 69px; --page-gutter: 18px; } }
+.topbar { height: var(--head-h); gap: 14px; }
+.lp-title { margin: 0; line-height: 1.04; }
+main { max-width: none; padding: 12px var(--page-gutter) 16px; }
+.hero { padding: clamp(22px, 3vw, 36px) clamp(20px, 3vw, 44px); margin-bottom: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(20,20,19,.04), 0 14px 30px -26px rgba(20,20,19,.35); }
+.hero-buddy { max-height: 260px; }
+.tile, .card, .tok, .panel, .fact { border-radius: 14px; }
+.sidebar { padding: 14px 12px; gap: 4px; background: rgba(250,249,245,.9); border-right-color: var(--line); overflow-y: auto; }
+.sidebar .logo { height: auto; gap: 11px; padding: 6px 8px 14px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.logo .face { width: 38px; height: 38px; box-shadow: inset 0 0 0 1px rgba(20,20,19,.1), 0 0 0 2px #FFFFFF, 0 0 0 3.5px var(--clay); }
+.logo > span:last-child { display: grid; gap: 4px; line-height: 1; }
+.logo .word { font-size: 22px; line-height: .9; }
+.logo .tag { margin: 0; font-size: 9.5px; letter-spacing: .12em; line-height: 1; }
+.side-lbl { padding: 8px 12px 4px; }
+.sidebar .nav { gap: 3px; }
+.nav.site a { height: 40px; padding: 0 12px; gap: 11px; border-radius: 10px; font-size: 14.5px; }
+.nav.site a .ic { width: 17px; height: 17px; color: var(--ink-3); }
+.nav.site a.here { background: #FFFFFF; }
+.nav.sub { margin-top: 6px; }
+.side-foot { margin-top: auto; padding-top: 12px; }
+.side-status { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid var(--line); }
+.side-status .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; background: currentColor; color: #B26A1E; animation: sdot 1.8s infinite; }
+.side-status.live .dot { color: var(--green); } .side-status.off .dot { color: var(--coral); }
+@keyframes sdot { 0% { box-shadow: 0 0 0 0 currentColor; } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+.side-status b { display: block; font-size: 13.5px; line-height: 1.2; }
+.side-status small { display: block; font-size: 12px; color: var(--ink-3); line-height: 1.3; }
+.side-btn { height: 40px; padding: 0 14px; font-size: 14px; }
+.side-btn .soon { font: 500 10px var(--f-mono); padding: 2px 7px; border-radius: 999px; background: rgba(20,20,19,.12); }
+.sidebar .btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.sidebar .buy-btn[aria-disabled="true"]:hover { transform: none; box-shadow: none; }
 </style>
 </head>
 <body>
@@ -375,32 +459,47 @@ a.lrow:hover { background: var(--panel); }
   <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
   <symbol id="i-img" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/></symbol>
   <symbol id="i-wallet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7h16v13H3z"/><path d="M3 7V5h13v2"/><circle cx="15.5" cy="13.5" r="1.3" fill="currentColor"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /> <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /> <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol>
+  <symbol id="i-term" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="18" y1="20" y2="10" /> <line x1="12" x2="12" y1="20" y2="4" /> <line x1="6" x2="6" y1="20" y2="14" /></symbol>
 </svg>
 
 <div class="bg-fx" id="bgFx" aria-hidden="true"><i class="bg-grid"></i><i class="bg-hot"></i><i class="bg-glow"></i></div>
 <div class="app">
   <aside class="sidebar" id="sidebar">
-    <a class="logo" href="/" aria-label="VIGIL home"><span class="face" aria-hidden="true"></span><span><span class="word">VIGIL</span><span class="tag">powered by Grok</span></span></a>
-    <nav class="nav" aria-label="Launchpad">
-      <a href="#top" class="active"><svg class="ic"><use href="#i-home"/></svg>Home</a>
-      <a href="#tokens"><svg class="ic"><use href="#i-grid"/></svg>Tokens</a>
-      <a href="#launch"><svg class="ic"><use href="#i-plus"/></svg>Launch</a>
-      <a href="#rules"><svg class="ic"><use href="#i-shield"/></svg>Rules</a>
-      <a href="#fees"><svg class="ic"><use href="#i-coins"/></svg>Fees &amp; payouts</a>
+    <a class="logo" href="/#terminal" aria-label="Buddy: the terminal"><span class="face" aria-hidden="true"></span><span><span class="word">Buddy</span><span class="tag">powered by Claude</span></span></a>
+    <span class="side-lbl">Menu</span>
+    <nav class="nav site" aria-label="Pages">
+      <a href="/#terminal"><svg class="ic"><use href="#i-term"/></svg>Terminal</a>
+      <a href="/#ask"><svg class="ic"><use href="#i-msg"/></svg>Ask Buddy</a>
+      <a href="/#how"><svg class="ic"><use href="#i-layers"/></svg>How it works</a>
+      <a href="launchpad.html" class="here" aria-current="page"><svg class="ic"><use href="#i-rocket"/></svg>Launchpad</a>
     </nav>
-    <nav class="nav side-foot" aria-label="Help">
-      <a data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-msg"/></svg>Support</a>
-      <a href="https://github.com/Trench-launches/vigil#readme" target="_blank" rel="noopener"><svg class="ic"><use href="#i-book"/></svg>Docs</a>
+    <nav class="nav sub" aria-label="On this page">
+      <a href="#top" class="active">Overview</a>
+      <a href="#tokens">Tokens</a>
+      <a href="#launch">Launch a coin</a>
+      <a href="#rules">Rules</a>
+      <a href="#fees">Fees &amp; payouts</a>
     </nav>
+    <div class="side-foot">
+      <div class="side-status" id="sideStatus"><span class="dot" aria-hidden="true"></span><div><b id="sideMode">Testing phase</b><small id="sideModeS">Simulated trades, not onchain</small></div></div>
+      <a class="btn side-btn" data-x-link href="https://x.com/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-x"/></svg> Follow on X</a>
+      <a class="btn primary side-btn buy-btn" href="/#terminal" aria-disabled="true">Buy $BUDDY<span class="soon">soon</span></a>
+      <a class="side-doc" href="https://github.com/Trench-launches/vigil#readme" target="_blank" rel="noopener">Docs on GitHub ↗</a>
+    </div>
   </aside>
 
   <div class="page">
     <header class="topbar">
       <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu" aria-controls="sidebar" aria-expanded="false"><svg class="ic"><use href="#i-menu"/></svg></button>
+      <h1 class="lp-title">Launchpad</h1>
       <label class="search"><svg class="ic"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search name, ticker or mint" aria-label="Search launched coins" autocomplete="off"></label>
       <div class="actions">
-        <a class="icon-btn hide-sm" data-x-link href="https://x.com/" target="_blank" rel="noopener" aria-label="VIGIL on X"><svg class="ic"><use href="#i-x"/></svg></a>
-        <a class="icon-btn hide-sm" href="/#score" aria-label="VIGIL's trading scorecard"><svg class="ic"><use href="#i-chart"/></svg></a>
+        <a class="icon-btn hide-sm" data-x-link href="https://x.com/" target="_blank" rel="noopener" aria-label="Buddy on X"><svg class="ic"><use href="#i-x"/></svg></a>
+        <a class="icon-btn hide-sm" href="/#score" aria-label="Buddy's trading scorecard"><svg class="ic"><use href="#i-chart"/></svg></a>
         <a class="btn primary" href="#launch">Launch</a>
       </div>
     </header>
@@ -408,9 +507,9 @@ a.lrow:hover { background: var(--panel); }
     <main id="top">
       <section class="hero">
         <div class="hero-copy">
-        <div class="kickers"><span class="kicker">VIGIL launchpad</span><span class="kicker soft" id="statusPill"><span class="dot"></span>Launches on pump.fun</span></div>
+        <div class="kickers"><span class="kicker soft" id="statusPill"><span class="dot"></span>Launches on pump.fun</span></div>
         <h1>Launch a coin with one post.<span>Your fees, locked on chain.</span></h1>
-        <p>Tag <span data-x-handle>VIGIL</span> on X with a name, a ticker, an image and your Solana wallet. VIGIL checks the request, pays the launch on pump.fun and locks 90% of the coin's creator fees to you.</p>
+        <p>Tag <span data-x-handle>Buddy</span> on X with a name, a ticker, an image and your Solana wallet. Buddy checks the request, pays the launch on pump.fun and locks 90% of the coin's creator fees to you.</p>
         <div class="ctas"><a class="btn primary big" href="#tokens">Explore tokens →</a><a class="btn ghost big" href="#launch">Launch a coin</a></div>
         </div>
         <img class="hero-buddy" src="assets/buddy-rocket.webp" alt="Buddy, an ant in a suit, giving a thumbs up next to a rocket lifting off" width="773" height="800" fetchpriority="high">
@@ -423,7 +522,7 @@ a.lrow:hover { background: var(--panel); }
         </a>
         <a class="tile span-2" href="#rules">
           <div class="tile-body rules">
-            <div class="rule"><span class="ri"><svg class="ic"><use href="#i-eye"/></svg></span><div><b>Grok checks every request</b><small>No hate, scams or fake "official" coins</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
+            <div class="rule"><span class="ri"><svg class="ic"><use href="#i-eye"/></svg></span><div><b>Claude checks every request</b><small>No hate, scams or fake "official" coins</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
             <div class="rule"><span class="ri"><svg class="ic"><use href="#i-user"/></svg></span><div><b id="tRuleDay">One launch per account a day</b><small>Per X account, every 24 hours</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
             <div class="rule"><span class="ri"><svg class="ic"><use href="#i-clock"/></svg></span><div><b id="tRuleAge">Accounts older than 30 days</b><small>Brand-new accounts wait</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
             <div class="rule"><span class="ri"><svg class="ic"><use href="#i-lock"/></svg></span><div><b>Creator fees locked to you</b><small>Split once on chain, then nobody can change it</small></div><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span></div>
@@ -453,7 +552,7 @@ a.lrow:hover { background: var(--panel); }
           <div class="tile-body tile-pad">
             <div class="tile-kicker">Where fees go</div>
             <div class="split"><div class="you">90%</div><div class="us">10%</div></div>
-            <div class="split-k"><span>to you, the creator</span><span>VIGIL</span></div>
+            <div class="split-k"><span>to you, the creator</span><span>Buddy</span></div>
             <ul class="steps"><li>trading fees build up</li><li>split, locked on chain</li><li>paid to your wallet</li></ul>
           </div>
           <div class="tile-foot">Fees &amp; payouts <span class="tile-open">Open <svg class="ic"><use href="#i-arrow"/></svg></span></div>
@@ -473,19 +572,19 @@ a.lrow:hover { background: var(--panel); }
 
       <section class="sec" id="tokens" aria-labelledby="h-tokens">
         <div class="section-head"><h2 id="h-tokens">All tokens</h2><span id="tokCount">0 coins</span></div>
-        <div class="tokens" id="tokenGrid"><div class="card empty">No launches yet. When VIGIL launches a coin it shows up here with its creator, curve progress and links.</div></div>
+        <div class="tokens" id="tokenGrid"><div class="card empty">No launches yet. When Buddy launches a coin it shows up here with its creator, curve progress and links.</div></div>
       </section>
 
       <section class="sec" id="launch" aria-labelledby="h-launch">
         <div class="section-head"><h2 id="h-launch">Launch</h2><span>One post on X</span></div>
         <div class="panel-grid">
           <div class="panel">
-            <h3>Launch your own coin. <span>Just tag <span data-x-handle>VIGIL</span>.</span></h3>
-            <p>VIGIL pays the launch. You get 90% of the creator fees from the first trade.</p>
+            <h3>Launch your own coin. <span>Just tag <span data-x-handle>Buddy</span>.</span></h3>
+            <p>Buddy pays the launch. You get 90% of the creator fees from the first trade.</p>
             <ol class="lsteps">
               <li><div><b>Fill in your coin</b>Name, ticker, a line about it and the Solana wallet for your fees.</div></li>
-              <li><div><b>Post it on X with your image</b>VIGIL checks every request before it launches anything.</div></li>
-              <li><div><b>VIGIL launches it on pump.fun</b>It replies under your post with the contract address, and the coin appears on this page.</div></li>
+              <li><div><b>Post it on X with your image</b>Buddy checks every request before it launches anything.</div></li>
+              <li><div><b>Buddy launches it on pump.fun</b>It replies under your post with the contract address, and the coin appears on this page.</div></li>
             </ol>
           </div>
           <div class="panel">
@@ -498,6 +597,13 @@ a.lrow:hover { background: var(--panel); }
               <div class="note" id="fNote">Attach your coin's image on X before you post.</div>
               <button class="btn primary big" id="fGo" type="submit" disabled><svg class="ic"><use href="#i-x"/></svg> Post on X to launch →</button>
             </form>
+            <div class="track" id="lpTrack" hidden aria-live="polite">
+              <div class="track-h"><span class="track-ic" id="trIc"><svg class="ic"><use href="#i-rocket"/></svg></span><div><b id="trTitle">Your launch post is ready</b><p id="trSub"></p></div></div>
+              <ol class="track-steps"><li id="trS1"><i></i>Post it on X with your image</li><li id="trS2"><i></i>Buddy checks your coin</li><li id="trS3"><i></i><span id="trS3t">Your coin goes live on pump.fun</span></li></ol>
+              <div class="track-why" id="trWhy" hidden><b id="trWhyT"></b><p id="trWhyD"></p></div>
+              <div class="track-live" id="trLive" hidden><div class="track-ca"><code id="trCa"></code><button type="button" id="trCopy" aria-label="Copy the contract address"><svg class="ic"><use href="#i-copy"/></svg></button></div><div class="track-links" id="trLinks"></div></div>
+              <div class="track-btns"><button type="button" class="btn ghost" id="trEdit">Edit my post</button><a class="btn primary" id="trOpen" target="_blank" rel="noopener"><svg class="ic"><use href="#i-x"/></svg> Open X again</a></div>
+            </div>
           </div>
         </div>
       </section>
@@ -505,11 +611,11 @@ a.lrow:hover { background: var(--panel); }
       <section class="sec" id="rules" aria-labelledby="h-rules">
         <div class="section-head"><h2 id="h-rules">Rules</h2><span>The same for everyone</span></div>
         <div class="card">
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>Grok reads every request</b><small>A real request, no impersonation of people or projects, nothing hateful or unsafe. Refusals get a short reply.</small></div></div>
+          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>Claude reads every request</b><small>A real request, no impersonation of people or projects, nothing hateful or unsafe. Refusals get a short reply.</small></div></div>
           <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b id="rDay">One launch per X account a day</b><small>Requests past the limit are refused until tomorrow.</small></div></div>
           <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b id="rAge">X accounts older than 30 days</b><small>Keeps throwaway accounts from flooding the launchpad.</small></div></div>
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>An image, a name, a ticker and one wallet</b><small>Tickers are letters and numbers, up to 10. $VIGIL is VIGIL's own and can't be launched again.</small></div></div>
-          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>A daily launch budget</b><small>VIGIL pays for launches, so there's a daily cap. Once it's used, requests wait for the next day.</small></div></div>
+          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>An image, a name, a ticker and one wallet</b><small>Tickers are letters and numbers, up to 10. Buddy's own ticker is reserved.</small></div></div>
+          <div class="lrow"><span class="on"><svg class="ic"><use href="#i-check"/></svg>on</span><div class="nm"><b>A daily launch budget</b><small>Buddy pays for launches, so there's a daily cap. Once it's used, requests wait for the next day.</small></div></div>
         </div>
       </section>
 
@@ -517,23 +623,23 @@ a.lrow:hover { background: var(--panel); }
         <div class="section-head"><h2 id="h-fees">Fees &amp; payouts</h2><span>Locked on chain</span></div>
         <div class="facts">
           <div class="fact"><span>Your share</span><b id="fShare">90%</b><small>of the coin's creator fees</small></div>
-          <div class="fact"><span>VIGIL's share</span><b id="fOurs">10%</b><small>funds future launches</small></div>
+          <div class="fact"><span>Buddy's share</span><b id="fOurs">10%</b><small>funds future launches</small></div>
           <div class="fact"><span>Paid to creators</span><b id="fPaid">0 SOL</b><small>in recent payouts</small></div>
-          <div class="fact"><span>Launch cost to you</span><b>0 SOL</b><small>VIGIL pays it</small></div>
+          <div class="fact"><span>Launch cost to you</span><b>0 SOL</b><small>Buddy pays it</small></div>
         </div>
-        <div class="card" style="margin-top:12px"><div class="empty">pump.fun pays a coin's creator a small fee on every trade. Right after launch VIGIL splits that fee on chain: your share to your wallet, the rest to VIGIL, then the split is locked so nobody, VIGIL included, can change it. VIGIL pays out what has built up every few hours.</div></div>
+        <div class="card" style="margin-top:12px"><div class="empty">pump.fun pays a coin's creator a small fee on every trade. Right after launch Buddy splits that fee on chain: your share to your wallet, the rest to Buddy, then the split is locked so nobody, Buddy included, can change it. Buddy pays out what has built up every few hours.</div></div>
       </section>
 
-      <div class="foot">VIGIL is an automated account run by software. Coins launched here are made by their requesters; VIGIL checks requests but doesn't vouch for any coin. Memecoins are extremely risky. Not financial advice. <span id="dataNote">Waiting for live data.</span></div>
+      <div class="foot">Buddy is an automated account run by software. Coins launched here are made by their requesters; Buddy checks requests but doesn't vouch for any coin. Memecoins are extremely risky. Not financial advice. <span id="dataNote">Waiting for live data.</span></div>
     </main>
   </div>
 </div>
 
-<script src="config.js"></script>
+<script src="config.js?v=3"></script>
 <script>
 (() => {
   const C = window.SITE_CONFIG || {};
-  const NAME = C.name || "VIGIL";
+  const NAME = C.name || "Buddy";
   const X_HANDLE = C.xHandle || "";
   const API = (C.api || "http://localhost:8000").replace(/\/+$/, "");
   const EXPLORER = "https://solscan.io";
@@ -551,13 +657,25 @@ a.lrow:hover { background: var(--panel); }
   // the account, wherever it's named
   $$("[data-x-link]").forEach(a => { a.href = X_HANDLE ? `https://x.com/${X_HANDLE}` : "https://x.com/"; });
   $$("[data-x-handle]").forEach(el => { el.textContent = X_HANDLE ? "@" + X_HANDLE : NAME; });
+  // Buy $BUDDY: goes to GMGN once the token is set in config.js; until then it says "soon"
+  const TOKEN = C.token || {};
+  $$(".buy-btn").forEach(b => { if (TOKEN.gmgn) { b.href = TOKEN.gmgn; b.target = "_blank"; b.rel = "noopener"; b.removeAttribute("aria-disabled"); b.querySelector(".soon")?.remove(); }
+    else b.addEventListener("click", e => e.preventDefault()); });
+  // the trading mode in the sidebar, as on the terminal
+  fetch(API + "/site", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(d => {
+    if (!d) return;
+    const live = d.mode === "live", killed = !!d.kill_switch?.on;
+    $("#sideStatus").className = "side-status " + (killed ? "off" : live ? "live" : "");
+    $("#sideMode").textContent = killed ? "Paused" : live ? "Live trading" : "Testing phase";
+    $("#sideModeS").textContent = killed ? "Kill switch on: watching, not trading" : live ? "Real trades, onchain" : "Simulated trades, not onchain";
+  }).catch(() => {});
 
   // sidebar: open on phones, and the section in view is the active link
   const side = $("#sidebar"), menu = $("#menuBtn");
   menu.addEventListener("click", e => { e.stopPropagation(); const open = !side.classList.contains("open"); side.classList.toggle("open", open); menu.setAttribute("aria-expanded", String(open)); });
   document.addEventListener("click", e => { if (side.classList.contains("open") && !side.contains(e.target)) { side.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); } });
   $$(".sidebar a").forEach(a => a.addEventListener("click", () => { side.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); }));
-  const links = $$(".sidebar .nav:not(.side-foot) a");
+  const links = $$(".sidebar .nav.sub a");
   const secs = ["top", "tokens", "launch", "rules", "fees"].map(id => document.getElementById(id));
   const mark = () => { const y = scrollY + 140; let cur = "top"; secs.forEach(s => { if (s && s.id !== "top" && s.offsetTop <= y) cur = s.id; });
     links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + cur)); };
@@ -624,11 +742,11 @@ a.lrow:hover { background: var(--panel); }
         <div class="tok-meta"><div><span>Curve</span>${progressText(c)}</div><div><span>Market cap</span>${usd(c.market_cap_usd)}</div>
           <div><span>Creator fees</span>${c.fee_split_locked ? (c.creator_share_bps / 100) + "% to creator" : "split pending"}</div><div><span>Mint</span><span class="mono" style="text-transform:none;font-size:12px;color:var(--text-2)">${esc(c.token.slice(0, 4))}…${esc(c.token.slice(-4))}</span></div></div>
         <div class="tok-links">${links3(c)}</div></article>`).join("")
-      : `<div class="card empty">${COINS.length ? "No coin matches that search." : "No launches yet. When VIGIL launches a coin it shows up here with its creator, curve progress and links."}</div>`;
+      : `<div class="card empty">${COINS.length ? "No coin matches that search." : "No launches yet. When Buddy launches a coin it shows up here with its creator, curve progress and links."}</div>`;
   };
   $("#q").addEventListener("input", () => { renderTokens(); if ($("#q").value.trim()) document.getElementById("tokens").scrollIntoView({ block: "start" }); });
 
-  // the launch form: builds the post VIGIL reads on X (same format as the main site's form)
+  // the launch form: builds the post Buddy reads on X (same format as the main site's form)
   let launchOpen = true;
   const f = { name: $("#fName"), sym: $("#fSym"), desc: $("#fDesc"), link: $("#fLink"), wallet: $("#fWallet") };
   const post = () => {
@@ -637,7 +755,7 @@ a.lrow:hover { background: var(--panel); }
     const ok = { name: v.name.length > 0, sym: /^[A-Z0-9]{1,10}$/.test(v.sym), wallet: isAddr(v.wallet) };
     const text = `@${X_HANDLE || NAME} launch $${v.sym || "TICKER"} ${v.name || "Coin name"}` + (v.desc ? `\n\n${v.desc}` : "")
       + (v.link ? `\n\n${v.link}` : "") + `\n\nfees to: ${v.wallet || "your Solana wallet"}`;
-    return { ok, text, valid: ok.name && ok.sym && ok.wallet };
+    return { v, ok, text, valid: ok.name && ok.sym && ok.wallet };
   };
   const renderForm = (touched = false) => {
     const p = post();
@@ -651,7 +769,63 @@ a.lrow:hover { background: var(--panel); }
   };
   Object.values(f).forEach(el => el.addEventListener("input", () => renderForm(true)));
   $("#lform").addEventListener("submit", e => { e.preventDefault(); const p = post(); if (!p.valid) return;
-    window.open("https://x.com/intent/post?text=" + encodeURIComponent(p.text), "_blank", "noopener"); });
+    const url = "https://x.com/intent/post?text=" + encodeURIComponent(p.text);
+    window.open(url, "_blank", "noopener"); track(p.v.sym, p.v.wallet, url); });
+
+  /* after they go to post: follow the request (by ticker and wallet) until it's live or refused */
+  let SHARE = 90, trTimer = null;
+  const LD_WHY = {
+    "no image": ["You forgot the image", "Every coin needs a picture. Attach one to your post on X and post it again."],
+    "per-user limit": ["One launch per day", "Each X account can launch one coin a day. You can launch again tomorrow."],
+    "account too new": ["Your X account is too new", "Launches are open to X accounts older than 30 days, to keep bots out."],
+    "no wallet": ["No fee wallet in your post", "Add the wallet for your creator fees (one Solana wallet address) and post again."],
+    "unclear name or ticker": [`${NAME} couldn't read the name or ticker`, "Write it as: launch $TICKER Coin name. The ticker is letters and numbers, up to 10."],
+    "reserved ticker": ["That ticker is reserved", `It belongs to ${NAME}'s own coin. Pick another ticker and post again.`],
+    "daily budget used": ["Launches are full for today", `${NAME}'s launch budget for today is used up. Try again tomorrow.`],
+  };
+  const trStep = (i, st) => { $("#trS" + i).className = st; };
+  const trShow = (kind, title, sub, icon) => { $("#lpTrack").className = "track " + kind; $("#trTitle").textContent = title; $("#trSub").textContent = sub;
+    $("#trIc").innerHTML = `<svg class="ic"><use href="#${icon}"/></svg>`; };
+  const track = (sym, wallet, url) => {
+    $("#lform").hidden = true; $("#lpTrack").hidden = false; $("#trWhy").hidden = true; $("#trLive").hidden = true; $("#trOpen").href = url;
+    $("#trS3t").textContent = `$${sym} goes live on pump.fun`;
+    trShow("", "Your launch post is ready", `Post it on X with your image attached. ${NAME} picks it up within a few minutes and launches $${sym}.`, "i-rocket");
+    trStep(1, "now"); trStep(2, ""); trStep(3, "");
+    clearInterval(trTimer);
+    const started = Date.now();
+    const poll = async () => {
+      if (Date.now() - started > 20 * 60e3) return clearInterval(trTimer);  // stop after 20 minutes
+      let st;
+      try { const r = await fetch(API + "/launchpad/status?symbol=" + encodeURIComponent(sym) + "&wallet=" + encodeURIComponent(wallet), { cache: "no-store" }); st = await r.json(); } catch { return; }
+      if (st.status === "not_seen") return;
+      trStep(1, "done");
+      if (st.status === "refused") {
+        clearInterval(trTimer); trStep(2, "fail");
+        const [t, d] = LD_WHY[st.reason] || [`It didn't pass ${NAME}'s check`, st.reason || `${NAME} explains why in its reply under your post.`];
+        $("#trWhyT").textContent = t; $("#trWhyD").textContent = d; $("#trWhy").hidden = false;
+        return trShow("bad", `${NAME} couldn't launch $${sym}`, "Nothing was launched and nothing was spent. Fix it and post again.", "i-close");
+      }
+      if (st.status === "failed") {
+        clearInterval(trTimer); trStep(2, "done"); trStep(3, "fail");
+        return trShow("bad", "The launch didn't go through", `Something went wrong on ${NAME}'s side and no coin was made. Try again in a little while.`, "i-close");
+      }
+      trStep(2, "done");
+      if (st.status === "approved" || st.status === "launching") {
+        trStep(3, "now");
+        return trShow("", `$${sym} passed the checks`, `${NAME} is announcing it and launching it on pump.fun now. This takes about a minute.`, "i-rocket");
+      }
+      clearInterval(trTimer); trStep(3, "done");  // launched (or fees handed over)
+      trShow("live", `$${sym} is live!`, `Your coin is live on pump.fun. You get ${SHARE}% of its creator fees from the first trade; ${NAME} keeps ${100 - SHARE}%.`, "i-check");
+      $("#trCa").textContent = st.token || "";
+      $("#trLinks").innerHTML = (st.announce_x_id ? `<a href="https://x.com/i/status/${esc(st.announce_x_id)}" target="_blank" rel="noopener">${esc(NAME)}'s post ↗</a>` : "")
+        + (st.tx_hash ? `<a href="https://solscan.io/tx/${esc(st.tx_hash)}" target="_blank" rel="noopener">Receipt ↗</a>` : "")
+        + (st.token ? `<a href="https://pump.fun/coin/${esc(st.token)}" target="_blank" rel="noopener">pump.fun ↗</a><a href="https://gmgn.ai/sol/token/${esc(st.token)}" target="_blank" rel="noopener">Chart ↗</a>` : "");
+      $("#trLive").hidden = false;
+    };
+    poll(); trTimer = setInterval(poll, 8000);
+  };
+  $("#trEdit").addEventListener("click", () => { clearInterval(trTimer); $("#lpTrack").hidden = true; $("#lform").hidden = false; });
+  $("#trCopy").addEventListener("click", () => { const t = $("#trCa").textContent; if (t && navigator.clipboard) navigator.clipboard.writeText(t); });
   renderForm();
 
   // live data
@@ -666,7 +840,7 @@ a.lrow:hover { background: var(--panel); }
     $("#ready").innerHTML = `<svg class="ic"><use href="#i-check"/></svg>${launchOpen ? "Ready to launch" : "Opening soon"}`;
     $("#tLaunched").textContent = (st.launched || 0).toLocaleString("en-US");
     $("#tToday").textContent = `${st.launched_24h || 0} in the last 24 hours`;
-    const share = (st.creator_share_bps ?? 9000) / 100;
+    const share = (st.creator_share_bps ?? 9000) / 100; SHARE = share;
     $("#fShare").textContent = `${share}%`; $("#fOurs").textContent = `${100 - share}%`;
     $(".split .you").textContent = `${share}%`; $(".split .us").textContent = `${100 - share}%`;
     $("#fPaid").textContent = solAmt(st.creator_fees_paid_sol || 0);
