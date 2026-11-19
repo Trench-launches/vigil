@@ -53,7 +53,7 @@ class TranscriptIn(BaseModel):
 
 
 class ChatMsg(BaseModel):
-    role: str = Field(pattern="^(user|grok|muse)$")  # "muse": pages opened before the Grok switch
+    role: str = Field(pattern="^(user|claude|grok|muse)$")  # "grok", "muse": pages opened before the Claude switch
     text: str = Field(max_length=2000)
 
 
@@ -62,7 +62,7 @@ class ChatIn(BaseModel):
     history: list[ChatMsg] = Field(default_factory=list, max_length=20)
     # a coin the visitor picked (a suggestion chip): researched with the live card
     token: str | None = Field(default=None, pattern=BASE58_MINT)
-    # the coin discussed earlier: passed to Grok quietly, used only if the new message is about it
+    # the coin discussed earlier: passed to Claude quietly, used only if the new message is about it
     context_token: str | None = Field(default=None, pattern=BASE58_MINT)
 
 
@@ -119,7 +119,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             "kill_switch": {"on": killed, "reason": why},
             "journal": {"entries": count("journal"), "chain_intact": ok, "first_bad_id": bad},
             "integrations": {
-                "rpc": redact(s.solana_rpc_url), "jupiter": bool(s.jupiter_api_key), "grok": bool(s.grok_api_key),
+                "rpc": redact(s.solana_rpc_url), "jupiter": bool(s.jupiter_api_key), "claude": bool(s.anthropic_api_key),
                 "x_read": bool(s.x_bearer_token),
                 "x_post": bool(s.x_user_access_token or (s.x_client_id and s.x_refresh_token)) and s.x_posting_enabled,
                 "twitch": bool(s.twitch_client_id and s.twitch_eventsub_secret), "news_feeds": len(s.news_feeds),
@@ -223,7 +223,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         out.pop("id")
         out["fee_shares"] = _json(out["fee_shares"])
         if out["status"] == "refused":  # the short public reason VIGIL replied with, not the internal note
-            out["reason"] = (out["reason"] or "").removeprefix("grok declined: ")
+            out["reason"] = (out["reason"] or "").removeprefix("claude declined: ").removeprefix("grok declined: ")
         return out
 
     @app.get("/launchpad/recent")
@@ -309,13 +309,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return rows(conn, "SELECT * FROM posts WHERE status=? ORDER BY id DESC LIMIT 200", (status,))
         return rows(conn, "SELECT * FROM posts ORDER BY id DESC LIMIT 200")
 
-    # --- ask VIGIL (public chat, answered by Grok) ---------------------------------------------
+    # --- ask VIGIL (public chat, answered by Claude) ---------------------------------------------
 
     import threading
     chat_lock = threading.Lock()
 
     def chat_services() -> dict[str, Any]:
-        """Chain, market and Grok clients for the chat, built once. Tests can preset app.state.chat_services."""
+        """Chain, market and Claude clients for the chat, built once. Tests can preset app.state.chat_services."""
         svc = getattr(app.state, "chat_services", None)
         if svc is None:
             with chat_lock:  # the start-up warm-up and a first visitor must not build it twice
@@ -328,7 +328,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                                                      "brain": ctx.brain, "x": ctx.x, "web": ctx.web}
         return svc
 
-    if s.chat_enabled and s.grok_api_key:  # building the clients takes ~10s: do it at start-up, not on a visitor's first question
+    if s.chat_enabled and s.anthropic_api_key:  # building the clients takes ~10s: do it at start-up, not on a visitor's first question
         threading.Thread(target=chat_services, name="chat-warmup", daemon=True).start()
 
     def visitor(request: Request, conn: Any) -> str:
@@ -363,7 +363,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     @app.post("/chat")
     def ask_vigil(body: ChatIn, request: Request, conn=Depends(db)) -> dict[str, Any]:
-        """Ask VIGIL (Grok) about a Solana coin. Rate limited per visitor and per day overall."""
+        """Ask VIGIL (Claude) about a Solana coin. Rate limited per visitor and per day overall."""
         svc, who, msg, history = chat_start(body, request, conn)
         for e in chat.answer_events(svc, s, s.database_path, who, msg, history, body.token, body.context_token):
             if e["type"] == "error":

@@ -1,7 +1,7 @@
 """Auto-replies: the hard filter, the caps, and threading under someone else's post."""
 from types import SimpleNamespace
 
-from ct_agent.brain.grok import GrokReply, GrokResult
+from ct_agent.brain.claude import ClaudeReply, ClaudeResult
 from ct_agent.db import kv_set
 from ct_agent.social.outbox import _next_sendable
 from ct_agent.social.replies import clean, replies_once
@@ -34,7 +34,7 @@ class _Brain:
 
     def reply(self, ctx):
         self.seen.append(ctx)
-        return GrokResult(GrokReply(skip=self.skip, reply=self.text), "", "m", "h")
+        return ClaudeResult(ClaudeReply(skip=self.skip, reply=self.text), "", "m", "h")
 
 
 def _ctx(settings, db, mentions, brain):
@@ -58,7 +58,7 @@ def test_replies_respect_caps_and_skip_backlog(settings, db):
     assert parent == "1"  # posted straight under their post
 
 
-def test_grok_can_decline(settings, db):
+def test_claude_can_decline(settings, db):
     kv_set(db, "mentions_since_id", "0")
     kv_set(db, "x_my_user_id", "me")
     ctx = _ctx(settings, db, [{"id": "9", "author_id": "troll", "text": "you suck"}], _Brain("", skip=True))
@@ -71,9 +71,9 @@ class _Writer:
         self.text, self.calls = text, 0
 
     def musing(self, ctx):
-        from ct_agent.brain.grok import GrokMusing
+        from ct_agent.brain.claude import ClaudeMusing
         self.calls += 1
-        return GrokResult(GrokMusing(tweet=self.text), "", "m", "h")
+        return ClaudeResult(ClaudeMusing(tweet=self.text), "", "m", "h")
 
 
 def test_musings_every_half_hour_never_eat_the_trade_posts_room(settings, db):

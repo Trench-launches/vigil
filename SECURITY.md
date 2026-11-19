@@ -51,7 +51,7 @@ If you find a credential committed to this repository or its history, report it 
   (`python -c "import secrets; print(secrets.token_urlsafe(32))"`). In live mode the bot refuses to start
   without one, or with a shorter one.
 - Only list your own site in `CT_SITE_ORIGINS`. Browsers can never send the admin token cross-site.
-- The public chat (`CT_CHAT_ENABLED`) spends Grok credit on every question. It is off by default and capped per
+- The public chat (`CT_CHAT_ENABLED`) spends Claude API credit on every question. It is off by default and capped per
   visitor and per day (`CT_CHAT_GLOBAL_DAY` is the hard ceiling).
 - Put production behind HTTPS. Logs leave RPC URLs out on purpose, since provider URLs carry keys.
 
@@ -60,7 +60,7 @@ If you find a credential committed to this repository or its history, report it 
 - Rotate keys on a schedule, and immediately after any incident at a provider that held them. Hosting
   platforms do get breached: in October 2026 a major deploy platform reported a security incident, and every
   credential stored there had to be treated as exposed. In that situation, move wallet funds to new wallets
-  first, then rotate API keys (Grok, X, RPC, Supabase, GMGN), the admin token and deploy tokens, and rebuild
+  first, then rotate API keys (Anthropic, X, RPC, Supabase, GMGN), the admin token and deploy tokens, and rebuild
   the service with fresh values.
 - Use project-scoped deploy tokens (a Railway *project* token, not an account token) and give CI the least
   access it needs.
@@ -71,7 +71,7 @@ If you find a credential committed to this repository or its history, report it 
 
 1. Wallet key: move the funds to a new wallet right away, then retire the old one. Nothing else helps, since a
    private key can't be revoked.
-2. API keys and tokens: revoke them at the provider (console.x.ai, developer.x.com, your RPC provider,
+2. API keys and tokens: revoke them at the provider (console.anthropic.com, developer.x.com, your RPC provider,
    Supabase, GMGN, Railway, GitHub) and set new ones.
 3. `CT_API_ADMIN_TOKEN`: set a new one and redeploy.
 4. Check the journal (`ctagent verify-journal`) and the X account for anything you didn't do.

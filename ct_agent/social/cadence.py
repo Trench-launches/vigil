@@ -4,9 +4,9 @@ Trades, updates and launches still post the moment they happen, and each one cou
 when x_cadence_min minutes pass with nothing new on the timeline does VIGIL fill the gap with the next kind in
 the rotation that has something to say:
 
-  scan     what the scanner looked at (smart-money calls today, coins Grok read this hour, what was bought)
+  scan     what the scanner looked at (smart-money calls today, coins Claude read this hour, what was bought)
   holdings the open bags and how each one is doing
-  musing   a short line from Grok (musings.py)
+  musing   a short line from Claude (musings.py)
   score    the running scorecard, losses included
   goals    what VIGIL is aiming for next and what its data has taught it (goals.py), every few hours
 
@@ -65,7 +65,7 @@ def scan_post(conn: Any, site: dict[str, Any], now: datetime) -> str | None:
                         (hour,)).fetchone()
     lines = ["🔎 Scan report, last hour", "",
              f"Smart-money calls on Solana today: {f.get('calls_24h', 0):,}",
-             f"Screened by Grok this hour: {looked}"]
+             f"Screened by Claude this hour: {looked}"]
     if looked:
         lines.append(f"Bought: {acts.get('buy', 0)} · Watching: {acts.get('watch', 0)} · Passed: {acts.get('pass', 0)}")
     if pick:

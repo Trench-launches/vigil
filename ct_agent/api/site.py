@@ -1,7 +1,7 @@
 """Everything the public website shows, in one read-only payload.
 
 The landing page polls GET /site. Figures are real: counts from the
-smart-money scanner, the latest sources and onchain checks, Grok's actual
+smart-money scanner, the latest sources and onchain checks, Claude's actual
 reasoning, open positions, posts that went out, and the scorecard. Amounts
 are in SOL (keys end in _sol).
 Nothing here is secret; the API is public by design.
@@ -201,7 +201,7 @@ def _build(conn: Any, s: Settings) -> dict[str, Any]:
     killed, why = risk.kill_active()
 
     # --- funnel: the scanner's Solana calls in the last 24h ---------------------
-    # calls: what the smart-money scanner called; screened: checked onchain and read by Grok; bought: traded.
+    # calls: what the smart-money scanner called; screened: checked onchain and read by Claude; bought: traded.
     funnel = {
         "calls_24h": one("SELECT COUNT(*) FROM scanner_calls WHERE called_at>=?", (day,)),
         "screened_24h": one("SELECT COUNT(*) FROM scanner_calls WHERE called_at>=? AND decision_id IS NOT NULL", (day,)),
@@ -237,7 +237,7 @@ def _build(conn: Any, s: Settings) -> dict[str, Any]:
     for x in leads:
         x["symbol"] = syms.get(x["verified_token"] or "")
 
-    # --- thinking: Grok's latest real decisions (one of each kind if possible) ---
+    # --- thinking: Claude's latest real decisions (one of each kind if possible) ---
     raw = rows(conn, "SELECT d.*, t.symbol, t.stage AS coin_stage, t.dex_id FROM decisions d "
                      "LEFT JOIN tokens t ON t.mint=d.token "
                      "WHERE (d.model!='rule' OR d.action='buy') ORDER BY d.id DESC LIMIT 60")
@@ -291,7 +291,7 @@ def _build(conn: Any, s: Settings) -> dict[str, Any]:
         if p.get("kind") == "intro":
             posts.append({"kind": "intro", "body": p.get("text", ""), "sent_at": j["ts"], "x_post_id": p.get("post_id")})
     posts = sorted(posts, key=lambda p: p["sent_at"] or "", reverse=True)[:6]
-    # The trade tweets, one thread per coin (the buy, Grok's reasons under it, updates, sells), newest trade first:
+    # The trade tweets, one thread per coin (the buy, Claude's reasons under it, updates, sells), newest trade first:
     # the public record of every coin it bought, as posted on X.
     trade_posts = rows(conn, "SELECT p.kind, p.body, p.sent_at, p.x_post_id, p.ref, t.symbol FROM posts p "
                              "LEFT JOIN tokens t ON t.mint=p.ref WHERE p.status='sent' AND p.kind IN "

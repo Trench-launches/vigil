@@ -1,11 +1,11 @@
-"""The website's "Ask VIGIL" chat, answered by Grok.
+"""The website's "Ask VIGIL" chat, answered by Claude.
 
 A visitor sends a message, usually a Solana mint address or a $ticker. VIGIL
 researches that coin live (the same mint-safety checks, holder read and screen
-the trader uses, plus what it has heard and decided), and Grok answers from
+the trader uses, plus what it has heard and decided), and Claude answers from
 those facts.
 
-Every request is a paid Grok call, so it is rate limited per visitor (salted
+Every request is a paid Claude call, so it is rate limited per visitor (salted
 IP hash, never the raw IP) and capped overall per day. The global cap is the
 hard ceiling on spend.
 """
@@ -120,7 +120,7 @@ def find_token(conn: Any, text: str, market: Any = None) -> tuple[str | None, st
 
 
 def research(ctx: Any, token: str) -> dict[str, Any]:
-    """Live facts about one coin for Grok. Cached briefly so a burst of questions about the
+    """Live facts about one coin for Claude. Cached briefly so a burst of questions about the
     same coin doesn't repeat the chain reads."""
     hit = _RESEARCH.get(token)
     if hit and time.time() - hit[1] < RESEARCH_TTL_S:
@@ -197,7 +197,7 @@ def _research(ctx: Any, token: str) -> dict[str, Any]:
 
 
 def token_card(facts: dict[str, Any]) -> dict[str, Any] | None:
-    """What the website shows above Grok's reply."""
+    """What the website shows above Claude's reply."""
     if not facts.get("is_solana_token"):
         return None
     return {k: facts.get(k) for k in ("address", "name", "symbol", "stage", "dex", "liquidity_usd", "mcap_usd",
@@ -266,7 +266,7 @@ def _x_allowed(ctx: Any) -> bool:
 
 def answer_events(svc: dict[str, Any], s: Any, db_path: str, who: str, msg: str, history: list[dict[str, str]],
                   hint: str | None, context: str | None = None) -> Any:
-    """Research the coin step by step, then ask Grok. Yields what the site shows live:
+    """Research the coin step by step, then ask Claude. Yields what the site shows live:
     {"type": "step", "id", "status": run|done|skip|fail, "detail"}, then {"type": "answer", ...}
     or {"type": "error", "detail"}."""
     from types import SimpleNamespace
@@ -363,13 +363,13 @@ def answer_events(svc: dict[str, Any], s: Any, db_path: str, who: str, msg: str,
                 facts = {}
         facts["now_utc"] = datetime.now(timezone.utc).strftime("%A %d %B %Y, %H:%M UTC")
         log_request(conn, who, token, "asked")  # counted before the paid call, whatever happens next
-        yield step("grok", "run")
+        yield step("claude", "run")
         res = svc["brain"].chat(facts, ev, history + [{"role": "user", "text": msg}], story)
         if res.decision is None:
-            yield step("grok", "fail")
+            yield step("claude", "fail")
             yield {"type": "error", "detail": "VIGIL didn't answer that one. Try again in a moment."}
             return
-        yield step("grok", "done")
+        yield step("claude", "done")
         yield {"type": "answer", "reply": res.decision.reply.strip()[:2000], "token": token_card(facts) if token else None,
                "remaining": remaining(conn, s, who)}
     finally:

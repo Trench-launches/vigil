@@ -1,7 +1,7 @@
 """Auto-replies to people who mention or reply to the bot on X.
 
 Only people who engage with VIGIL first get a reply (X's automation rules), under a daily cap and a per-person
-cap. Grok writes each reply, family friendly and in crypto-native language; it can decline (hostile, spam,
+cap. Claude writes each reply, family friendly and in crypto-native language; it can decline (hostile, spam,
 politics, anything unsafe), and every reply also passes a hard filter here before it's queued: no links, no
 contract addresses, no tags, no bad words. Replies go through the outbox like every other post.
 """
@@ -20,7 +20,7 @@ from .outbox import enqueue
 
 log = logging.getLogger(__name__)
 
-# A hard floor under Grok's own judgement: a reply containing any of these is dropped, never edited.
+# A hard floor under Claude's own judgement: a reply containing any of these is dropped, never edited.
 BLOCKED = re.compile(
     r"\b(fuck\w*|shit\w*|bitch\w*|cunt\w*|dick\w*|cock\w*|puss(y|ies)|whore\w*|slut\w*|bastard\w*|asshole\w*|"
     r"retard\w*|nigg\w*|fag\w*|porn\w*|nsfw|sex\w*|nude\w*|kill\s+(yourself|urself)|kys|rape\w*|nazi\w*|"
@@ -126,7 +126,7 @@ def replies_once(ctx: Any) -> dict[str, Any]:
         text = clean(d.reply) if d and not d.skip else None
         if not text:
             declined += 1
-            journal_append(conn, "reply_declined", {"x_post_id": m["id"], "grok_skip": bool(d and d.skip),
+            journal_append(conn, "reply_declined", {"x_post_id": m["id"], "brain_skip": bool(d and d.skip),
                                                     "error": res.error, "draft": (d.reply if d else "")[:280]})
             continue
         _, new = enqueue(conn, Draft("reply", text, who, f"reply:{m['id']}", reply_to=f"x:{m['id']}"))

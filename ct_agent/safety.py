@@ -93,7 +93,7 @@ def review(s: Settings) -> tuple[list[str], list[str]]:
             errors.append("CT_LAUNCHPAD_ENABLED needs CT_X_HANDLE (the bot's X handle, credited in every launch)")
         if not token:
             warnings.append("CT_LAUNCHPAD_ENABLED with no CT_API_ADMIN_TOKEN")
-    if s.chat_enabled and s.grok_api_key and s.chat_global_day <= 0:
+    if s.chat_enabled and s.anthropic_api_key and s.chat_global_day <= 0:
         errors.append("CT_CHAT_ENABLED with CT_CHAT_GLOBAL_DAY <= 0: the public chat would have no spending cap")
     if s.x_posting_enabled and not token:
         warnings.append("X posting is on with no CT_API_ADMIN_TOKEN: stuck posts can't be resolved over the API")

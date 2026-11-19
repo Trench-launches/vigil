@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 import httpx
 
-from .brain.grok import GrokBrain, openai_completer
+from .brain.claude import ClaudeBrain, anthropic_completer
 from .chain.solana import SolanaRpc
 from .config import Settings, get_settings
 from .db import open_db
@@ -25,7 +25,7 @@ class Context:
     rpc: SolanaRpc
     market: MarketData
     jupiter: Jupiter
-    brain: GrokBrain
+    brain: ClaudeBrain
     x: XClient
     risk: RiskManager
     live: LiveExecutor
@@ -44,10 +44,11 @@ def build(settings: Settings | None = None, *, rpc_transport: httpx.BaseTranspor
     jupiter = Jupiter(s.jupiter_api_url, s.jupiter_api_key, transport=jupiter_transport)
     if jupiter_transport is not None:  # a test double: no rate limit to pace for
         jupiter.min_interval_s = 0.0
-    if completer is None and s.grok_api_key:
-        completer = openai_completer(s.grok_api_key, s.grok_base_url, s.grok_model, s.grok_timeout_s,
-                                     fallback_models=s.grok_fallback_models)
-    brain = GrokBrain(completer, s.grok_model)
+    if completer is None and s.anthropic_api_key:
+        completer = anthropic_completer(s.anthropic_api_key, s.claude_model, s.claude_timeout_s,
+                                        decision_effort=s.claude_decision_effort,
+                                        writing_effort=s.claude_writing_effort)
+    brain = ClaudeBrain(completer, s.claude_model)
     oauth = XOAuth2(client_id=s.x_client_id, client_secret=s.x_client_secret, conn=conn,
                     seed_refresh_token=s.x_refresh_token, transport=x_transport) if s.x_client_id else None
     x = XClient(bearer_token=s.x_bearer_token, user_token=s.x_user_access_token, oauth=oauth,

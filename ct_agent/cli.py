@@ -290,11 +290,11 @@ def _check() -> int:
         report["sol_usd"] = str(ctx.market.sol_usd())
     except Exception as exc:
         report["sol_usd"] = f"FAILED {exc}"
-    if s.grok_api_key:
+    if s.anthropic_api_key:
         r = ctx.brain.decide({"token": "healthcheck", "note": "Reply with action pass. This is a connectivity test."})
-        report["grok"] = "ok" if r.decision else f"FAILED {r.error}"
+        report["claude"] = "ok" if r.decision else f"FAILED {r.error}"
     else:
-        report["grok"] = "not configured"
+        report["claude"] = "not configured"
     if s.supabase_url and s.supabase_key:
         try:
             r = ctx.web.get(f"{s.supabase_url.rstrip('/')}/rest/v1/alert_performance", timeout=20,

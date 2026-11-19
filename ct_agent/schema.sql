@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS scanner_calls (
     triggered_at    TEXT,
     checked_at      TEXT,
     first_seen      TEXT NOT NULL,
-    decision_id     INTEGER                 -- Grok's analysis of the call
+    decision_id     INTEGER                 -- Claude's analysis of the call
 );
 CREATE INDEX IF NOT EXISTS ix_scanner_calls_status ON scanner_calls(status, called_at);
 CREATE INDEX IF NOT EXISTS ix_scanner_calls_token ON scanner_calls(token);

@@ -15,7 +15,7 @@ from datetime import datetime, timedelta, timezone
 
 import httpx
 
-NEEDED = ("jupiter", "grok", "x_post", "live_trading_ready")  # what live trading leans on
+NEEDED = ("jupiter", "claude", "x_post", "live_trading_ready")  # what live trading leans on
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -1,8 +1,8 @@
-"""The trading engine: smart-money calls in, Grok's read, a rule-based buy, rule-based exits, posts out.
+"""The trading engine: smart-money calls in, Claude's read, a rule-based buy, rule-based exits, posts out.
 
-Coins come from the scanner (sources/scanner.py). Grok analyses every new call and its read is posted, but the
+Coins come from the scanner (sources/scanner.py). Claude analyses every new call and its read is posted, but the
 trade itself is a rule: a call is bought once the coin is up scanner_trigger_pct from the call (or the moment it
-lands, in buy-on-call mode). Nothing Grok says can force a buy: the kill switch, the risk limits and the price
+lands, in buy-on-call mode). Nothing Claude says can force a buy: the kill switch, the risk limits and the price
 impact bound all sit between the rule and the swap. Exits are fixed rules too: a stop loss, a take-profit ladder
 (the stop moves to entry after the first rung) and a maximum hold.
 
@@ -104,7 +104,7 @@ def _assess_call(ctx: Context, call: dict[str, Any], sol_usd: float | None, *, w
 
 
 def scanner_cycle(ctx: Context) -> list[dict[str, Any]]:
-    """The smart-money scanner's calls. Grok analyses every new tradeable call and posts its read. The trade
+    """The smart-money scanner's calls. Claude analyses every new tradeable call and posts its read. The trade
     itself is a rule: a call is bought once the coin is up scanner_trigger_pct from the call price. Nothing
     about the coin can veto that; only the wallet's safety limits can (open trades, daily loss, balance)."""
     from ..sources import scanner
@@ -122,7 +122,7 @@ def scanner_cycle(ctx: Context) -> list[dict[str, Any]]:
     sol_usd = ctx.market.sol_usd()
     out: list[dict[str, Any]] = []
     ready_ids = {c["id"] for c in ready}
-    # calls that arrive already up get analysed first, so the buy post can use Grok's read
+    # calls that arrive already up get analysed first, so the buy post can use Claude's read
     fresh = [c for c in ready if not c.get("decision_id")] + \
         [c for c in scanner.to_analyse(conn, s.scanner_window_hours) if c["id"] not in ready_ids]
     for call in fresh[:4]:
@@ -164,7 +164,7 @@ def _dex_stats(ctx: Context, token: str) -> dict[str, Any]:
 
 
 def analyse_untradeable(ctx: Context, call: dict[str, Any]) -> int:
-    """A call VIGIL can't trade still gets Grok's read and a radar post, with what's knowable about it."""
+    """A call VIGIL can't trade still gets Claude's read and a radar post, with what's knowable about it."""
     from ..sources.scanner import call_facts
     s = ctx.settings
     token = call["token"]
@@ -179,7 +179,7 @@ def analyse_untradeable(ctx: Context, call: dict[str, Any]) -> int:
 
 
 def analyse_call(ctx: Context, a: Assessed) -> int:
-    """Grok's read on a new smart-money call: recorded, and posted to the radar. It does not decide the trade."""
+    """Claude's read on a new smart-money call: recorded, and posted to the radar. It does not decide the trade."""
     token, symbol = a.cand.token, a.coin.get("symbol") or (a.call or {}).get("symbol") or "?"
     return _record_analysis(ctx, token, symbol, build_pack(ctx, a), a.call, a)
 
@@ -200,11 +200,11 @@ def _record_analysis(ctx: Context, token: str, symbol: str, pack: dict[str, Any]
                             res.model, res.raw))
         did = int(cur.lastrowid)
         journal_append(conn, "scanner_analysis", {"decision_id": did, "token": token, "symbol": symbol,
-                                                  "grok_action": d.action if d else None,
+                                                  "brain_action": d.action if d else None,
                                                   "confidence": d.confidence if d else None, "thesis": thesis,
                                                   "reasons": reasons, "risks": risks,
                                                   "narrative": d.narrative.model_dump() if d else None,
-                                                  "grok_error": res.error}, ref=token, in_tx=True)
+                                                  "brain_error": res.error}, ref=token, in_tx=True)
     mark_analysed(conn, call["id"], did)
     if a is not None:
         try:
@@ -229,7 +229,7 @@ def _record_analysis(ctx: Context, token: str, symbol: str, pack: dict[str, Any]
 
 
 def _post_read_under_buy(ctx: Context, token: str, symbol: str, did: int, d: Any) -> None:
-    """In buy-on-call mode the buy goes first; Grok's read on the coin follows as a reply under the BOUGHT post."""
+    """In buy-on-call mode the buy goes first; Claude's read on the coin follows as a reply under the BOUGHT post."""
     conn = ctx.conn
     pos = conn.execute("SELECT id, mode FROM positions WHERE token=? ORDER BY id DESC LIMIT 1", (token,)).fetchone()
     if not pos:
@@ -242,7 +242,7 @@ def _post_read_under_buy(ctx: Context, token: str, symbol: str, did: int, d: Any
 
 
 def caller_once(ctx: Context) -> list[dict[str, Any]]:
-    """The fast loop (every few seconds): new smart-money calls are bought as they land. Grok's analysis and
+    """The fast loop (every few seconds): new smart-money calls are bought as they land. Claude's analysis and
     the rest of the trading cycle run in the slower trader loop."""
     from ..sources import scanner
     s = ctx.settings
@@ -591,8 +591,8 @@ def _at(ctx: Context, token: str, fill: FillEstimate) -> str:
 
 def _post_mortem(ctx: Context, pos: dict[str, Any], reason: str, pnl_pct: float, age_h: float,
                  symbol: str) -> dict[str, str]:
-    """Grok's honest read on a losing trade for the exit post, journalled so it isn't lost.
-    Falls back to the original thesis alone if Grok can't answer."""
+    """Claude's honest read on a losing trade for the exit post, journalled so it isn't lost.
+    Falls back to the original thesis alone if Claude can't answer."""
     conn = ctx.conn
     d = conn.execute("SELECT thesis, reasons, risks FROM decisions WHERE id=?", (pos["decision_id"],)).fetchone() \
         if pos.get("decision_id") else None
@@ -721,7 +721,7 @@ def _take_profit(ctx: Context, pos: dict[str, Any], mark: FillEstimate, tokens_s
     nth = {1: "first", 2: "second", 3: "third"}.get(rung, f"#{rung}")
     nxt = f", next one at {ladder[rung][0]:g}x" if rung < len(ladder) else ""
     pnl_pct = (mult - 1) * 100
-    # this post is the update for the gain so far: Grok says why the rest is still held, and the milestone
+    # this post is the update for the gain so far: Claude says why the rest is still held, and the milestone
     # updates it already covers don't go out again separately
     s, key = ctx.settings, f"milestones:{pos['id']}"
     if s.x_update_step_pct > 0:
@@ -762,28 +762,28 @@ def _milestone_update(ctx: Context, pos: dict[str, Any], pnl_pct: float, fill: F
                 {"type": "thesis", "pos": pos, "pnl_pct": pnl_pct, "mc": mc} if m > 0 else None)
 
 
-def _post_later(ctx: Context, draft: str, kwargs: dict[str, Any], grok: dict[str, Any] | None) -> None:
-    """The exit loop never waits on Grok: it journals the post to write (which compose function, its fields, and
-    what Grok should add), and the posting loop writes it within seconds (post_jobs_once)."""
-    journal_append(ctx.conn, "post_job", {"draft": draft, "kwargs": kwargs, "grok": grok}, ref=kwargs.get("token"))
+def _post_later(ctx: Context, draft: str, kwargs: dict[str, Any], brain: dict[str, Any] | None) -> None:
+    """The exit loop never waits on Claude: it journals the post to write (which compose function, its fields, and
+    what Claude should add), and the posting loop writes it within seconds (post_jobs_once)."""
+    journal_append(ctx.conn, "post_job", {"draft": draft, "kwargs": kwargs, "brain": brain}, ref=kwargs.get("token"))
 
 
 def post_jobs_once(ctx: Context) -> int:
-    """Write the posts the exit loop left: ask Grok for the post-mortem or the updated thesis, then queue the post.
+    """Write the posts the exit loop left: ask Claude for the post-mortem or the updated thesis, then queue the post.
     Posts carry fixed keys, so a job that runs twice still posts once."""
     conn = ctx.conn
     last = kv_get(conn, "post_jobs_cursor") or 0
     jobs = rows(conn, "SELECT id, payload FROM journal WHERE kind='post_job' AND id>? ORDER BY id", (last,))
     for j in jobs:
         p = json.loads(j["payload"]) if isinstance(j["payload"], str) else j["payload"]
-        kw, m = p["kwargs"], p.get("grok") or {}
+        kw, m = p["kwargs"], p.get("brain") or p.get("grok") or {}
         try:
             if m.get("type") == "post_mortem":
                 kw.update(_post_mortem(ctx, m["pos"], m["reason"], m["pnl_pct"], m["age_h"], kw["symbol"]))
             elif m.get("type") == "thesis":
                 kw["thesis"] = _updated_thesis(ctx, m["pos"], kw["symbol"], m["pnl_pct"], m["mc"], note=m.get("note", ""))
-        except Exception as exc:  # Grok's words are extra: the post still goes out without them
-            log.warning("grok text for a %s post failed: %s", p["draft"], exc)
+        except Exception as exc:  # Claude's words are extra: the post still goes out without them
+            log.warning("claude text for a %s post failed: %s", p["draft"], exc)
         try:
             enqueue(conn, getattr(compose, p["draft"])(**kw))
         except Exception as exc:
@@ -793,7 +793,7 @@ def post_jobs_once(ctx: Context) -> int:
 
 
 def _updated_thesis(ctx: Context, pos: dict[str, Any], symbol: str, pnl_pct: float, mc: str, note: str = "") -> str:
-    """Grok's fresh read on a coin that's running, for the milestone post. Journalled; '' if Grok can't answer,
+    """Claude's fresh read on a coin that's running, for the milestone post. Journalled; '' if Claude can't answer,
     and the update still goes out without it."""
     conn = ctx.conn
     try:
@@ -812,7 +812,7 @@ def _updated_thesis(ctx: Context, pos: dict[str, Any], symbol: str, pnl_pct: flo
         return ""
     thesis = (r.decision.thesis if r.decision else "").strip()
     journal_append(conn, "thesis_update", {"position_id": pos["id"], "token": pos["token"], "symbol": symbol,
-                                           "pnl_pct": round(pnl_pct, 1), "thesis": thesis, "grok_error": r.error},
+                                           "pnl_pct": round(pnl_pct, 1), "thesis": thesis, "brain_error": r.error},
                    ref=pos["token"])
     return thesis
 

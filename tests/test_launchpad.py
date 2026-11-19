@@ -12,7 +12,7 @@ import pytest
 from solders.keypair import Keypair
 from solders.pubkey import Pubkey
 
-from ct_agent.brain.grok import GrokLaunch, GrokResult
+from ct_agent.brain.claude import ClaudeLaunch, ClaudeResult
 from ct_agent.db import journal_recent, kv_set, rows
 from ct_agent.launchpad import pumpfun as pf
 from ct_agent.launchpad.pumpfun import (FeeSplitUnverified, LaunchBlocked, LaunchResult, LaunchUnconfirmed,
@@ -32,11 +32,11 @@ MINT = str(Keypair.from_seed(bytes([3] * 32)).pubkey())
 
 class _Brain:
     def __init__(self, **kw):
-        self.d = GrokLaunch(**{"is_request": True, "approve": True, "name": "Cat Coin", "symbol": "CAT",
+        self.d = ClaudeLaunch(**{"is_request": True, "approve": True, "name": "Cat Coin", "symbol": "CAT",
                                "description": "a cat that trades memes.", "twitter": "https://x.com/catcoin", **kw})
 
     def review_launch(self, text):
-        return GrokResult(self.d, "", "m", "h")
+        return ClaudeResult(self.d, "", "m", "h")
 
 
 def _ctx(settings, db, brain=None, rpc=None, **kw):
@@ -84,7 +84,7 @@ def test_refusals_each_get_a_short_reply(settings, db):
         assert words in _replies(db)[-1]
     assert take_request(_ctx(settings, db, _Brain(approve=False, reason="I can't launch coins named after real brands.")),
                         _m("5")) == "refused" and _replies(db)[-1] == "I can't launch coins named after real brands."
-    # Grok's name must really be in the post: no launching something they didn't ask for
+    # Claude's name must really be in the post: no launching something they didn't ask for
     assert take_request(_ctx(settings, db, _Brain(symbol="DOG")), _m("6")) == "refused"
 
 

@@ -198,7 +198,7 @@ def refresh(ctx: Context) -> list[dict[str, Any]]:
 
 
 def to_analyse(conn: Any, window_hours: float, limit: int = 3) -> list[dict[str, Any]]:
-    """Calls Grok hasn't looked at yet, oldest first: every Solana call gets a read and a post, including
+    """Calls Claude hasn't looked at yet, oldest first: every Solana call gets a read and a post, including
     ones VIGIL can't trade (unsafe, or Jupiter can't route it). Only our own token is left out."""
     cutoff = (_now() - timedelta(hours=window_hours)).isoformat(timespec="seconds")
     return rows(conn, "SELECT * FROM scanner_calls WHERE decision_id IS NULL AND called_at>=? AND "
@@ -217,7 +217,7 @@ def mark_bought(conn: Any, token: str) -> None:
 
 
 def call_facts(call: dict[str, Any], trigger_pct: float) -> dict[str, Any]:
-    """What the scanner saw at the call, plus the move since, for Grok's briefing."""
+    """What the scanner saw at the call, plus the move since, for Claude's briefing."""
     d = json.loads(call.get("data") or "{}")
     try:
         signals = json.loads(d.get("alert_signals") or "{}")

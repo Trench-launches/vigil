@@ -1,7 +1,7 @@
 """Launch requests from X, the pump.fun launches themselves, and each coin's creator-fee split.
 
 1. take_request (in the mentions loop): a post asking VIGIL to launch a coin is checked (per-account daily limit,
-   account age, one Solana wallet for the fees, an attached image, the daily SOL budget) and screened by Grok (a real
+   account age, one Solana wallet for the fees, an attached image, the daily SOL budget) and screened by Claude (a real
    request, no impersonation, nothing unsafe). It's approved, or refused with a short reply.
 2. launchpad_once (its own loop): approved requests are announced on X, then launched on pump.fun from the launcher
    wallet, and VIGIL replies with the contract address. Right after, the coin's creator fees are split once and
@@ -127,7 +127,7 @@ def take_request(ctx: Any, m: dict[str, Any]) -> str:
     if not m.get("images"):
         return _refuse(conn, m, "no image", "Attach an image for the coin and ask again 🌅", **fields)
     if not d.approve:
-        return _refuse(conn, m, "grok declined: " + d.reason, (d.reason or "I can't launch that one.")[:200], **fields)
+        return _refuse(conn, m, "claude declined: " + d.reason, (d.reason or "I can't launch that one.")[:200], **fields)
     if not name or not SYMBOL.match(sym) or sym.lower() not in text.lower() or name.lower() not in text.lower():
         return _refuse(conn, m, "unclear name or ticker", "Give me a name and a ticker (letters and numbers, up to 10) "
                                                           "and I'll launch it 🌅", **fields)
