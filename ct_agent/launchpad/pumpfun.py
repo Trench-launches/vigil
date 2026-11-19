@@ -41,6 +41,7 @@ from solders.instruction import AccountMeta, Instruction
 from solders.keypair import Keypair
 from solders.message import MessageV0
 from solders.pubkey import Pubkey
+from solders.system_program import TransferParams, transfer
 from solders.token.associated import get_associated_token_address
 from solders.transaction import VersionedTransaction
 
@@ -88,6 +89,8 @@ PUMPPORTAL_PRIORITY_FEE = 0.0005   # SOL
 MAX_CREATE_OVERHEAD = lamports(0.015)  # above the dev buy; a simulation that spends more is refused
 MIN_LAUNCHER_RESERVE = lamports(0.01)  # keep this much on the launcher so the fee-split tx (~0.004) can still be paid
 MIN_DISTRIBUTE_LAMPORTS = lamports(0.01)  # below this a payout isn't worth the transaction
+SWEEP_COMPUTE_UNITS = 2_000             # a plain transfer, plus the two compute-budget instructions
+SWEEP_FEE_BUFFER = 10_000               # lamports left for the sweep's own fee (5,000 base + priority)
 RENT_EXEMPT_EMPTY = 890_880        # the minimum a 0-byte account (the creator vault) keeps
 FEE_TX_COMPUTE_UNITS = 400_000
 FEE_TX_MICROLAMPORTS = 100_000     # priority price per CU: 0.00004 SOL on 400k CU
@@ -671,6 +674,49 @@ class PumpLauncher:
                                                             "shares": [s.as_dict() for s in cfg["shareholders"]]},
                        ref=mint, mode="live")
         return sig
+
+    # --- 5. sharing out Buddy's fees ---------------------------------------------------------------------------------
+
+    def share_out_fees(self, keep_lamports: int, min_lamports: int, trading: str | None, trading_pct: float,
+                       treasury: str | None) -> tuple[str, dict[str, int]] | None:
+        """Share out the launcher's SOL above `keep_lamports` (the reserve that pays for launches): `trading_pct` of
+        it to the trading wallet, which funds trades, and the rest to the treasury, or left on the launcher when
+        `treasury` is None. One transaction of plain transfers, signed by the launcher. Returns (signature,
+        {address: lamports}), or None when less than `min_lamports` would move."""
+        kp = self._ready()
+        me = kp.pubkey()
+        for name, addr in (("trading wallet", trading), ("treasury", treasury)):
+            if addr is not None and not is_pubkey(addr):
+                raise LaunchBlocked(f"the {name} isn't a Solana address")
+            if addr is not None and Pubkey.from_string(addr) == me:
+                raise LaunchBlocked(f"the {name} must not be the launcher wallet")
+        if not 0 <= trading_pct <= 100:
+            raise LaunchBlocked("the trading share must be between 0 and 100%")
+        spare = self.rpc.get_balance(str(me)) - max(keep_lamports, MIN_LAUNCHER_RESERVE) - SWEEP_FEE_BUFFER
+        to_trading = int(spare * trading_pct / 100) if trading and spare > 0 else 0
+        to_treasury = spare - to_trading if treasury and spare > 0 else 0
+        moves = {a: n for a, n in ((trading, to_trading), (treasury, to_treasury)) if a and n > 0}
+        if sum(moves.values()) < max(min_lamports, 1):
+            return None
+        ixs = [set_compute_unit_limit(SWEEP_COMPUTE_UNITS), set_compute_unit_price(FEE_TX_MICROLAMPORTS)]
+        ixs += [transfer(TransferParams(from_pubkey=me, to_pubkey=Pubkey.from_string(a), lamports=n)) for a, n in moves.items()]
+        bh = Hash.from_string(self.rpc.latest_blockhash()["blockhash"])
+        tx = VersionedTransaction(MessageV0.try_compile(me, ixs, [], bh), [kp])
+        b64 = base64.b64encode(bytes(tx)).decode()
+        sim = self._simulate(b64)
+        if sim.get("err"):
+            raise LaunchBlocked(f"fee share-out simulation failed: {sim['err']}")
+        sig = str(tx.signatures[0])
+        meta = {"signature": sig, "to_trading": to_trading if trading else 0, "to_treasury": to_treasury if treasury else 0,
+                "trading": trading, "treasury": treasury}
+        journal_append(self.conn, "fees_share_submitted", meta, mode="live")
+        self.rpc.send_transaction(b64)
+        try:
+            self.rpc.confirm(sig)
+        except RpcError as exc:
+            raise LaunchBlocked(f"fee share-out not confirmed: {exc}") from exc
+        journal_append(self.conn, "fees_shared", meta, mode="live")
+        return sig, moves
 
 
 def _describe(tx: VersionedTransaction) -> list[dict[str, Any]]:

@@ -423,7 +423,18 @@ def launch_board(conn: Any, s: Settings, curves: Any = None, prices_usd: Any = N
         "per_user_day": s.launch_per_user_day, "min_account_days": s.launch_min_account_days,
         "creator_fees_paid_sol": round(paid, 6),
     }
-    return {"stats": stats, "coins": coins, "payouts": payouts, "generated_at": datetime.now(timezone.utc).isoformat()}
+    # Buddy's fees above the launch reserve, shared out by the launcher: to trading, and to the treasury (launchpad/service.py)
+    shared = [{"at": j["ts"], "signature": p.get("signature"),
+               "to_trading_sol": round(int(p.get("to_trading") or 0) / LAMPORTS, 6),
+               "to_treasury_sol": round(int(p.get("to_treasury") or 0) / LAMPORTS, 6)}
+              for j in rows(conn, "SELECT ts, payload FROM journal WHERE kind='fees_shared' ORDER BY id DESC LIMIT 500")
+              for p in [_j(j["payload"], {})]]
+    fees = {"enabled": s.fee_sweep_enabled, "keep_sol": s.fee_keep_sol, "trading_share_pct": s.fee_trading_share_pct,
+            "rest_to": "treasury" if s.fee_rest_to_treasury else "launcher", "treasury": s.treasury_address or None,
+            "to_trading_sol": round(sum(x["to_trading_sol"] for x in shared), 6),
+            "to_treasury_sol": round(sum(x["to_treasury_sol"] for x in shared), 6), "recent": shared[:12]}
+    return {"stats": stats, "coins": coins, "payouts": payouts, "fees": fees,
+            "generated_at": datetime.now(timezone.utc).isoformat()}
 
 
 def _try(read: Any, mints: list[str]) -> dict[str, Any]:

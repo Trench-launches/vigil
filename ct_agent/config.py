@@ -195,6 +195,15 @@ class Settings(BaseSettings):
     launch_vip_handles: list[str] = []     # X handles with a higher daily limit (the team, for tests)
     launch_vip_per_day: int = 10
     launch_min_account_days: int = 30      # the requester's X account must be at least this old
+    # Fee sharing: Buddy's share of launch fees lands on the launcher. Every few hours, what's above a reserve for
+    # launches is shared out: fee_trading_share_pct of it tops up the trading wallet (funding trades), and the rest
+    # goes to the treasury (CT_TREASURY_ADDRESS) or, with fee_rest_to_treasury off, stays on the launcher.
+    fee_sweep_enabled: bool = False
+    fee_keep_sol: float = 0.1               # the launcher keeps this much to pay for launches
+    fee_trading_share_pct: float = 50.0     # of the fees above the reserve, the part that funds trading
+    fee_rest_to_treasury: bool = True       # the rest: to the treasury (true) or left on the launcher (false)
+    fee_sweep_min_sol: float = 0.02         # less than this moving isn't worth a transaction
+    fee_sweep_every_hours: float = 6.0
     pumpportal_url: str = "https://pumpportal.fun/api/trade-local"
     pinata_jwt: str = ""                   # uploads each coin's image + metadata to IPFS (pinata.cloud)
 
