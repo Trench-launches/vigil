@@ -1,4 +1,4 @@
-"""Solana addresses, keys and the program ids VIGIL relies on.
+"""Solana addresses, keys and the program ids Buddy relies on.
 
 Addresses are base58 and case-sensitive: compare them as given and never lowercase them (a lowercased
 mint is a different, usually invalid, address).

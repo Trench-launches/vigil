@@ -22,8 +22,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_prefix="CT_", extra="ignore")
 
     # --- identity -------------------------------------------------------
-    agent_name: str = "VIGIL"
-    agent_ticker: str = "VIGIL"  # the project's own coin; the launchpad won't launch a copy of it
+    agent_name: str = "Buddy"
+    agent_ticker: str = "BUDDY"  # the project's own coin; the launchpad won't launch a copy of it
     agent_token_address: str = ""  # the project's own token, once launched
     # Never traded from scanner calls, like our own token: e.g. an older project coin (JSON list of addresses).
     skip_tokens: list[str] = []
@@ -88,7 +88,7 @@ class Settings(BaseSettings):
     # Original crypto musings (social/musings.py), on top of trade posts and replies
     x_musings_enabled: bool = False
     x_musing_every_min: float = 30.0
-    # Goal posts (social/goals.py): what VIGIL is aiming for next and what its own data has taught it, in the cadence
+    # Goal posts (social/goals.py): what Buddy is aiming for next and what its own data has taught it, in the cadence
     x_goals_enabled: bool = False
     x_goals_every_hours: float = 6.0
     # A timeline post at least this often (social/cadence.py): trades count, and gaps are filled in rotation with a
@@ -148,7 +148,7 @@ class Settings(BaseSettings):
     scanner_buy_on_call: bool = False   # buy every tradeable call the moment it lands (no +trigger wait)
     decision_cooldown_min: int = 30  # don't re-ask Claude about the same token too often
     candidates_per_cycle: int = 5
-    # Paper-trading history from VIGIL v1 (before this journal), merged into the site's scorecard and labelled
+    # Paper-trading history from Buddy v1 (before this journal), merged into the site's scorecard and labelled
     # as such. JSON, amounts in SOL, e.g. {"trades": 100, "wins": 54, "losses": 46, "best_sol": 0.3}; optional:
     # net_sol, deployed_sol, worst_sol, best_symbol, worst_symbol, avg_hold_h. Empty = no v1 history shown.
     score_history_v1: dict = {}
@@ -156,14 +156,14 @@ class Settings(BaseSettings):
     score_since: str = ""
     # Websites allowed to call the API from a browser (CORS), as a JSON list. Add your site's domain(s).
     site_origins: list[str] = ["http://127.0.0.1:5173", "http://localhost:5173"]
-    # Public "Ask VIGIL" chat on the website. Every request is a paid Claude call, so it is capped per
+    # Public "Ask Buddy" chat on the website. Every request is a paid Claude call, so it is capped per
     # visitor and overall; the global cap is the hard ceiling on spend. Off unless you turn it on.
     chat_enabled: bool = False
     chat_per_ip_hour: int = 10
     chat_per_ip_day: int = 30
     chat_global_day: int = 500
     chat_max_chars: int = 500
-    chat_x_lookups_day: int = 50  # X profile look-ups the chat may make per day (VIGIL's own research is separate)
+    chat_x_lookups_day: int = 50  # X profile look-ups the chat may make per day (Buddy's own research is separate)
     max_entries_per_day: int = 10  # hard cap on new trades in any rolling 24h
     research_wait_min: int = 10  # wait this long for a token's X research before deciding without it
 
@@ -171,7 +171,7 @@ class Settings(BaseSettings):
     # here: never the owner's or the treasury's.
     trading_wallet_private_key: str = ""
     live_execution_reviewed: bool = False  # flipped only after a human review
-    # Where swaps go: "jupiter" (VIGIL signs Jupiter-built swaps itself) or "gmgn" (GMGN's trading API, from the
+    # Where swaps go: "jupiter" (Buddy signs Jupiter-built swaps itself) or "gmgn" (GMGN's trading API, from the
     # wallet bound to the API key).
     live_venue: str = "jupiter"
     gmgn_api_key: str = ""
@@ -187,7 +187,7 @@ class Settings(BaseSettings):
     launcher_wallet_private_key: str = ""
     launch_daily_cap_sol: float = 0.5      # total launch spend per 24h; past it, requests wait for tomorrow
     launch_dev_buy_sol: float = 0.0        # optional first buy by the launcher at creation (0 = none)
-    launch_creator_share_bps: int = 9_000  # the requester's share of creator fees (VIGIL keeps the rest)
+    launch_creator_share_bps: int = 9_000  # the requester's share of creator fees (Buddy keeps the rest)
     # The fee split is irreversible, so it isn't sent until a real one has been checked: set true once
     # `ctagent launch-test` has locked a split and you've seen it on Solscan.
     launch_fee_split_verified: bool = False

@@ -1,4 +1,4 @@
-"""Goal posts: every few hours VIGIL says what it's aiming for next and what its own data has taught it so far.
+"""Goal posts: every few hours Buddy says what it's aiming for next and what its own data has taught it so far.
 
 Claude writes them (GOALS_SYSTEM), but every number comes from facts computed here from the trade log, the scanner and
 the launchpad, so a goal post never claims anything that didn't happen. Aims are about getting better (more data,
@@ -30,7 +30,7 @@ def _next(n: int, steps: tuple[int, ...]) -> int | None:
 
 
 def goal_facts(conn: Any, site: dict[str, Any], mode: str, now: datetime) -> dict[str, Any]:
-    """What VIGIL has done so far, and the next round number for each count."""
+    """What Buddy has done so far, and the next round number for each count."""
     sc = site.get("score") or {}
     calls = {r["status"]: r["n"] for r in rows(conn, "SELECT status, COUNT(*) n FROM scanner_calls GROUP BY status")}
     taxed = conn.execute("SELECT COUNT(*) FROM scanner_calls WHERE status='skipped' AND note LIKE '%tax%'").fetchone()[0]

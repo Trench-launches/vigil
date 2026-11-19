@@ -1,4 +1,4 @@
-"""The `tokens` cache: every Solana coin VIGIL has looked at, filled on demand.
+"""The `tokens` cache: every Solana coin Buddy has looked at, filled on demand.
 
 Decimals and the token program never change, so they are read once. Where the coin trades (still on a launchpad
 bonding curve, or graduated to a pool, and on which DEX) is refreshed every few minutes from the market data.

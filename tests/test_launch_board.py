@@ -11,7 +11,7 @@ from ct_agent.db import journal_append, utcnow
 from ct_agent.launchpad import pumpfun as pf
 
 MINT_A, MINT_B = "So1aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "So1bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-REQ, VIGIL = "Req1111111111111111111111111111111111111111", "Vig1111111111111111111111111111111111111111"
+REQ, Buddy = "Req1111111111111111111111111111111111111111", "Vig1111111111111111111111111111111111111111"
 
 
 def curve(real_tokens: int, real_sol: int = 0, complete: bool = False) -> bytes:
@@ -19,7 +19,7 @@ def curve(real_tokens: int, real_sol: int = 0, complete: bool = False) -> bytes:
 
 
 def _launched(db, n, mint, symbol, when=None):
-    shares = [{"address": REQ, "bps": 9000}, {"address": VIGIL, "bps": 1000}]
+    shares = [{"address": REQ, "bps": 9000}, {"address": Buddy, "bps": 1000}]
     db.execute("INSERT INTO launch_requests(x_post_id,author_id,handle,created_at,status,name,symbol,token,recipient,"
                "fee_shares,launched_at,tx_hash) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",
                (f"post{n}", "u1", "catfan", when or utcnow(), "launched", f"{symbol} Coin", symbol, mint, REQ,

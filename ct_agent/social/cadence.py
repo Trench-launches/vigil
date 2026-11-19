@@ -1,14 +1,14 @@
 """A steady timeline: a post at least every x_cadence_min minutes, in a rotation of kinds.
 
 Trades, updates and launches still post the moment they happen, and each one counts as that slot's post. Only
-when x_cadence_min minutes pass with nothing new on the timeline does VIGIL fill the gap with the next kind in
+when x_cadence_min minutes pass with nothing new on the timeline does Buddy fill the gap with the next kind in
 the rotation that has something to say:
 
   scan     what the scanner looked at (smart-money calls today, coins Claude read this hour, what was bought)
   holdings the open bags and how each one is doing
   musing   a short line from Claude (musings.py)
   score    the running scorecard, losses included
-  goals    what VIGIL is aiming for next and what its data has taught it (goals.py), every few hours
+  goals    what Buddy is aiming for next and what its data has taught it (goals.py), every few hours
 
 So every hour carries a mix of kinds. Replies to people and thread replies never count toward the timeline.
 The facts come from the same numbers the website shows. Each post names at most one cashtag (X refuses more).
@@ -95,7 +95,7 @@ def score_post(site: dict[str, Any]) -> str | None:
         return None
     # The site sends null (not 0) for numbers that don't exist yet, such as a win rate before any trade closes.
     closed, win = sc.get("closed") or 0, sc.get("win_rate")
-    lines = ["📈 VIGIL scorecard", "",
+    lines = ["📈 Buddy scorecard", "",
              f"Trades: {sc['taken']} ({closed} closed, {sc.get('open') or 0} open)",
              f"Win rate: {win:.0f}%" if closed and win is not None else "Win rate: none closed yet",
              f"Closed P&L: {sc.get('net_sol') or 0:+.4f} SOL"]

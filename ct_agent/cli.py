@@ -59,7 +59,7 @@ def main(argv: list[str] | None = None) -> int:
     ln.add_argument("--name", required=True)
     ln.add_argument("--symbol", required=True)
     ln.add_argument("--fees-to", required=True, help="the wallet that gets the requester's share of creator fees")
-    ln.add_argument("--description", default="A test launch by VIGIL.")
+    ln.add_argument("--description", default="A test launch by Buddy.")
     ln.add_argument("--dev-buy", type=float, default=0.0, help="SOL the launcher buys at creation (max 0.05)")
     ln.add_argument("--yes", action="store_true", help="don't ask before sending")
     t = sub.add_parser("twitch-subscribe")

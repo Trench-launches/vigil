@@ -1,6 +1,6 @@
-"""What VIGIL checks about a Solana coin before it trades it (replaces the Pons launch reader).
+"""What Buddy checks about a Solana coin before it trades it (replaces the Pons launch reader).
 
-A coin is its SPL mint. VIGIL reads the mint account (decimals, supply, who can still mint or freeze, Token-2022
+A coin is its SPL mint. Buddy reads the mint account (decimals, supply, who can still mint or freeze, Token-2022
 extensions), the biggest holders (counting only wallets: bonding curves, pools and other program-owned accounts
 are left out) and the coin's own metadata (name, image, description, links) for its story.
 """

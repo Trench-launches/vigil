@@ -4,7 +4,7 @@ Each coin's metadata names an image (pump.fun coins: an IPFS link), saved in the
 token cache. The site never loads those links directly: the API fetches a logo once, checks
 it really is an image, re-encodes it as a small 128px WebP (which also drops
 anything else embedded in the file) and serves that from disk. Only tokens
-VIGIL already tracks can be fetched, so this isn't an open image proxy.
+Buddy already tracks can be fetched, so this isn't an open image proxy.
 """
 from __future__ import annotations
 
@@ -91,7 +91,7 @@ def logo_file(conn: Any, data_dir: Path, token: str, client: httpx.Client | None
     row = conn.execute("SELECT logo_url FROM tokens WHERE mint=?", (token,)).fetchone()
     urls = _candidates(row["logo_url"]) if row and row["logo_url"] else []
     own = client is None
-    client = client or httpx.Client(timeout=8, headers={"user-agent": "VIGIL-logo-fetch"})
+    client = client or httpx.Client(timeout=8, headers={"user-agent": "Buddy-logo-fetch"})
     try:
         for url in urls:
             raw = _download(url, client)

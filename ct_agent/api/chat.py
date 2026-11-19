@@ -1,6 +1,6 @@
-"""The website's "Ask VIGIL" chat, answered by Claude.
+"""The website's "Ask Buddy" chat, answered by Claude.
 
-A visitor sends a message, usually a Solana mint address or a $ticker. VIGIL
+A visitor sends a message, usually a Solana mint address or a $ticker. Buddy
 researches that coin live (the same mint-safety checks, holder read and screen
 the trader uses, plus what it has heard and decided), and Claude answers from
 those facts.
@@ -60,7 +60,7 @@ def check_limits(conn: Any, s: Any, who: str) -> None:
     """Raise ChatLimited if this visitor, or the site as a whole, is out of questions."""
     total = conn.execute("SELECT COUNT(*) FROM chat_requests WHERE ts>=?", (_since(days=1),)).fetchone()[0]
     if total >= s.chat_global_day:
-        raise ChatLimited("VIGIL has answered all it can for today. Try again tomorrow.", 3600)
+        raise ChatLimited("Buddy has answered all it can for today. Try again tomorrow.", 3600)
     left = remaining(conn, s, who)
     if left["day"] <= 0:
         raise ChatLimited(f"That's your {s.chat_per_ip_day} questions for today. Come back tomorrow.", 3600)
@@ -99,7 +99,7 @@ def _search_ticker(market: Any, ticker: str) -> str | None:
 
 def find_token(conn: Any, text: str, market: Any = None) -> tuple[str | None, str | None]:
     """(mint, how) for the coin the message is about: a pasted mint wins, else a $ticker from the scanner's
-    recent calls or VIGIL's token cache, else DexScreener's search."""
+    recent calls or Buddy's token cache, else DexScreener's search."""
     m = _mint_in(text)
     if m:
         return m, "address"
@@ -178,7 +178,7 @@ def _research(ctx: Any, token: str) -> dict[str, Any]:
                      volume_h1_usd=pool.volume_h1_usd if pool else None,
                      liquidity_usd=pool.liquidity_usd if pool else None,
                      volume_h24_usd=pool.volume_h24_usd if pool else None, safety=safety, holders=hs)
-    f["vigil_screen"] = {"flags": c.flags, "red_flags": c.blockers}
+    f["buddy_screen"] = {"flags": c.flags, "red_flags": c.blockers}
     att = kv_get(conn, f"x_attention:{token}")
     if att:
         f["x_mentions_24h"] = att.get("count_24h")
@@ -186,11 +186,11 @@ def _research(ctx: Any, token: str) -> dict[str, Any]:
                         "ORDER BY id DESC LIMIT 1", (token,)).fetchone()
     if call:
         f["smart_money_call"] = dict(call)
-    f["vigil_decisions"] = [{"when": d["ts"], "action": d["action"], "confidence": d["confidence"],
+    f["buddy_decisions"] = [{"when": d["ts"], "action": d["action"], "confidence": d["confidence"],
                              "thesis": (d["thesis"] or "")[:300]}
                             for d in rows(conn, "SELECT ts, action, confidence, thesis FROM decisions WHERE "
                                                 "token=? AND model!='rule' ORDER BY id DESC LIMIT 3", (token,))]
-    f["vigil_trades"] = rows(conn, "SELECT mode, status, opened_at, closed_at, entry_quote AS entry_sol, "
+    f["buddy_trades"] = rows(conn, "SELECT mode, status, opened_at, closed_at, entry_quote AS entry_sol, "
                                    "pnl_quote AS pnl_sol, exit_reason FROM positions WHERE token=? "
                                    "ORDER BY id DESC LIMIT 3", (token,))
     return f
@@ -243,7 +243,7 @@ def onchain_detail(f: dict[str, Any]) -> str:
     hs = f.get("holders") or {}
     if hs.get("top10_share") is not None:
         bits.append(f"top 10 hold {hs['top10_share']:.0%}")
-    flags = len((f.get("vigil_screen") or {}).get("red_flags") or [])
+    flags = len((f.get("buddy_screen") or {}).get("red_flags") or [])
     if flags:
         bits.append(f"{flags} red flag{'s' if flags != 1 else ''}")
     return " · ".join(b for b in bits if b)
@@ -255,7 +255,7 @@ def _clip(t: str, n: int) -> str:
 
 
 def _x_allowed(ctx: Any) -> bool:
-    """The chat's daily allowance of X profile look-ups, so visitors can't spend VIGIL's X budget."""
+    """The chat's daily allowance of X profile look-ups, so visitors can't spend Buddy's X budget."""
     key = "chat_x_lookups:" + datetime.now(timezone.utc).strftime("%Y-%m-%d")
     used = int(kv_get(ctx.conn, key) or 0)
     if used >= ctx.settings.chat_x_lookups_day:
@@ -367,7 +367,7 @@ def answer_events(svc: dict[str, Any], s: Any, db_path: str, who: str, msg: str,
         res = svc["brain"].chat(facts, ev, history + [{"role": "user", "text": msg}], story)
         if res.decision is None:
             yield step("claude", "fail")
-            yield {"type": "error", "detail": "VIGIL didn't answer that one. Try again in a moment."}
+            yield {"type": "error", "detail": "Buddy didn't answer that one. Try again in a moment."}
             return
         yield step("claude", "done")
         yield {"type": "answer", "reply": res.decision.reply.strip()[:2000], "token": token_card(facts) if token else None,

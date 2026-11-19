@@ -192,7 +192,7 @@ def test_untradeable_calls_are_skipped_in_plain_words_but_still_read(tmp_path):
     assert "can't route" in st[stuck.mint]["note"] and "5% tax on every transfer" in st[taxed.mint]["note"]
     assert "not a Solana token" in st["0x" + "ab" * 20]["note"]
     assert rows(ctx.conn, "SELECT COUNT(*) c FROM positions")[0]["c"] == 0
-    assert any('"tradeable_by_vigil": false' in c for c in claude.calls)  # untradeable calls still get Claude's read
+    assert any('"tradeable_by_buddy": false' in c for c in claude.calls)  # untradeable calls still get Claude's read
 
 
 def test_buy_on_call_buys_first_and_reads_under_it(tmp_path):
@@ -481,7 +481,7 @@ def test_chat_streams_each_research_step(tmp_path):
     assert steps["coin"] == "$HOT · Hot" and "pool on pumpswap" in steps["onchain"]
     assert "guards every fridge" in steps["lore"] and steps["x"] == "@hotcoin (profile not checked)"
     assert ev[-1]["type"] == "answer" and "guards every fridge" in claude.calls[-1].split("<untrusted_evidence>")[1]
-    ev = [json.loads(line) for line in api.post("/chat/stream", json={"message": "how does VIGIL pick trades?"}).text.splitlines()]
+    ev = [json.loads(line) for line in api.post("/chat/stream", json={"message": "how does Buddy pick trades?"}).text.splitlines()]
     assert [e["id"] for e in ev if e["type"] == "step"] == ["claude", "claude"] and ev[-1]["type"] == "answer"
 
 
@@ -518,7 +518,7 @@ def test_v1_history_folds_into_the_scorecard():
     sc = _with_v1(now, {"trades": 100, "wins": 54, "net_sol": 0.35, "deployed_sol": 5.0, "avg_hold_h": 3.0})
     assert sc["net_sol"] == 0.3 and sc["deployed_sol"] == 5.1 and sc["return_pct"] == 5.88
     assert "net_sol" in sc["history"]["includes"]
-    assert sc["avg_hold_h"] == 2.96 and sc["series"] == [0.0, 0.35, 0.345, 0.3] and sc["labels"][0] == "VIGIL v1 (100 trades)"
+    assert sc["avg_hold_h"] == 2.96 and sc["series"] == [0.0, 0.35, 0.345, 0.3] and sc["labels"][0] == "Buddy v1 (100 trades)"
 
 
 def test_admin_can_queue_a_hand_written_post(tmp_path):

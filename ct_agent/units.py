@@ -1,4 +1,4 @@
-"""The quote asset and amount conversions. VIGIL trades against SOL; tokens carry their own decimals.
+"""The quote asset and amount conversions. Buddy trades against SOL; tokens carry their own decimals.
 
 Positions, limits and P&L are kept in whole SOL (floats). Chain amounts are integers in base units:
 lamports for SOL (9 decimals) and the mint's own decimals for a token (pump.fun coins use 6).

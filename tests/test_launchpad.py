@@ -1,5 +1,5 @@
 """Launchpad on pump.fun: requests on X are checked and screened, approved ones announced then launched, and each
-coin's creator fees split once (90% requester / 10% VIGIL). pump.fun, PumpPortal, Pinata and the Solana node are
+coin's creator fees split once (90% requester / 10% Buddy). pump.fun, PumpPortal, Pinata and the Solana node are
 offline fakes that speak the real wire formats (tests/launchpad_fakes.py)."""
 import base64
 import hashlib
@@ -131,9 +131,9 @@ def test_any_name_goes_except_our_own_ticker(settings, db):
     assert take_request(ctx, _m("60")) == "approved"
     assert take_request(ctx, {**_m("61", text=f"@VigilBot launch $CAT Cat Coin fees to {other}"), "author_id": "u9"}) \
         == "approved"  # a second $CAT from someone else is fine
-    ours = _ctx(settings, db, _Brain(symbol="VIGIL", name="Vigil Two"))
-    assert take_request(ours, {**_m("62", text=f"launch $VIGIL Vigil Two {WALLET}"), "author_id": "u8"}) == "refused"
-    assert "$VIGIL is my own coin" in _replies(db)[-1]
+    ours = _ctx(settings, db, _Brain(symbol="Buddy", name="Vigil Two"))
+    assert take_request(ours, {**_m("62", text=f"launch $BUDDY Vigil Two {WALLET}"), "author_id": "u8"}) == "refused"
+    assert "$BUDDY is my own coin" in _replies(db)[-1]
 
 
 # --- the launch loop (with a stand-in launcher) --------------------------------------------------------------------
@@ -181,14 +181,14 @@ def test_announce_then_launch_then_split_90_10(settings, db):
     lp = _Launcher()
     assert launchpad_once(ctx, lp)["launched"] == 0  # first the announcement, crediting them
     ann = rows(db, "SELECT * FROM posts WHERE kind='launch_announce'")[0]
-    assert ann["body"].startswith("🚀 New on the VIGIL launchpad\n\n$CAT · Cat Coin\nCreator: @catfan")
+    assert ann["body"].startswith("🚀 New on the Buddy launchpad\n\n$CAT · Cat Coin\nCreator: @catfan")
     assert "pump.fun" in ann["body"] and ann["reply_to_key"] is None and lp.calls == []
     assert launchpad_once(ctx, lp)["launched"] == 0  # not launched until the announcement is out
     _announced(db)
     assert launchpad_once(ctx, lp) == {"launched": 1, "fee_splits": 0, "distributed": 0}
     assert lp.last["socials"]["twitter"] == "https://x.com/catcoin"  # they gave their own link: it stays
     assert lp.last["description"] == "a cat that trades memes. Created by @catfan, launched via @VigilBot"
-    assert ("split", [(WALLET, 9000), (LAUNCHER, 1000)]) in lp.calls  # requester first, then VIGIL
+    assert ("split", [(WALLET, 9000), (LAUNCHER, 1000)]) in lp.calls  # requester first, then Buddy
     r = rows(db, "SELECT * FROM launch_requests")[0]
     assert (r["status"], r["token"], r["tx_hash"], r["cost_lamports"], r["fee_share_tx"]) == \
         ("launched", MINT, "SIG1", "23400000", "SPLITSIG")
@@ -201,7 +201,7 @@ def test_announce_then_launch_then_split_90_10(settings, db):
     assert receipt["reply_to_key"] == ann["idempotency_key"]
     body = receipt["body"]
     assert "is live on Solana" in body and "https://solscan.io/tx/SIG1" in body and f"https://pump.fun/coin/{MINT}" in body
-    assert "0.0234 SOL (paid by VIGIL)" in body and "90% to @catfan, 10% to VIGIL" in body
+    assert "0.0234 SOL (paid by Buddy)" in body and "90% to @catfan, 10% to Buddy" in body
     live = next(b for b in _replies(db) if "is live on Solana\n\nCA:" in b and "x.com/i/status/900" in b)
     assert "90% of its creator fees go to your wallet" in live
     assert "https://solscan.io/tx/SPLITSIG" in _replies(db)[-1] and "locked" in _replies(db)[-1]
@@ -210,7 +210,7 @@ def test_announce_then_launch_then_split_90_10(settings, db):
 
 
 def test_a_failed_launch_says_sorry_and_the_coin_links_to_the_announcement(settings, db):
-    ctx = _ctx(settings, db, _Brain(twitter=""))  # no link of their own: the coin links to VIGIL's announcement
+    ctx = _ctx(settings, db, _Brain(twitter=""))  # no link of their own: the coin links to Buddy's announcement
     take_request(ctx, _m("12"))
     lp = _Launcher()
     launchpad_once(ctx, lp)
@@ -429,7 +429,7 @@ def test_create_fee_sharing_config_passes_every_idl_account():
 
 def test_split_for_and_the_share_rules():
     assert pf.split_for(WALLET, LAUNCHER, 9000) == [Share(WALLET, 9000), Share(LAUNCHER, 1000)]
-    assert pf.split_for(LAUNCHER, LAUNCHER, 9000) == [Share(LAUNCHER, 10_000)]  # VIGIL's own coin: one shareholder
+    assert pf.split_for(LAUNCHER, LAUNCHER, 9000) == [Share(LAUNCHER, 10_000)]  # Buddy's own coin: one shareholder
     assert pf.split_for(WALLET, LAUNCHER, 10_000) == [Share(WALLET, 10_000)]
     for bad, words in [([Share(WALLET, 9000), Share(LAUNCHER, 999)], "add up to 10000"),
                        ([Share(WALLET, 5000), Share(WALLET, 5000)], "same address twice"),
@@ -620,7 +620,7 @@ def _imported_coin(node, shares, revoked=True):
     node.set_account(pf.bonding_curve_pda(MINT), pf.PUMP_PROGRAM, curve_bytes(cfg))
     node.set_account(cfg, pf.PUMP_FEES_PROGRAM, config_bytes(Pubkey.from_string(MINT), LAUNCHER_KP.pubkey(), shares, revoked))
     node.assets[MINT] = {"content": {"json_uri": "https://ipfs.io/ipfs/bafymeta",
-                                     "metadata": {"name": "VIGIL Launch Test", "symbol": "vtest", "description": "a test"},
+                                     "metadata": {"name": "Buddy Launch Test", "symbol": "vtest", "description": "a test"},
                                      "links": {"image": "https://ipfs.io/ipfs/bafyimg"}}}
     node.signatures[MINT] = [{"signature": "SPLITSIG", "blockTime": 1_800_000_100},
                              {"signature": "LAUNCHSIG", "blockTime": 1_800_000_000}]

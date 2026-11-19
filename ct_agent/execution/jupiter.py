@@ -1,7 +1,7 @@
-"""Jupiter: the swap router VIGIL trades through, and its price feed.
+"""Jupiter: the swap router Buddy trades through, and its price feed.
 
 Swap V2 `order` -> sign -> `execute` (https://developers.jup.ag/docs/swap/order-and-execute). Jupiter builds the
-transaction and lands it; VIGIL only signs. RFQ routes (JupiterZ) are excluded so our signature is the only one
+transaction and lands it; Buddy only signs. RFQ routes (JupiterZ) are excluded so our signature is the only one
 needed. Prices come from Price API v3, up to 50 mints a call. The free API key allows ~1 request/s, so calls
 are paced and a 429 is retried after a pause.
 """

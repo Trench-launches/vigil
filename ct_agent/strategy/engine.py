@@ -126,7 +126,7 @@ def scanner_cycle(ctx: Context) -> list[dict[str, Any]]:
     fresh = [c for c in ready if not c.get("decision_id")] + \
         [c for c in scanner.to_analyse(conn, s.scanner_window_hours) if c["id"] not in ready_ids]
     for call in fresh[:4]:
-        if not call.get("pool_id"):  # VIGIL can't trade it, but it still gets a read and a post
+        if not call.get("pool_id"):  # Buddy can't trade it, but it still gets a read and a post
             did = analyse_untradeable(ctx, call)
             out.append({"token": call["token"], "analysed": did, "tradeable": False})
             continue
@@ -148,7 +148,7 @@ def scanner_cycle(ctx: Context) -> list[dict[str, Any]]:
 
 
 def _dex_stats(ctx: Context, token: str) -> dict[str, Any]:
-    """The coin's deepest SOL pool on DexScreener, for a call VIGIL can't trade."""
+    """The coin's deepest SOL pool on DexScreener, for a call Buddy can't trade."""
     try:
         p = ctx.market.pool_stats(token)
     except Exception as exc:
@@ -164,15 +164,15 @@ def _dex_stats(ctx: Context, token: str) -> dict[str, Any]:
 
 
 def analyse_untradeable(ctx: Context, call: dict[str, Any]) -> int:
-    """A call VIGIL can't trade still gets Claude's read and a radar post, with what's knowable about it."""
+    """A call Buddy can't trade still gets Claude's read and a radar post, with what's knowable about it."""
     from ..sources.scanner import call_facts
     s = ctx.settings
     token = call["token"]
     symbol = (call.get("symbol") or "?").replace("\U0001f331", "").strip() or "?"
     facts = call_facts(call, s.scanner_trigger_pct)
-    facts["rule"] = (f"VIGIL can't trade this coin ({call.get('note') or 'not tradeable'}), so it won't buy it. "
+    facts["rule"] = (f"Buddy can't trade this coin ({call.get('note') or 'not tradeable'}), so it won't buy it. "
                      "Your job is only the analysis: what the coin is, why smart money may be in, what could go wrong.")
-    pack = {"token": token, "symbol": symbol, "chain": "Solana", "tradeable_by_vigil": False,
+    pack = {"token": token, "symbol": symbol, "chain": "Solana", "tradeable_by_buddy": False,
             "why_not_tradeable": call.get("note"), "scanner_call": facts, "market": _dex_stats(ctx, token),
             "lore": _lore(ctx, token), "evidence": [], "limits": {"mode": s.trading_mode.value}}
     return _record_analysis(ctx, token, symbol, pack, call, None)
@@ -368,7 +368,7 @@ def build_pack(ctx: Context, a: Assessed) -> dict[str, Any]:
         pack["scanner_call"] = call_facts(a.call, s.scanner_trigger_pct)
         if s.scanner_buy_on_call:
             pack["scanner_call"]["rule"] = (
-                "VIGIL buys every smart-money call the moment it lands, and has ALREADY BOUGHT this one. Give your "
+                "Buddy buys every smart-money call the moment it lands, and has ALREADY BOUGHT this one. Give your "
                 "honest read: what the coin is, why smart money may be in, what could go wrong. Don't say you are "
                 "watching, waiting or passing; the position is open.")
     if a.pool:

@@ -1,6 +1,6 @@
-# VIGIL: an open, automated memecoin trader for Solana
+# Buddy: an open, automated memecoin trader for Solana
 
-VIGIL is an AI trading persona that runs in the open. It follows a smart-money scanner's calls on Solana
+Buddy is an AI trading persona that runs in the open. It follows a smart-money scanner's calls on Solana
 memecoins (pump.fun launches and the coins trading on PumpSwap, Raydium and other DEXs), checks each coin
 onchain (who can still mint or freeze it, Token-2022 taxes, who holds the supply), has Anthropic's **Claude** write its
 read on the coin, trades by fixed rules through **Jupiter** with hard risk limits nothing can override, journals
@@ -180,7 +180,7 @@ committing. Put them in a gitignored `.env.site`:
 SITE_URL=https://www.your-site.example          # required: the site's own address
 SITE_API_URL=https://your-backend.example.com   # required
 SITE_X_HANDLE=YourBot                           # optional, no @
-SITE_NAME=VIGIL                                 # optional
+SITE_NAME=Buddy                                 # optional
 ```
 
 Then `vercel link` once and `scripts/deploy-web.sh`. On another static host, edit `web/config.js` and those
@@ -221,4 +221,4 @@ Interactive docs at `/docs` while the API runs.
 See [CONTRIBUTING.md](CONTRIBUTING.md). To report a vulnerability, follow [SECURITY.md](SECURITY.md) and
 please don't open a public issue.
 
-Released under the [MIT License](LICENSE). VIGIL is an independent project, not affiliated with Anthropic, xAI, X, Solana, Jupiter or pump.fun.
+Released under the [MIT License](LICENSE). Buddy is an independent project, not affiliated with Anthropic, xAI, X, Solana, Jupiter or pump.fun.

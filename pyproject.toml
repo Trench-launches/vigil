@@ -1,7 +1,7 @@
 [project]
 name = "ct-agent"
 version = "0.1.0"
-description = "VIGIL: Solana memecoin research and trading persona, powered by Claude (Anthropic API)"
+description = "Buddy: Solana memecoin research and trading persona, powered by Claude (Anthropic API)"
 requires-python = ">=3.12"
 license = "MIT"
 license-files = ["LICENSE"]

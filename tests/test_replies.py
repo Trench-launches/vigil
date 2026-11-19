@@ -8,8 +8,8 @@ from ct_agent.social.replies import clean, replies_once
 
 
 def test_filter_drops_anything_unsafe_and_strips_tags():
-    assert clean("gm fren @someone, VIGIL only buys once a call runs +30%. wagmi") == \
-        "gm fren , VIGIL only buys once a call runs +30%. wagmi"
+    assert clean("gm fren @someone, Buddy only buys once a call runs +30%. wagmi") == \
+        "gm fren , Buddy only buys once a call runs +30%. wagmi"
     for bad in ("this is shit", "buy at pump.fun now", "ca is 0x1234abcd99", "guaranteed 10x ser", "x" * 300, "",
                 "ca DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263 ser"):
         assert clean(bad) is None, bad
@@ -44,7 +44,7 @@ def _ctx(settings, db, mentions, brain):
 
 
 def test_replies_respect_caps_and_skip_backlog(settings, db):
-    ms = [{"id": str(i), "author_id": "fan" if i < 4 else f"u{i}", "text": f"gm vigil {i}"} for i in range(1, 7)]
+    ms = [{"id": str(i), "author_id": "fan" if i < 4 else f"u{i}", "text": f"gm buddy {i}"} for i in range(1, 7)]
     ms.append({"id": "7", "author_id": "me", "text": "my own post"})
     brain = _Brain("gm fren, LFG")
     ctx = _ctx(settings, db, ms, brain)
@@ -113,6 +113,6 @@ def test_a_reply_under_a_trade_post_gets_the_coins_story_and_todays_rules(settin
                         "referenced_tweets": [{"type": "replied_to", "id": "500"}]}], brain)
     assert replies_once(ctx)["replies_queued"] == 1
     sent = brain.seen[-1]
-    assert sent["coin"]["symbol"] == "FRAI" and sent["coin"]["vigil_thesis"].startswith("FRAI lets you use AI")
+    assert sent["coin"]["symbol"] == "FRAI" and sent["coin"]["buddy_thesis"].startswith("FRAI lets you use AI")
     assert sent["coin"]["coins_own_lore"]["description"] == "AI models without subscriptions"
     assert "the moment it lands" in sent["rules"] and "+30%" not in sent["rules"]
